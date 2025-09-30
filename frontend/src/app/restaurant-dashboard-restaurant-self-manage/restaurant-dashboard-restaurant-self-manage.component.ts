@@ -40,7 +40,6 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
                 private route: ActivatedRoute, private http: HttpClient) {}
   
     ngOnInit(): void {
-        // Get restaurant ID from route parameters
         this.restaurantId = this.route.snapshot.paramMap.get('id');
         
         console.log('Restaurant ID:', this.restaurantId);
@@ -61,7 +60,6 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
                 next: (data: any) => {
                     this.restaurant = data;
                     
-                    // Populate form fields with actual data
                     this.name = data.name;
                     this.description = data.description;
                     this.location = data.location;
@@ -110,7 +108,6 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
             return;
         }
 
-        // Validate required fields
         if (!this.name || !this.description || !this.location || !this.phone) {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all required fields' });
             return;
@@ -139,7 +136,6 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
                     });
                     this.loading = false;
                     
-                    // Refresh the restaurant data
                     this.fetchRestaurantData();
                 },
                 error: (error) => {
@@ -151,7 +147,6 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     }
     
     cancel() {
-        // Reset form to original values
         if (this.restaurant) {
             this.name = this.restaurant.name;
             this.description = this.restaurant.description;

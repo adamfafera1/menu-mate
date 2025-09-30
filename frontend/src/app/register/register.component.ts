@@ -36,7 +36,6 @@ export class RegisterComponent {
       next: (response) => {
         console.log('Registration response:', response);
         
-        // If a restaurant was created, store its ID
         if (response && response.restaurantId) {
           this.authService.setRestaurantId(response.restaurantId);
           console.log('Restaurant created with ID:', response.restaurantId);

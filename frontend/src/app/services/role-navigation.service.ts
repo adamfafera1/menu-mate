@@ -20,30 +20,33 @@ export class RoleNavigationService {
     
     switch (userRole) {
       case UserRole.ADMIN:
-        this.router.navigate(['/browse']); // Admin can access everything, start with browse
+        this.router.navigate(['/browse']);
         break;
       case UserRole.USER:
         this.router.navigate(['/browse']);
         break;
       case UserRole.RESTAURANT_OWNER:
         const restaurantId = this.authService.getRestaurantId();
+        console.log('Stored restaurant ID:', restaurantId);
         if (restaurantId) {
           this.router.navigate(['/dashboard', restaurantId]);
         } else {
-          // Fallback: Get restaurant ID from API for existing users
+          console.log('No stored restaurant ID, fetching from API...');
           this.authService.getUserRestaurant().subscribe({
             next: (restaurant) => {
+              console.log('Restaurant from API:', restaurant);
               if (restaurant && restaurant.id) {
+                console.log('Setting restaurant ID:', restaurant.id);
                 this.authService.setRestaurantId(restaurant.id);
                 this.router.navigate(['/dashboard', restaurant.id]);
               } else {
                 console.error('No restaurant found for user');
-                this.router.navigate(['/browse']); // Redirect to browse if no restaurant found
+                this.router.navigate(['/browse']);
               }
             },
             error: (error) => {
               console.error('Failed to get user restaurant:', error);
-              this.router.navigate(['/browse']); // Redirect to browse on error
+              this.router.navigate(['/browse']);
             }
           });
         }

@@ -79,7 +79,6 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
   }
 
   proposeEdit() {
-    // Check authentication before allowing edit proposal
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose restaurant edits"});
       this.closeDialog();

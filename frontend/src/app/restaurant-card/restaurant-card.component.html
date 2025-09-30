@@ -1,5 +1,5 @@
 <div class="mb-4 p-8 flex items-center justify-center">
-    <p-card [style]="{width: '25rem', overflow: 'hidden' }">
+    <p-card [style]="{width: '25rem', height: '28rem', overflow: 'hidden' }" class="flex flex-col">
         <ng-template #header>
             <img alt="Card" class="h-48 w-full object-cover" src={{restaurant.imagePath}} />
         </ng-template>
@@ -7,7 +7,7 @@
         <ng-template #subtitle> <p-rating [(ngModel)]="rating" [readonly]="true"></p-rating>
             {{rating.toFixed(2)}}/5
         </ng-template>
-        <p>
+        <p class="flex-1 overflow-hidden text-ellipsis line-clamp-3">
             {{restaurant.description}}
         </p>
         <ng-template #footer>

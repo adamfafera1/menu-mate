@@ -33,8 +33,6 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
   constructor(public messageService: MessageService, public http: HttpClient, private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    // Don't load user data immediately to allow viewing without authentication
-    // User data will be loaded when dialog becomes visible
   }
 
   ngOnChanges() {
@@ -74,7 +72,6 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
   
   
   postReview() {
-    // Check authentication before allowing review posting
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to review items"});
       this.closeDialog();

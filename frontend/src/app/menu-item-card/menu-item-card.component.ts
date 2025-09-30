@@ -102,7 +102,7 @@ export class MenuItemCardComponent implements OnChanges {
       })
       .then(data => {
       this.items = data;
-      this.filterItems(); // Initialize filtered items
+      this.filterItems();
       console.log(this.items)
       })
       .catch(error => {

@@ -21,7 +21,7 @@ export class AuthService {
 
   logout(){
     localStorage.removeItem('token');
-    this.clearRestaurantId(); // Clear restaurant ID on logout
+    this.clearRestaurantId();
   }
 
   setToken(token: string){
@@ -32,11 +32,14 @@ export class AuthService {
   }
 
   setRestaurantId(restaurantId: string) {
+    console.log('Setting restaurant ID in localStorage:', restaurantId);
     localStorage.setItem('restaurantId', restaurantId);
   }
 
   getRestaurantId(): string | null {
-    return localStorage.getItem('restaurantId');
+    const id = localStorage.getItem('restaurantId');
+    console.log('Retrieved restaurant ID from localStorage:', id);
+    return id;
   }
 
   clearRestaurantId() {
@@ -94,7 +97,9 @@ export class AuthService {
 
   getUserRestaurant(): Observable<any> {
     const userFromToken = this.getUserFromToken();
+    console.log('User from token:', userFromToken);
     if (userFromToken && userFromToken.id) {
+      console.log('Calling API with user ID:', userFromToken.id);
       return this.http.get(`https://localhost:7084/api/Restaurants/owner/${userFromToken.id}`);
     }
     throw new Error('No authenticated user found');

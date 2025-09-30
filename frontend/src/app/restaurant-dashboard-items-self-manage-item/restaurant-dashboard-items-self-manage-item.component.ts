@@ -5,7 +5,6 @@ import { TextareaModule } from 'primeng/textarea';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { FileUpload   } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -25,7 +24,7 @@ interface Alergens {
 
 @Component({
   selector: 'app-restaurant-dashboard-items-self-manage-item',
-  imports: [SideMenuComponent, IftaLabelModule, TextareaModule, CommonModule, FormsModule, InputTextModule, /*FileUpload,*/ ToastModule, ButtonModule, InputNumberModule, MultiSelectModule],
+  imports: [SideMenuComponent, IftaLabelModule, TextareaModule, CommonModule, FormsModule, InputTextModule, ToastModule, ButtonModule, InputNumberModule, MultiSelectModule],
   templateUrl: './restaurant-dashboard-items-self-manage-item.component.html',
   styleUrl: './restaurant-dashboard-items-self-manage-item.component.css',
   providers: [MessageService]
@@ -58,7 +57,6 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       return;
     }
 
-    // Validate required fields
     if (!this.name || !this.description || !this.price) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all required fields' });
       return;
@@ -88,7 +86,6 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
           });
           this.loading = false;
           
-          // Refresh the item data
           this.fetchItemData();
         },
         error: (error) => {
@@ -104,7 +101,6 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
   }
 
   cancelUpdate(): void {
-    // Reset form to original values
     if (this.item) {
       this.name = this.item.name;
       this.description = this.item.description;
@@ -131,11 +127,9 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
   }
 
   ngOnInit(): void {
-    // Get route parameters
     this.restaurantId = this.route.snapshot.paramMap.get('id');
     const routeParams = this.route.snapshot.url;
     
-    // The item ID is the second 'id' parameter in the route
     if (routeParams.length >= 4) {
       this.itemId = routeParams[routeParams.length - 1].path;
     }
@@ -177,7 +171,6 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
         next: (data: any) => {
           this.item = data;
           
-          // Populate form fields with actual data
           this.name = data.name;
           this.description = data.description;
           this.price = data.price;
@@ -186,9 +179,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
           this.fats = data.fats;
           this.proteins = data.proteins;
           
-          // Handle allergens if they exist in the data
           if (data.allergens) {
-            // Assuming allergens come as a comma-separated string
             const allergenNames = data.allergens.split(',').map((a: string) => a.trim());
             this.selectedAlergens = this.alergens.filter(allergen => 
               allergenNames.includes(allergen.name)

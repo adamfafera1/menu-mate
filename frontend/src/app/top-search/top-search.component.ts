@@ -34,7 +34,6 @@ export class TopSearchComponent implements OnInit {
   ngOnInit() {
     this.isBrowsePage = this.router.url === '/browse';
 
-    // Debounce search input
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged()
