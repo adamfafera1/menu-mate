@@ -11,6 +11,8 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-restaurant-dashboard-restaurant-self-manage',
@@ -28,27 +30,56 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     description: string | undefined;
     phone: string | undefined;
     location: string | undefined;
-    cuisines: any[] | undefined;
     uploadedFiles: any[] = [];
     selectedCuisine: string | undefined;
+    restaurant: any = null;
+    restaurantId: string | null = null;
+    loading: boolean = true;
   
-    constructor(private confirmationService: ConfirmationService, private messageService: MessageService) {}
+    constructor(private confirmationService: ConfirmationService, private messageService: MessageService, 
+                private route: ActivatedRoute, private http: HttpClient) {}
   
     ngOnInit(): void {
-        this.cuisines = [
-        'Fast Food',
-        'Pizza',
-        'Burgers',
-        'Sushi',
-        'Italian',
-        'Asian',
-        'American',
-        'Soup',
-        'Indian',
-        'Desserts',
-        'Japanese',
-        'Comfort Food'
-        ];
+        // Get restaurant ID from route parameters
+        this.restaurantId = this.route.snapshot.paramMap.get('id');
+        
+        console.log('Restaurant ID:', this.restaurantId);
+        
+        if (this.restaurantId) {
+            this.fetchRestaurantData();
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Restaurant ID not found' });
+            this.loading = false;
+        }
+    }
+
+    fetchRestaurantData(): void {
+        this.loading = true;
+        
+        this.http.get(`https://localhost:7084/api/Restaurants/${this.restaurantId}`)
+            .subscribe({
+                next: (data: any) => {
+                    this.restaurant = data;
+                    
+                    // Populate form fields with actual data
+                    this.name = data.name;
+                    this.description = data.description;
+                    this.location = data.location;
+                    this.phone = data.phone;
+                    
+                    this.loading = false;
+                    console.log('Restaurant data loaded:', this.restaurant);
+                },
+                error: (error) => {
+                    console.error('Error fetching restaurant data:', error);
+                    this.messageService.add({ 
+                        severity: 'error', 
+                        summary: 'Error', 
+                        detail: 'Failed to load restaurant data' 
+                    });
+                    this.loading = false;
+                }
+            });
     }
 
     confirm(event: Event) {
@@ -68,12 +99,72 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
                 label: 'Save',
             },
             accept: () => {
-                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have updated the restaurants info' });
+                this.updateRestaurant();
             }
         });
     }
     
-    cancel() {}
+    updateRestaurant(): void {
+        if (!this.restaurantId) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Restaurant ID not found' });
+            return;
+        }
+
+        // Validate required fields
+        if (!this.name || !this.description || !this.location || !this.phone) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all required fields' });
+            return;
+        }
+
+        this.loading = true;
+        
+        const updateData = {
+            name: this.name,
+            description: this.description,
+            location: this.location,
+            phone: this.phone,
+            rating: this.restaurant?.rating || 0,
+            imagePath: this.restaurant?.imagePath || "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500"
+     
+        };
+
+        this.http.put(`https://localhost:7084/api/Restaurants/${this.restaurantId}`, updateData)
+            .subscribe({
+                next: (response) => {
+                    console.log('Restaurant updated successfully:', response);
+                    this.messageService.add({ 
+                        severity: 'success', 
+                        summary: 'Success', 
+                        detail: 'Restaurant information updated successfully' 
+                    });
+                    this.loading = false;
+                    
+                    // Refresh the restaurant data
+                    this.fetchRestaurantData();
+                },
+                error: (error) => {
+                    console.error('Error updating restaurant:', error);
+                
+                    this.loading = false;
+                }
+            });
+    }
+    
+    cancel() {
+        // Reset form to original values
+        if (this.restaurant) {
+            this.name = this.restaurant.name;
+            this.description = this.restaurant.description;
+            this.location = this.restaurant.location;
+            this.phone = this.restaurant.phone;
+        }
+        
+        this.messageService.add({ 
+            severity: 'info', 
+            summary: 'Cancelled', 
+            detail: 'Changes have been cancelled' 
+        });
+    }
   
 
 }

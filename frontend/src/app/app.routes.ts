@@ -16,31 +16,36 @@ import { RestaurantDashboardAddItemComponent } from './restaurant-dashboard-add-
 import { RestaurantDashboardItemsSelfManageComponent } from './restaurant-dashboard-items-self-manage/restaurant-dashboard-items-self-manage.component';
 import { RestaurantDashboardItemsSelfManageItemComponent } from './restaurant-dashboard-items-self-manage-item/restaurant-dashboard-items-self-manage-item.component';
 import { RestaurantDashboardRestaurantSelfManageComponent } from './restaurant-dashboard-restaurant-self-manage/restaurant-dashboard-restaurant-self-manage.component';
+import { authGuard } from './services/auth.guard';
+import { restaurantOwnerGuard, userGuard, browseGuard } from './services/role.guard';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
-    // user paths
+    //user
     {path: '', redirectTo: 'browse', pathMatch: 'full'},
-    {path: 'browse', component: BrowseComponent},
-    {path: 'restaurant/:id', component: RestaurantPageComponent},
-    {path: 'review ', component: ReviewComponent},
-    {path: 'user', component: UserPageComponent},
-    {path: 'login', component: LoginComponent},
+    {path: 'browse', component: BrowseComponent, canActivate: [browseGuard]},
+    {path: 'restaurant/:id', component: RestaurantPageComponent, canActivate: [browseGuard]},
+    {path: 'review ', component: ReviewComponent, canActivate: [userGuard]},
+    {path: 'user', component: UserPageComponent, canActivate: [userGuard]},
     
-    // DASHBOARD
-    // restaurant
-    {path: 'dashboard/:id', component: RestaurantDashboardComponent},
-    {path: 'dashboard/:id/edits', component: RestaurantDashboardEditsComponent},
-    {path: 'dashboard/:id/reviews', component: RestaurantDashboardReviewsComponent},
-    // items
-    {path: 'dashboard/:id/item-edits', component: RestaurantDashboardItemEditsComponent},
-    {path: 'dashboard/:id/item-edits/:id', component: RestaurantDashboardItemEditsCheckComponent},
-    {path: 'dashboard/:id/item-reviews', component: RestaurantDashboardItemReviewsComponent},
-    {path: 'dashboard/:id/item-reviews/:id', component: RestaurantDashboardItemReviewsCheckComponent},
-    {path: 'dashboard/:id/add-item', component: RestaurantDashboardAddItemComponent},
+    //auth
+    {path: 'login', component: LoginComponent},
+    {path: 'register', component: RegisterComponent},
+    
+    //dashboard 
+    {path: 'dashboard/:id', component: RestaurantDashboardComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/edits', component: RestaurantDashboardEditsComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/reviews', component: RestaurantDashboardReviewsComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/item-edits', component: RestaurantDashboardItemEditsComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/item-edits/:id', component: RestaurantDashboardItemEditsCheckComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/item-reviews', component: RestaurantDashboardItemReviewsComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/item-reviews/:id', component: RestaurantDashboardItemReviewsCheckComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/add-item', component: RestaurantDashboardAddItemComponent, canActivate: [restaurantOwnerGuard]},
+    
     // self manage
-    {path: 'dashboard/:id/restaurant-self-manage', component: RestaurantDashboardRestaurantSelfManageComponent},
-    {path: 'dashboard/:id/items-self-manage', component: RestaurantDashboardItemsSelfManageComponent},
-    {path: 'dashboard/:id/items-self-manage/:id', component: RestaurantDashboardItemsSelfManageItemComponent },
+    {path: 'dashboard/:id/restaurant-self-manage', component: RestaurantDashboardRestaurantSelfManageComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/items-self-manage', component: RestaurantDashboardItemsSelfManageComponent, canActivate: [restaurantOwnerGuard]},
+    {path: 'dashboard/:id/items-self-manage/:id', component: RestaurantDashboardItemsSelfManageItemComponent, canActivate: [restaurantOwnerGuard]},
     
     {path: '**', component: PageNotFoundComponent}
     

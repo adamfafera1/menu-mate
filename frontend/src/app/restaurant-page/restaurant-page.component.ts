@@ -33,6 +33,7 @@ export class RestaurantPageComponent implements OnInit{
   visibleReview: boolean = false;
   visibleAllReviews: boolean = false;
   visibleEdit: boolean = false;
+  searchQuery: string = '';
 
   showReviewDialog() {
     this.visibleReview = true;
@@ -58,6 +59,10 @@ export class RestaurantPageComponent implements OnInit{
     console.log("Show edit = ", this.visibleEdit)
   }
 
+  onSearchQueryChange(query: string) {
+    this.searchQuery = query;
+  }
+
   
 
   constructor(private route: ActivatedRoute, private messageService: MessageService) {}
@@ -66,52 +71,48 @@ export class RestaurantPageComponent implements OnInit{
   ngOnInit() {
     const urlID = this.route.snapshot.paramMap.get('id');
 
-  
-    if(!urlID){
+    if (!urlID) {
       console.error("Restaurant with this ID doesn't exist");
       return;
     }
 
     fetch(`https://localhost:7084/api/Restaurants/${urlID}`)
       .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch restaurant data');
-      }
-      return response.json();
+        if (!response.ok) {
+          throw new Error('Failed to fetch restaurant data');
+        }
+        return response.json();
       })
       .then(data => {
-      this.selectedRestaurant = data;
+        this.selectedRestaurant = data;
       })
       .catch(error => {
-      console.error('Error fetching restaurant:', error);
+        console.error('Error fetching restaurant:', error);
       });
 
-      ``
     fetch(`https://localhost:7084/api/Reviews/${urlID}`)
       .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch reviews data');
-      }
-      return response.json();
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews data');
+        }
+        return response.json();
       })
       .then(data => {
-      this.reviews = data;
+        this.reviews = data;
+        this.updateAverageRating();
       })
       .catch(error => {
-      console.error('Error fetching reviews:', error);
+        console.error('Error fetching reviews:', error);
       });
-  };
-  
-  calculateAverageRating(): number {
-    if (this.reviews.length === 0) {
-      this.restaurantRating = 0;
-      return 0;
-    }
-    const total = this.reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
-    this.restaurantRating = parseFloat((total / this.reviews.length).toFixed(2));
-    return this.restaurantRating;
   }
 
-  
+  updateAverageRating(): void {
+    if (this.reviews.length === 0) {
+      this.restaurantRating = 0;
+    } else {
+      const total = this.reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+      this.restaurantRating = parseFloat((total / this.reviews.length).toFixed(2));
+    }
+  }
 }
-  
+

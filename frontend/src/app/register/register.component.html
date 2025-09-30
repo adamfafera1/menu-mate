@@ -1,0 +1,35 @@
+<div routerLink='/browse'class="p-3 absolute top-0 left-0">
+    <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
+</div>
+<div class="flex justify-center items-center min-h-screen">    
+    <div class="w-80">
+        <span class="block text-center mb-4 text-xl">Register </span>
+          <p-floatLabel>
+            <input pInputText #email type="email" id="email"  required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring"  />
+            <label for="email">Email</label>
+          </p-floatLabel>
+          <p-float-label class="mt-8">  
+            <input pInputText #userName type="text"  required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <label for="userName">Username</label>
+          </p-float-label>
+          <p-floatLabel class="mt-8">
+            <input pInputText #password type="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <label for="password">Password</label>
+          </p-floatLabel>
+          <p-floatLabel class="mt-8">
+            <p-dropdown 
+              [options]="roleOptions" 
+              [(ngModel)]="selectedRole" 
+              optionLabel="label" 
+              optionValue="value"
+              class="w-full"
+              inputId="role">
+            </p-dropdown>
+            <label for="role">Role</label>
+          </p-floatLabel>
+          <div class="flex justify-center mt-6">
+            <p-button lable="Login" type="submit" (click)="onRegister(email.value, userName.value, password.value)" class="w-auto max-w-xs"> Register </p-button>
+          </div>
+    </div>
+</div>
+<p-toast></p-toast>

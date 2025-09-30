@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { RatingServiceService } from '../services/rating-service.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -18,7 +19,7 @@ export class SideMenuComponent implements OnInit{
   reviewCount : number | null = 0;
   private id: string | null = null;
 
-  constructor(private router: Router, private ratingService: RatingServiceService ) {
+  constructor(private router: Router, private ratingService: RatingServiceService, private authService: AuthService ) {
       this.id = this.router.url.split('/')[2] || null;
   }
 
@@ -65,16 +66,17 @@ export class SideMenuComponent implements OnInit{
                 {label: 'Restaurant info', icon:'pi pi-pencil', command: () => {this.navigateRestaurantSelfManage()}},
                 {label: 'Items info', icon:'pi pi-file-edit', command:() => {this.navigateItemsSelfManage()}}
               ]
+            },
+            {
+              label: 'Options',
+              items: [
+                { label:'Sign out', icon:'pi pi-sign-out', command : () => {this.signOut()}}
+              ]
             }
+
           ];
 
-          this.options = [
-            {label:'Sign out', icon:'pi pi-sign-out', command : () => {
-              this.signOut();
-            }
-          },
-
-          ];
+          
         },
         error: (error) => {
           console.error('Error getting review count:', error);
@@ -118,6 +120,7 @@ export class SideMenuComponent implements OnInit{
   }
 
   signOut() {
-  this.router.navigate(['login']);
+    this.authService.logout();
+    this.router.navigate(['login']);
   }
 }

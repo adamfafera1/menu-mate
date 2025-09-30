@@ -1,14 +1,14 @@
 <div>
   <div class="mt-1">
-    <app-top-search></app-top-search>
+    <app-top-search (searchQueryChange)="onSearchQueryChange($event)"></app-top-search>
   </div>
 
 
   <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 p-4" >
-    @for (restaurant of restaurants; track restaurant) {
-      <app-restaurant-card
-      [restaurant] = "restaurant"></app-restaurant-card>
-    }
+    <app-restaurant-card
+      *ngFor="let restaurant of filteredRestaurants"
+      [restaurant]="restaurant">
+    </app-restaurant-card>
   </div>
   
 </div>

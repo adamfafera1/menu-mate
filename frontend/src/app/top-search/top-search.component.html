@@ -4,12 +4,18 @@
         <p-floatlabel variant="on">
             <p-iconfield >
                 <p-inputicon class="pi pi-search" />
-                <input class="text-center sm:w-auto lg:w-96 h-10 rounded-2xl"  pInputText id="on_label" autocomplete="off" />
+                <input 
+                  class="text-center sm:w-auto lg:w-96 h-10 rounded-2xl"  
+                  pInputText 
+                  id="on_label" 
+                  autocomplete="off" 
+                  [(ngModel)]="searchQuery" 
+                  (input)="onSearch()" />
             </p-iconfield>
             <label for="on_label" style="color: aliceblue;"> Search</label>
         </p-floatlabel>
         <div routerLink="/user" class="cursor-pointer">
-            <p-avatar shape="circle" class="h-full w-svw shadow-sm shadow-black" image="https://tr.rbxcdn.com/180DAY-d2aa8b558f4c73dc77ab184210a56788/420/420/Hat/Png/noFilter"></p-avatar>       
+            <p-avatar shape="circle" class="h-full w-svw shadow-sm shadow-black" image="https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png"></p-avatar>       
         </div>
     </p-toolbar>
 </div>

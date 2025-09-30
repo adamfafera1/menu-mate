@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
@@ -20,20 +21,26 @@ enum Currency {
 export class DashboardItemsComponentComponent implements OnInit {
   
   items : any[] = [];
-  id : number = 1;
 
-  constructor(private router : Router) {}
+  
+
+  constructor(private router : Router, private activatedRoute: ActivatedRoute, private http: HttpClient) {}
 
   ngOnInit(): void {
-  
-    fetch('https://localhost:7084/api/Items')
-      .then(response => response.json())
-      .then(data => {
-        this.items = data;
-      })
-      .catch(error => {
-        console.error('Error fetching items:', error);
-      });
+
+    this.activatedRoute.paramMap.subscribe(params => {
+      const id = params.get('id');
+      console.log('Id mam nadzieje restauracji: ', id)
+      
+      fetch(`https://localhost:7084/api/Items/Restaurant/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          this.items = data;
+        })
+        .catch(error => {
+          console.error('Error fetching items:', error);
+        });
+    });
 
   }
 

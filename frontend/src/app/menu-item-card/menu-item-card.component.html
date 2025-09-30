@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 p-4">
-    @for (item of items; track item) {
+    @for (item of filteredItems; track item) {
     <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }" class="cursor-pointer">
         <ng-template #header>
             <img alt="Card" class="h-32 w-full object-cover" src="{{item.image}}" />
@@ -12,6 +12,15 @@
             </p>
         </div>
     </p-card>
+    } @empty {
+    <div class="col-span-full flex justify-center items-center py-8">
+        <div class="text-center text-gray-500">
+            <i class="pi pi-search text-4xl mb-3"></i>
+            <p class="text-lg">No menu items found</p>
+            @if (searchQuery) {
+            }
+        </div>
+    </div>
     }
 </div>
 
@@ -77,8 +86,8 @@
         </p-tabpanels>
     </p-tabs>
     <ng-template #footer>
-        <p-button (click)="showEdit()" label="Propose edit" [text]="true" severity="secondary" />
-        <p-button (click)="showReview()" label="Review" [outlined]="true" severity="secondary"  />
+        <p-button (click)="showEdit()" label="Propose edit" />
+        <p-button (click)="showReview()" label="Review"  />
     </ng-template>
 
     <app-propose-item-edit [(visible)]="visibleEdit" [itemId]="selectedItem()?.id"></app-propose-item-edit>

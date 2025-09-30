@@ -43,8 +43,6 @@ namespace menumate.Controllers
             var user = new User()
             {
                 Name = addUserDto.Name,
-                Email = addUserDto.Email,
-                Password = addUserDto.Password,
                 ImgPath = addUserDto.ImgPath,
             };
 
@@ -65,8 +63,6 @@ namespace menumate.Controllers
             }
 
             user.Name = updateUserDto.Name;
-            user.Email = updateUserDto.Email;
-            user.Password = updateUserDto.Password;
             user.ImgPath = updateUserDto.ImgPath;
 
             dbContext.Users.Update(user);
@@ -91,5 +87,31 @@ namespace menumate.Controllers
            
         }
 
+        [HttpGet]
+        [Route("current")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            if (userId == null)
+            {
+                
+                return Unauthorized();
+            }
+
+            var user = dbContext.Users.Find(Guid.Parse(userId));
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new {
+                user.Id,
+                user.Name,
+                user.Email,
+                user.ImgPath
+            });
+        }
     }
 }

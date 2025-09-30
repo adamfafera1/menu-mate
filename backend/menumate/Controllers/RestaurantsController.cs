@@ -38,6 +38,20 @@ namespace menumate.Controllers
             return Ok(restaurant);
         }
 
+        [HttpGet]
+        [Route("owner/{ownerId:guid}")]
+        public IActionResult GetRestaurantByOwnerId(Guid ownerId)
+        {
+            var restaurant = dbContext.Restaurants.FirstOrDefault(r => r.OwnerId == ownerId);
+
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(restaurant);
+        }
+
         [HttpPost]
         public IActionResult AddRestaurant(AddRestaurantDto addRestaurantDto)
         {
@@ -68,6 +82,9 @@ namespace menumate.Controllers
             restaurant.Location = updateRestaurantDto.Location;
             restaurant.Rating = updateRestaurantDto.Rating;
             restaurant.Description = updateRestaurantDto.Description;
+            restaurant.Phone = updateRestaurantDto.Phone;
+            restaurant.ImagePath = updateRestaurantDto.ImagePath;
+
 
             dbContext.SaveChanges();
 

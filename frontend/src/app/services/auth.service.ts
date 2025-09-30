@@ -1,0 +1,137 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode';
+import { UserRole, UserWithRole } from '../models/user-roles';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string){
+    return this.http.post<{token: string}>(`https://localhost:7084/api/Auth/login` , { email, password})
+  }
+
+  register(email: string, userName: string, password: string, role: string = 'User'){
+    return this.http.post<{restaurantId?: string}>(`https://localhost:7084/api/Auth/register` , { email, userName, password, role})
+  }
+
+  logout(){
+    localStorage.removeItem('token');
+    this.clearRestaurantId(); // Clear restaurant ID on logout
+  }
+
+  setToken(token: string){
+    localStorage.setItem('token', token);
+    console.log('Token set, checking role...');
+    const role = this.getUserRole();
+    console.log('User role from new token:', role);
+  }
+
+  setRestaurantId(restaurantId: string) {
+    localStorage.setItem('restaurantId', restaurantId);
+  }
+
+  getRestaurantId(): string | null {
+    return localStorage.getItem('restaurantId');
+  }
+
+  clearRestaurantId() {
+    localStorage.removeItem('restaurantId');
+  }
+
+  getToken(){
+    return localStorage.getItem('token')
+  }
+
+  isAuthenticated(): boolean {
+    return !! this.getToken();
+  }
+
+
+  getUserById(userId: string): Observable<UserWithRole> {
+    return this.http.get<UserWithRole>(`https://localhost:7084/api/Users/${userId}`, {});
+  }
+
+  getCurrentUser(): Observable<UserWithRole | null> {
+    const userFromToken = this.getUserFromToken();
+    if (userFromToken && userFromToken.id) {
+      return this.getUserById(userFromToken.id);
+    }
+    throw new Error('No authenticated user found');
+  }
+
+  getUserRole(): UserRole | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      console.log('Decoded token for role:', decoded);
+      const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] 
+                 || decoded["role"] 
+                 || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role"];
+      return role as UserRole || UserRole.USER;
+    } catch (error) {
+      console.error('Failed to decode role from token', error);
+      return null;
+    }
+  }
+
+  hasRole(role: UserRole): boolean {
+    const userRole = this.getUserRole();
+    return userRole === role;
+  }
+
+  hasAnyRole(roles: UserRole[]): boolean {
+    const userRole = this.getUserRole();
+    return userRole ? roles.includes(userRole) : false;
+  }
+
+  getUserRestaurant(): Observable<any> {
+    const userFromToken = this.getUserFromToken();
+    if (userFromToken && userFromToken.id) {
+      return this.http.get(`https://localhost:7084/api/Restaurants/owner/${userFromToken.id}`);
+    }
+    throw new Error('No authenticated user found');
+  }
+
+  getUserFromToken() {
+    const token = this.getToken();
+    if (!token) {
+      console.error('No token found in local storage');
+      return null;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      console.log('Decoded token:', decoded);
+      return {
+        id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null,
+      };
+    } catch (error) {
+      console.error('Failed to decode token', error);
+      return null;
+    }
+  }
+
+  getUserDataFromToken(){
+    const userFromToken = this.getUserFromToken();
+    if (userFromToken && userFromToken.id) {
+    this.getUserById(userFromToken.id).subscribe(
+        (user) => {
+          return user;
+        },
+        (error) => {
+          console.error('Failed to fetch user data by ID', error);
+        }
+      );
+    } else {
+      console.error('Failed to decode user ID from token');
+    }
+  }
+
+}

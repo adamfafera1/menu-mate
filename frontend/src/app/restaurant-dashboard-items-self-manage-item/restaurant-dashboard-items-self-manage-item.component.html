@@ -1,46 +1,57 @@
 <div class="flex flex-row">
     <app-side-menu/>
     <div class="basis-4/5 bg-zinc-900 p-6 mt-6 mb-3 mr-6 rounded-lg border border-zinc-700">
-        <span class="font-semibold text-4xl text-zinc-600 ml-3">Self manage an item: {{item[0].name}}</span>
+        <span class="font-semibold text-4xl text-zinc-600 ml-3">
+            Self manage an item: {{loading ? 'Loading...' : (item?.name || 'Unknown Item')}}
+        </span>
+        
+        <p-toast></p-toast>
         <div class="flex justify-center mt-5">
-            <div class="grid grid-cols-1 w-1/2 gap-3 ">
+            <div class="grid grid-cols-1 w-1/2 gap-3" *ngIf="!loading">
                 
                 <p-iftalabel>
-                    <input id="name" pInputText [(ngModel)]="item[0].name" class="w-full" />
+                    <input id="name" pInputText [(ngModel)]="name" class="w-full" [disabled]="loading" />
                     <label for="name">Item name</label>
                 </p-iftalabel>
                 <p-ifta-label>
-                    <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN" locale="pl-PL" class="w-full" />
+                    <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN" locale="pl-PL" class="w-full" [disabled]="loading" />
                     <label for="price"> Price </label>
                 </p-ifta-label>
                 <p-iftalabel>   
-                    <textarea pTextarea id="description" [(ngModel)]="item[0].description" class="w-full" rows="5" cols="30" style="resize: none"></textarea>
+                    <textarea pTextarea id="description" [(ngModel)]="description" class="w-full" rows="5" cols="30" style="resize: none" [disabled]="loading"></textarea>
                     <label for="description">Description</label>
                 </p-iftalabel>
-                <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name" placeholder="Select Alergens" class="w-full"/>
+                <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name" placeholder="Select Alergens" class="w-full" [disabled]="loading"/>
                 <div class="grid grid-cols-2 gap-2">
                     <p-ifta-label>
-                        <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" g" class="w-full" />
+                        <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" g" class="w-full" [disabled]="loading" />
                         <label for="price"> Calories </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full" />
+                        <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full" [disabled]="loading" />
                         <label for="carbs"> Carbohydrates </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full" />
+                        <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full" [disabled]="loading" />
                         <label for="fats"> Fats </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g" class="w-full" />
+                        <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g" class="w-full" [disabled]="loading" />
                         <label for="proteins"> Proteins </label>
                     </p-ifta-label>
                 </div>
                 <div class="mt-3">
-                    <p-button ><i class="pi pi-pencil"></i> Update item </p-button>
-                    <p-button severity="secondary" class="ml-3 mt-3"><i class="pi pi-times"></i> Cancel update </p-button>
+                    <p-button (click)="updateItem()" [disabled]="loading"><i class="pi pi-pencil"></i> Update item </p-button>
+                    <p-button severity="secondary" class="ml-3 mt-3" (click)="cancelUpdate()" [disabled]="loading"><i class="pi pi-times"></i> Cancel update </p-button>
                 </div>
                 <!-- <p-fileupload mode="basic" name="demo[]" chooseIcon="pi pi-upload" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)" [auto]="true" chooseLabel="Browse" />                -->
+            </div>
+            
+            <div class="flex justify-center items-center h-96" *ngIf="loading">
+                <div class="text-center">
+                    <i class="pi pi-spin pi-spinner text-4xl text-zinc-400 mb-4"></i>
+                    <p class="text-zinc-400 text-lg">Loading item data...</p>
+                </div>
             </div>
         </div>
     </div>

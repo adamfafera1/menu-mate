@@ -1,5 +1,5 @@
 <div class="mt-1">
-  <app-top-search></app-top-search>
+  <app-top-search (searchQueryChange)="onSearchQueryChange($event)"></app-top-search>
 </div>
 <div class="static mx-auto place-content-center w-3/4 surface-card p-4 shadow-2 border-round">
   <div class="relative h-1/12">
@@ -22,7 +22,7 @@
     <div class="col-span-1 col-start-4 content-center cursor-pointer hover:underline" (click)="showAllReviews()" >
       <div class="grid grid-rows- grid-cols-1 content-center place-items-end">
         <p-rating [(ngModel)]="restaurantRating" [readonly]="true"/>
-        <h1 class="mt-1" > {{calculateAverageRating()}} / 5</h1>
+        <h1 class="mt-1" > {{restaurantRating}} / 5</h1>
         <div class="text-stone-400">{{reviews.length}} reviews</div>
       </div>
     </div>
@@ -52,7 +52,7 @@
   </div>
 
   <div class="flex justify-center items-center rounded-xl bg-zinc-950 mt-5  p-4 overflow-hidden">
-    <app-menu-item-card></app-menu-item-card>
+    <app-menu-item-card [searchQuery]="searchQuery"></app-menu-item-card>
 </div>
 
 </div>

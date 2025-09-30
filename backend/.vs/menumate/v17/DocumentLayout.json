@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250927024624_UserChange.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:menumate\\Migrations\\20250927024624_UserChange.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250930042131_AddUserRoles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:menumate\\Migrations\\20250930042131_AddUserRoles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\controllers\\edititemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\controllers\\edititemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\models\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\models\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\controllers\\editrestaurantscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\controllers\\editrestaurantscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\menu-mate\\backend\\menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,54 +42,80 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "20250927024624_UserChange.cs",
-              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250927024624_UserChange.cs",
-              "RelativeDocumentMoniker": "menumate\\Migrations\\20250927024624_UserChange.cs",
-              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250927024624_UserChange.cs",
-              "RelativeToolTip": "menumate\\Migrations\\20250927024624_UserChange.cs",
+              "DocumentIndex": 1,
+              "Title": "20250930042131_AddUserRoles.cs",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250930042131_AddUserRoles.cs",
+              "RelativeDocumentMoniker": "menumate\\Migrations\\20250930042131_AddUserRoles.cs",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Migrations\\20250930042131_AddUserRoles.cs",
+              "RelativeToolTip": "menumate\\Migrations\\20250930042131_AddUserRoles.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T02:46:24.297Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Models\\Entities\\User.cs",
-              "RelativeDocumentMoniker": "menumate\\Models\\Entities\\User.cs",
-              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Models\\Entities\\User.cs",
-              "RelativeToolTip": "menumate\\Models\\Entities\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T02:44:40.168Z",
+              "WhenOpened": "2025-09-30T04:21:31.131Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "EditItemsController.cs",
-              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\EditItemsController.cs",
-              "RelativeDocumentMoniker": "menumate\\Controllers\\EditItemsController.cs",
-              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\EditItemsController.cs",
-              "RelativeToolTip": "menumate\\Controllers\\EditItemsController.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAcwEUAAAAdAAAAAAAAAA==",
+              "Title": "RegisterDto.cs",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Models\\RegisterDto.cs",
+              "RelativeDocumentMoniker": "menumate\\Models\\RegisterDto.cs",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Models\\RegisterDto.cs",
+              "RelativeToolTip": "menumate\\Models\\RegisterDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T00:07:04.654Z",
+              "WhenOpened": "2025-09-30T01:16:37.99Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "EditRestaurantsController.cs",
-              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\EditRestaurantsController.cs",
-              "RelativeDocumentMoniker": "menumate\\Controllers\\EditRestaurantsController.cs",
-              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\EditRestaurantsController.cs",
-              "RelativeToolTip": "menumate\\Controllers\\EditRestaurantsController.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAIwEMAAAAQAAAAAAAAAA==",
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "menumate\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "menumate\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAIwFgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T00:07:04.014Z",
+              "WhenOpened": "2025-09-29T18:23:41.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "menumate\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "menumate\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAiwEgAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T18:23:31.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\appsettings.json",
+              "RelativeDocumentMoniker": "menumate\\appsettings.json",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\appsettings.json",
+              "RelativeToolTip": "menumate\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-29T02:33:31.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Program.cs",
+              "RelativeDocumentMoniker": "menumate\\Program.cs",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\Program.cs",
+              "RelativeToolTip": "menumate\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACUAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T02:00:19.773Z",
               "EditorCaption": ""
             }
           ]

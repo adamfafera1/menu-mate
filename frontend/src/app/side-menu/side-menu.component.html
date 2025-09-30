@@ -1,20 +1,11 @@
 
 <div class="basis-1/5 w-1/12 h-dvh p-6">
-    <p-menu [model]="items" styleClass="h-5/6">
+    <p-menu [model]="items" class="h-auto">
         <ng-template #start>
             <div class="flex justify-center font-semibold text-2xl text-zinc-500">
                 <span >Dashboard</span>
             </div>
         </ng-template>
     </p-menu>
-    <p-menu [model]="options" styleClass="h-1/6 mt-3">
-        <ng-template #start>
-            <button pRipple class="relative overflow-hidden w-full border-0 bg-transparent flex items-start mt-2 p-2 pl-4 hover:pointer hover:bg-surface-100 dark:hover:bg-surface-800 cursor-default rounded-none transition-colors duration-200">
-                <p-avatar image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhdkA-pOR1l5lRdCAtAAA2XSt2qg-WxQcg5A&s" class="mr-2" shape="circle" />
-                <span class="inline-flex flex-col">
-                    <span class="font-bold">Smuggler's Inn</span>
-                </span>
-            </button>
-        </ng-template>
-    </p-menu>      
+         
 </div>  

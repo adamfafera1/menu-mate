@@ -37,6 +37,20 @@ namespace menumate.Controllers
 
             return Ok(review);
         }
+
+        [HttpGet]
+        [Route("user/{id:guid}")]
+        public IActionResult GetReviewsByUserId(Guid id)
+        {
+            var review = dbContext.Reviews.Where(item => item.UserId == id);
+            if(review == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(review);
+        }
+
         [HttpPost]
         public IActionResult AddReview(AddReviewDto addReviewDto)
         {

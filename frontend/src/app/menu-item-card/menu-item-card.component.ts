@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -24,15 +24,35 @@ enum Currency {
   templateUrl: './menu-item-card.component.html',
   styleUrl: './menu-item-card.component.css'
 })
-export class MenuItemCardComponent {
+export class MenuItemCardComponent implements OnChanges {
+  @Input() searchQuery: string = '';
+  
   visible : boolean = false;
   visibleEdit : boolean = false;
   visibleReview : boolean = false;
   items : any[] = [];
+  filteredItems : any[] = [];
   value : number = 4;
   selectedItem = signal<any | null>(null);
 
   constructor(private route: ActivatedRoute) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['searchQuery']) {
+      this.filterItems();
+    }
+  }
+
+  filterItems() {
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      this.filteredItems = [...this.items];
+    } else {
+      this.filteredItems = this.items.filter(item => 
+        item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+  }
 
   showDialog(item: any) {
     this.selectedItem.set(item) ;
@@ -82,6 +102,7 @@ export class MenuItemCardComponent {
       })
       .then(data => {
       this.items = data;
+      this.filterItems(); // Initialize filtered items
       console.log(this.items)
       })
       .catch(error => {

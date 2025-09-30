@@ -1,4 +1,23 @@
-<div class="flex flex-col m-20 text-3xl items-center justify-center bg-slate-900 cursor-pointer" routerLink="/browse"  >
-    <p class="m-32">login works!</p>
-    <p class="m-32">something will be here in the future but now go back to browse</p>
+<div routerLink='/browse'class="p-3 absolute top-0 left-0">
+    <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
 </div>
+<div class="flex justify-center items-center min-h-screen">    
+    <div class="w-80">
+        <span class="block text-center mb-8 text-2xl">Log in to your account</span>
+        <p-floatLabel>
+            <input pInputText #email type="email" id="email" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <label for="email">Email</label>
+        </p-floatLabel>
+        <p-floatLabel class="mt-8">
+            <input pInputText #password type="password" id="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <label for="password">Password</label>
+        </p-floatLabel>
+        <div class="flex justify-center mt-6">
+            <p-button label="Login" (click)="onLogin(email.value, password.value)" class="w-auto"></p-button>
+        </div>
+        <div class="text-center mt-12 text-sm text-gray-300">
+            <a routerLink="/register" class="hover:underline cursor-pointer">No account yet? Register here</a>
+        </div>
+    </div>
+</div>
+<p-toast/>

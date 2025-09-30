@@ -1,35 +1,31 @@
+<div routerLink='/browse'class="p-3 absolute top-0 left-0">
+    <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
+</div>
 
 <div class="flex flex-col items-center">
-  <img class="m-3 rounded-full h-2/12 w-2/12 shadow-slate-950 shadow-2xl" src="https://tr.rbxcdn.com/180DAY-d2aa8b558f4c73dc77ab184210a56788/420/420/Hat/Png/noFilter">
-  <p class="text-sm text-slate-400">{{ currentUser.username }}</p>
-  <h1 class="m-3 text-3xl"> {{currentUser.name}} @if (currentUser.verified) {
-    <i class="pi pi-verified"></i>
-  }</h1>
 
-
-  <div class="card w-5/6 sm:w-3/4 xl:w-2/3">
-    <p-tabs value="0" class="rounded-2xl">
-      <p-tablist class="rounded-2xl">
-        <p-tab value="0">Reviews ({{currentUser.reviews}})</p-tab>
-        <p-tab value="1">Proposals ({{currentUser.propositions}}) </p-tab>
-      </p-tablist>
-      <p-tabpanels class="rounded-b-xl text-center">
-        <p-tabpanel value="0">
-          <p class="m-0">
-            You haven't posted any reviews yet.
-          </p>
-        </p-tabpanel>
-        <p-tabpanel value="1">
-          <p class="m-0">
-            You have not made any edit propositions yet.
-          </p>
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
-  </div>
-
-  <div class="flex row-auto bottom-0">
-    <p-button routerLink="/login" severity="danger" class="m-3"><i class="pi pi-sign-out"></i>Logout</p-button>
-    <p-button severity="secondary" class="m-3"><i class="pi pi-user-edit"></i>Edit profile</p-button>
-  </div>
-</div>
+    <img class="m-3 rounded-full w-1/12 shadow-slate-950 shadow-lg" src={{user.imgPath}}>
+    <p class="text-sm text-slate-400"> {{user.email || "Not found" }}</p>
+    <h1 class="m-3 text-3xl"> {{user.userName}}
+    </h1>
+    
+    
+    <div class="card w-5/6 sm:w-3/4 xl:w-2/3">
+      <p-tabs value="0" class="rounded-2xl">
+        <p-tablist class="rounded-2xl">
+          <p-tab value="0">Reviews</p-tab>
+        </p-tablist>
+        <p-tabpanels class="rounded-b-xl text-center">
+          <p-tabpanel value="0">
+            <p class="m-0">
+              You haven't posted any reviews yet.
+            </p>
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    </div>
+    
+    <div class="flex row-auto bottom-0">
+      <p-button (click)="logout()" routerLink="/login" severity="danger" class="m-3"><i class="pi pi-sign-out"></i>Logout</p-button>
+    </div>
+</div> 

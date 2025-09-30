@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
@@ -7,6 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from "primeng/toast";
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export enum ItemProperty {
   Name = 'Name',
@@ -26,7 +28,7 @@ export enum ItemProperty {
   templateUrl: './propose-item-edit.component.html',
   styleUrl: './propose-item-edit.component.css',
 })
-export class ProposeItemEditComponent {
+export class ProposeItemEditComponent implements OnInit, OnChanges {
   @Input() itemId: string | null = null;
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -35,13 +37,63 @@ export class ProposeItemEditComponent {
   properties = Object.values(ItemProperty);
   selectedProperty: ItemProperty | null = null;
   newValue: string = '';
+  currentUser: any = null;
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
+  ngOnInit() {
+  }
+
+  ngOnChanges() {
+    if (this.visible && !this.currentUser) {
+      this.loadCurrentUser();
+    }
+  }
+
+  loadCurrentUser() {
+    if (!this.authService.isAuthenticated()) {
+      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose item edits"});
+      this.closeDialog();
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const userFromToken = this.authService.getUserFromToken();
+    if (userFromToken && userFromToken.id) {
+      this.authService.getUserById(userFromToken.id).subscribe(
+        (user) => {
+          this.currentUser = user;
+        },
+        (error) => {
+          console.error('Failed to fetch user data by ID', error);
+          this.messageService.add({severity:'error', summary: "Error", detail:"Failed to load user data"});
+        }
+      );
+    } else {
+      console.error('Failed to decode user ID from token');
+      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose item edits"});
+      this.closeDialog();
+      this.router.navigate(['/login']);
+    }
+  }
+
   proposeEdit() {
+    if (!this.authService.isAuthenticated()) {
+      localStorage.setItem('editLoggedOut', 'true')
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.currentUser) {
+      this.messageService.add({severity:'error', summary: "Error", detail:"User data not loaded. Please try again."});
+      return;
+    }
+
     if (!this.selectedProperty || !this.newValue || !this.itemId) {
       console.log('Validation failed:', {
             selectedProperty: this.selectedProperty,

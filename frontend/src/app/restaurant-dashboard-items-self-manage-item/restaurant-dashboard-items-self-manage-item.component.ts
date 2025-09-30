@@ -11,6 +11,8 @@ import { MessageService } from 'primeng/api';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -30,7 +32,8 @@ interface Alergens {
 })
 export class RestaurantDashboardItemsSelfManageItemComponent {
   name: string | undefined;
-  item: any[] = [];
+  description: string | undefined;
+  item: any = null;
   alergens!: Alergens[];
   selectedAlergens!: Alergens[];
   price: number | undefined;
@@ -38,19 +41,114 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
   carbs: number | undefined;
   fats: number | undefined;
   proteins: number | undefined;
+  restaurantId: string | null = null;
+  itemId: string | null = null;
+  loading: boolean = true;
 
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private route: ActivatedRoute, private http: HttpClient) {}
 
   onUpload(event: UploadEvent) {
         this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Basic Mode' });
   }
 
+  updateItem(): void {
+    if (!this.itemId) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Item ID not found' });
+      return;
+    }
+
+    // Validate required fields
+    if (!this.name || !this.description || !this.price) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill in all required fields' });
+      return;
+    }
+
+    this.loading = true;
+    
+    const updateData = {
+      name: this.name,
+      description: this.description,
+      price: this.price,
+      calories: this.cals || 0,
+      carbs: this.carbs || 0,
+      fats: this.fats || 0,
+      proteins: this.proteins || 0,
+      allergens: this.selectedAlergens?.map(a => a.name).join(', ') || ''
+    };
+
+    this.http.put(`https://localhost:7084/api/Items/${this.itemId}`, updateData)
+      .subscribe({
+        next: (response) => {
+          console.log('Item updated successfully:', response);
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Success', 
+            detail: 'Item updated successfully' 
+          });
+          this.loading = false;
+          
+          // Refresh the item data
+          this.fetchItemData();
+        },
+        error: (error) => {
+          console.error('Error updating item:', error);
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'Failed to update item' 
+          });
+          this.loading = false;
+        }
+      });
+  }
+
+  cancelUpdate(): void {
+    // Reset form to original values
+    if (this.item) {
+      this.name = this.item.name;
+      this.description = this.item.description;
+      this.price = this.item.price;
+      this.cals = this.item.calories;
+      this.carbs = this.item.carbohydrates;
+      this.fats = this.item.fats;
+      this.proteins = this.item.proteins;
+      
+      if (this.item.allergens) {
+        this.selectedAlergens = this.alergens.filter(allergen => 
+          this.item.allergens.includes(allergen.name)
+        );
+      } else {
+        this.selectedAlergens = [];
+      }
+    }
+    
+    this.messageService.add({ 
+      severity: 'info', 
+      summary: 'Cancelled', 
+      detail: 'Changes have been cancelled' 
+    });
+  }
+
   ngOnInit(): void {
-    this.item = [{
-      name : 'Sandwich',
-      description : 'Some description',
-    }];
+    // Get route parameters
+    this.restaurantId = this.route.snapshot.paramMap.get('id');
+    const routeParams = this.route.snapshot.url;
+    
+    // The item ID is the second 'id' parameter in the route
+    if (routeParams.length >= 4) {
+      this.itemId = routeParams[routeParams.length - 1].path;
+    }
+
+    console.log('Restaurant ID:', this.restaurantId);
+    console.log('Item ID:', this.itemId);
+
+    if (this.itemId) {
+      this.fetchItemData();
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Item ID not found' });
+      this.loading = false;
+    }
     
     this.alergens = [
       {name: 'None'},
@@ -69,6 +167,47 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       {name: 'Lupin'},
       {name: 'Molluscs'},
     ];
+  }
+
+  fetchItemData(): void {
+    this.loading = true;
+    
+    this.http.get(`https://localhost:7084/api/Items/${this.itemId}`)
+      .subscribe({
+        next: (data: any) => {
+          this.item = data;
+          
+          // Populate form fields with actual data
+          this.name = data.name;
+          this.description = data.description;
+          this.price = data.price;
+          this.cals = data.calories;
+          this.carbs = data.carbs;
+          this.fats = data.fats;
+          this.proteins = data.proteins;
+          
+          // Handle allergens if they exist in the data
+          if (data.allergens) {
+            // Assuming allergens come as a comma-separated string
+            const allergenNames = data.allergens.split(',').map((a: string) => a.trim());
+            this.selectedAlergens = this.alergens.filter(allergen => 
+              allergenNames.includes(allergen.name)
+            );
+          }
+          
+          this.loading = false;
+          console.log('Item data loaded:', this.item);
+        },
+        error: (error) => {
+          console.error('Error fetching item data:', error);
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'Failed to load item data' 
+          });
+          this.loading = false;
+        }
+      });
   }
 
   

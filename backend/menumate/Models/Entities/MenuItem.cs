@@ -60,6 +60,6 @@ namespace menumate.Models.Entities
         public int Proteins { get; set; }
         public string Allergens { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
+        public string Image { get; set; } = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500";
     }
 }
