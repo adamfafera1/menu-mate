@@ -9,31 +9,41 @@ import { HttpClient } from '@angular/common/http';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
+import { API_CONFIG } from '../config/api.config';
 import { AuthService } from '../services/auth.service';
-
 
 @Component({
   selector: 'app-review-item-make',
-  imports: [DialogModule,RatingModule, FloatLabelModule, ButtonModule, FormsModule, TextareaModule],
+  imports: [
+    DialogModule,
+    RatingModule,
+    FloatLabelModule,
+    ButtonModule,
+    FormsModule,
+    TextareaModule,
+  ],
   templateUrl: './review-item-make.component.html',
-  styleUrl: './review-item-make.component.css'
+  styleUrl: './review-item-make.component.css',
 })
 export class ReviewItemMakeComponent implements OnInit, OnChanges {
-
   @Input() visible: boolean = false;
   @Input() itemId: string | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
-  
 
-  title: string ='';
+  title: string = '';
   description: string = '';
   rating: number = 0;
-  currentUser: any = null; 
+  currentUser: any = null;
 
-  constructor(public messageService: MessageService, public http: HttpClient, private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
+  constructor(
+    public messageService: MessageService,
+    public http: HttpClient,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     if (this.visible && !this.currentUser) {
@@ -43,8 +53,12 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
 
   loadCurrentUser() {
     if (!this.authService.isAuthenticated()) {
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to review items"});
-      localStorage.setItem('reviewLoggedOut', 'true')
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to review items',
+      });
+      localStorage.setItem('reviewLoggedOut', 'true');
       this.closeDialog();
       this.router.navigate(['/login']);
       return;
@@ -58,56 +72,78 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
         },
         (error) => {
           console.error('Failed to fetch user data by ID', error);
-          this.messageService.add({severity:'error', summary: "Error", detail:"Failed to load user data"});
-        }
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load user data',
+          });
+        },
       );
     } else {
       console.error('Failed to decode user ID from token');
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to review items"});
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to review items',
+      });
       this.closeDialog();
       this.router.navigate(['/login']);
     }
   }
 
-  
-  
   postReview() {
     if (!this.authService.isAuthenticated()) {
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to review items"});
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to review items',
+      });
       this.closeDialog();
       this.router.navigate(['/login']);
       return;
     }
 
     if (!this.currentUser) {
-      this.messageService.add({severity:'error', summary: "Error", detail:"User data not loaded. Please try again."});
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'User data not loaded. Please try again.',
+      });
       return;
     }
-    
+
     const review = {
       itemId: this.itemId,
       userId: this.currentUser.id,
       userName: this.currentUser.userName,
-      userImagePath: this.currentUser.imagePath || "https://innostudio.de/fileuploader/images/default-avatar.png",
+      userImagePath:
+        this.currentUser.imagePath ||
+        'https://innostudio.de/fileuploader/images/default-avatar.png',
       title: this.title,
       description: this.description,
-      rating: this.rating 
-    }
+      rating: this.rating,
+    };
 
-    this.http.post(`https://localhost:7084/api/ReviewItems`, review)
-      .subscribe({
-        next: (response) => {
-          console.log('Review posted successfully ', response);
-          this.messageService.add({severity:'success', summary: "Success", detail:"Review posted"});
-          this.closeDialog();
-          this.resetForm();
-        },
-        error: (error) =>{
-          console.error('Error posting review', error);
-          this.messageService.add({severity:'error', summary: "Error", detail:"Failed to post review"});
-        }
-      })
-
+    this.http.post(`${API_CONFIG.baseUrl}/ReviewItems`, review).subscribe({
+      next: (response) => {
+        console.log('Review posted successfully ', response);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Review posted',
+        });
+        this.closeDialog();
+        this.resetForm();
+      },
+      error: (error) => {
+        console.error('Error posting review', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to post review',
+        });
+      },
+    });
   }
 
   closeDialog() {
@@ -120,5 +156,4 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
     this.description = '';
     this.rating = 0;
   }
-
 }

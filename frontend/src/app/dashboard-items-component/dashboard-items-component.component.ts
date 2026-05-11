@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { API_CONFIG } from '../config/api.config';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
@@ -16,37 +17,35 @@ enum Currency {
   selector: 'app-dashboard-items-component',
   imports: [CardModule, BadgeModule, ToastModule],
   templateUrl: './dashboard-items-component.component.html',
-  styleUrl: './dashboard-items-component.component.css'
+  styleUrl: './dashboard-items-component.component.css',
 })
 export class DashboardItemsComponentComponent implements OnInit {
-  
-  items : any[] = [];
+  items: any[] = [];
 
-  
-
-  constructor(private router : Router, private activatedRoute: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private http: HttpClient,
+  ) {}
 
   ngOnInit(): void {
-
-    this.activatedRoute.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Id mam nadzieje restauracji: ', id)
-      
-      fetch(`https://localhost:7084/api/Items/Restaurant/${id}`)
-        .then(response => response.json())
-        .then(data => {
+      console.log('Id mam nadzieje restauracji: ', id);
+
+      fetch(`${API_CONFIG.baseUrl}/Items/Restaurant/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
           this.items = data;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching items:', error);
         });
     });
-
   }
 
-  goToItem(itemId : number) {
-    this.router.navigate([this.router.url +'/'+ itemId]) 
-     
+  goToItem(itemId: number) {
+    this.router.navigate([this.router.url + '/' + itemId]);
   }
 
   getCurrencySymbol(currency: number): string {

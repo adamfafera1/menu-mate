@@ -1,7 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
+import { API_CONFIG } from '../config/api.config';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
@@ -19,9 +27,15 @@ export enum RestaurantProperty {
 @Component({
   selector: 'app-propose-restaurant-edit',
   standalone: true,
-  imports: [DropdownModule, InputTextModule, ButtonModule, FormsModule, DialogModule],
+  imports: [
+    SelectModule,
+    InputTextModule,
+    ButtonModule,
+    FormsModule,
+    DialogModule,
+  ],
   templateUrl: './propose-restaurant-edit.component.html',
-  styleUrl: './propose-restaurant-edit.component.css'
+  styleUrl: './propose-restaurant-edit.component.css',
 })
 export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
   @Input() restaurantId: string | null = null;
@@ -38,11 +52,10 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
     private http: HttpClient,
     private messageService: MessageService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     if (this.visible && !this.currentUser) {
@@ -52,8 +65,12 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
 
   loadCurrentUser() {
     if (!this.authService.isAuthenticated()) {
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose restaurant edits"});
-      localStorage.setItem('editLoggedOut', 'true')
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to propose restaurant edits',
+      });
+      localStorage.setItem('editLoggedOut', 'true');
       this.closeDialog();
       this.router.navigate(['/login']);
       return;
@@ -67,12 +84,20 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
         },
         (error) => {
           console.error('Failed to fetch user data by ID', error);
-          this.messageService.add({severity:'error', summary: "Error", detail:"Failed to load user data"});
-        }
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load user data',
+          });
+        },
       );
     } else {
       console.error('Failed to decode user ID from token');
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose restaurant edits"});
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to propose restaurant edits',
+      });
       this.closeDialog();
       this.router.navigate(['/login']);
     }
@@ -80,14 +105,22 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
 
   proposeEdit() {
     if (!this.authService.isAuthenticated()) {
-      this.messageService.add({severity:'warn', summary: "Login Required", detail:"Please log in to propose restaurant edits"});
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to propose restaurant edits',
+      });
       this.closeDialog();
       this.router.navigate(['/login']);
       return;
     }
 
     if (!this.currentUser) {
-      this.messageService.add({severity:'error', summary: "Error", detail:"User data not loaded. Please try again."});
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'User data not loaded. Please try again.',
+      });
       return;
     }
 
@@ -96,30 +129,29 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
     const edit = {
       restaurantId: this.restaurantId,
       propertyName: this.selectedProperty,
-      newValue: this.newValue
+      newValue: this.newValue,
     };
 
-    this.http.post(`https://localhost:7084/api/EditRestaurants`, edit)
-      .subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Edit proposed successfully'
-          });
-          this.resetForm();
-          this.editProposed.emit();
-          this.closeDialog();
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to propose edit'
-          });
-        }
-      });
+    this.http.post(`${API_CONFIG.baseUrl}/EditRestaurants`, edit).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Edit proposed successfully',
+        });
+        this.resetForm();
+        this.editProposed.emit();
+        this.closeDialog();
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to propose edit',
+        });
+      },
+    });
   }
 
   private resetForm() {
@@ -127,9 +159,8 @@ export class ProposeRestaurantEditComponent implements OnInit, OnChanges {
     this.newValue = '';
   }
 
-  closeDialog(){
+  closeDialog() {
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }
-
 }

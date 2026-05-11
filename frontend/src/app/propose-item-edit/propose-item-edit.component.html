@@ -1,22 +1,42 @@
-<p-dialog (onHide)="closeDialog()" header="Edit proposal" [modal]="true" [(visible)]="visible" [style]="{width: '35rem', height: '25rem'}">
-   
-    <div class="p-4 rounded-lg">
-        
-        <div class="grid gap-4">
-            <div>
-                <p-dropdown [options]="properties" [(ngModel)]="selectedProperty" placeholder="Select property to edit" class="w-full">
-                </p-dropdown>
-            </div>
+<p-dialog
+  (onHide)="closeDialog()"
+  header="Edit proposal"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '35rem', height: '25rem' }"
+>
+  <div class="p-4 rounded-lg">
+    <div class="grid gap-4">
+      <div>
+        <p-select
+          [options]="properties"
+          [(ngModel)]="selectedProperty"
+          placeholder="Select property to edit"
+          class="w-full"
+        >
+        </p-select>
+      </div>
 
-            <div>
-                <input type="text" pInputText [(ngModel)]="newValue" placeholder="Enter new value" class="w-full">
-            </div>
+      <div>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="newValue"
+          placeholder="Enter new value"
+          class="w-full"
+        />
+      </div>
 
-            <div>
-                <p-button label="Propose Edit" (onClick)="proposeEdit(); closeDialog()" [disabled]="!selectedProperty || !newValue" class="w-full">
-                </p-button>
-            </div>
-        </div>
+      <div>
+        <p-button
+          label="Propose Edit"
+          (onClick)="proposeEdit(); closeDialog()"
+          [disabled]="!selectedProperty || !newValue"
+          class="w-full"
+        >
+        </p-button>
+      </div>
     </div>
-    <p-toast></p-toast>
+  </div>
+  <p-toast></p-toast>
 </p-dialog>

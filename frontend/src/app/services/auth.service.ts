@@ -3,28 +3,39 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import { UserRole, UserWithRole } from '../models/user-roles';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string){
-    return this.http.post<{token: string}>(`https://localhost:7084/api/Auth/login` , { email, password})
+  login(email: string, password: string) {
+    return this.http.post<{ token: string }>(
+      `${API_CONFIG.baseUrl}/Auth/login`,
+      { email, password },
+    );
   }
 
-  register(email: string, userName: string, password: string, role: string = 'User'){
-    return this.http.post<{restaurantId?: string}>(`https://localhost:7084/api/Auth/register` , { email, userName, password, role})
+  register(
+    email: string,
+    userName: string,
+    password: string,
+    role: string = 'User',
+  ) {
+    return this.http.post<{ restaurantId?: string }>(
+      `${API_CONFIG.baseUrl}/Auth/register`,
+      { email, userName, password, role },
+    );
   }
 
-  logout(){
+  logout() {
     localStorage.removeItem('token');
     this.clearRestaurantId();
   }
 
-  setToken(token: string){
+  setToken(token: string) {
     localStorage.setItem('token', token);
     console.log('Token set, checking role...');
     const role = this.getUserRole();
@@ -46,17 +57,19 @@ export class AuthService {
     localStorage.removeItem('restaurantId');
   }
 
-  getToken(){
-    return localStorage.getItem('token')
+  getToken() {
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
-    return !! this.getToken();
+    return !!this.getToken();
   }
 
-
   getUserById(userId: string): Observable<UserWithRole> {
-    return this.http.get<UserWithRole>(`https://localhost:7084/api/Users/${userId}`, {});
+    return this.http.get<UserWithRole>(
+      `${API_CONFIG.baseUrl}/Users/${userId}`,
+      {},
+    );
   }
 
   getCurrentUser(): Observable<UserWithRole | null> {
@@ -75,10 +88,13 @@ export class AuthService {
     try {
       const decoded: any = jwtDecode(token);
       console.log('Decoded token for role:', decoded);
-      const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] 
-                 || decoded["role"] 
-                 || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role"];
-      return role as UserRole || UserRole.USER;
+      const role =
+        decoded[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        decoded['role'] ||
+        decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'];
+      return (role as UserRole) || UserRole.USER;
     } catch (error) {
       console.error('Failed to decode role from token', error);
       return null;
@@ -100,7 +116,9 @@ export class AuthService {
     console.log('User from token:', userFromToken);
     if (userFromToken && userFromToken.id) {
       console.log('Calling API with user ID:', userFromToken.id);
-      return this.http.get(`https://localhost:7084/api/Restaurants/owner/${userFromToken.id}`);
+      return this.http.get(
+        `${API_CONFIG.baseUrl}/Restaurants/owner/${userFromToken.id}`,
+      );
     }
     throw new Error('No authenticated user found');
   }
@@ -115,7 +133,10 @@ export class AuthService {
       const decoded: any = jwtDecode(token);
       console.log('Decoded token:', decoded);
       return {
-        id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || null,
+        id:
+          decoded[
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+          ] || null,
       };
     } catch (error) {
       console.error('Failed to decode token', error);
@@ -123,20 +144,19 @@ export class AuthService {
     }
   }
 
-  getUserDataFromToken(){
+  getUserDataFromToken() {
     const userFromToken = this.getUserFromToken();
     if (userFromToken && userFromToken.id) {
-    this.getUserById(userFromToken.id).subscribe(
+      this.getUserById(userFromToken.id).subscribe(
         (user) => {
           return user;
         },
         (error) => {
           console.error('Failed to fetch user data by ID', error);
-        }
+        },
       );
     } else {
       console.error('Failed to decode user ID from token');
     }
   }
-
 }

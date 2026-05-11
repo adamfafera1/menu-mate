@@ -1,30 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { TopSearchComponent } from "../top-search/top-search.component";
+import { TopSearchComponent } from '../top-search/top-search.component';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute} from '@angular/router';
-import { TableModule } from 'primeng/table'
+import { ActivatedRoute } from '@angular/router';
+import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
-import { MenuItemCardComponent } from "../menu-item-card/menu-item-card.component";
+import { MenuItemCardComponent } from '../menu-item-card/menu-item-card.component';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { ReviewComponent } from "../review/review.component";
-import { ProposeRestaurantEditComponent } from "../propose-restaurant-edit/propose-restaurant-edit.component";
-import { ReviewRestaurantMakeComponent } from "../review-restaurant-make/review-restaurant-make.component";
+import { ReviewComponent } from '../review/review.component';
+import { ProposeRestaurantEditComponent } from '../propose-restaurant-edit/propose-restaurant-edit.component';
+import { ReviewRestaurantMakeComponent } from '../review-restaurant-make/review-restaurant-make.component';
+import { API_CONFIG } from '../config/api.config';
 
 @Component({
   selector: 'app-restaurant-page',
-  imports: [TopSearchComponent, ButtonModule, IconFieldModule, RatingModule, FormsModule, TableModule, AccordionModule, DialogModule, TextareaModule, MenuItemCardComponent, Toast, ReviewComponent, ProposeRestaurantEditComponent, ReviewRestaurantMakeComponent],
+  imports: [
+    TopSearchComponent,
+    ButtonModule,
+    IconFieldModule,
+    RatingModule,
+    FormsModule,
+    TableModule,
+    AccordionModule,
+    DialogModule,
+    TextareaModule,
+    MenuItemCardComponent,
+    Toast,
+    ReviewComponent,
+    ProposeRestaurantEditComponent,
+    ReviewRestaurantMakeComponent,
+  ],
   templateUrl: './restaurant-page.component.html',
   styleUrl: './restaurant-page.component.css',
-  providers: [MessageService]
+  providers: [MessageService],
 })
-export class RestaurantPageComponent implements OnInit{
-  
+export class RestaurantPageComponent implements OnInit {
   restaurants: any[] = [];
   selectedRestaurant: any;
   items: any[] = [];
@@ -42,32 +57,32 @@ export class RestaurantPageComponent implements OnInit{
     this.visibleReview = false;
   }
 
-  showAllReviews(){
+  showAllReviews() {
     this.visibleAllReviews = true;
   }
-  hideAllReviews(){
+  hideAllReviews() {
     this.visibleAllReviews = false;
   }
 
-  showEditDialog(){
+  showEditDialog() {
     this.visibleEdit = true;
-    console.log("Show edit = ", this.visibleEdit)
+    console.log('Show edit = ', this.visibleEdit);
   }
 
-  hideEditDialog(){
+  hideEditDialog() {
     this.visibleEdit = false;
-    console.log("Show edit = ", this.visibleEdit)
+    console.log('Show edit = ', this.visibleEdit);
   }
 
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
   }
 
-  
+  constructor(
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+  ) {}
 
-  constructor(private route: ActivatedRoute, private messageService: MessageService) {}
-
-  
   ngOnInit() {
     const urlID = this.route.snapshot.paramMap.get('id');
 
@@ -76,32 +91,32 @@ export class RestaurantPageComponent implements OnInit{
       return;
     }
 
-    fetch(`https://localhost:7084/api/Restaurants/${urlID}`)
-      .then(response => {
+    fetch(`${API_CONFIG.baseUrl}/Restaurants/${urlID}`)
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch restaurant data');
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         this.selectedRestaurant = data;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching restaurant:', error);
       });
 
-    fetch(`https://localhost:7084/api/Reviews/${urlID}`)
-      .then(response => {
+    fetch(`${API_CONFIG.baseUrl}/Reviews/${urlID}`)
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch reviews data');
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         this.reviews = data;
         this.updateAverageRating();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching reviews:', error);
       });
   }
@@ -110,9 +125,13 @@ export class RestaurantPageComponent implements OnInit{
     if (this.reviews.length === 0) {
       this.restaurantRating = 0;
     } else {
-      const total = this.reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
-      this.restaurantRating = parseFloat((total / this.reviews.length).toFixed(2));
+      const total = this.reviews.reduce(
+        (sum, review) => sum + (review.rating || 0),
+        0,
+      );
+      this.restaurantRating = parseFloat(
+        (total / this.reviews.length).toFixed(2),
+      );
     }
   }
 }
-
