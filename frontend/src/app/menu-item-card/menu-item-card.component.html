@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 p-4">
     @for (item of filteredItems; track item) {
-    <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }" class="cursor-pointer">
+    <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }" class="cursor-pointer transition-all duration-300 hover:shadow-2xl rounded-xl hover:shadow-slate-300/20">
         <ng-template #header>
             <img alt="Card" class="h-32 w-full object-cover" src="{{item.image}}" />
         </ng-template>
@@ -86,7 +86,7 @@
         </p-tabpanels>
     </p-tabs>
     <ng-template #footer>
-        <p-button (click)="showEdit()" label="Propose edit" />
+        <p-button (click)="showEdit()" label="Propose an edit" />
         <p-button (click)="showReview()" label="Review"  />
     </ng-template>
 

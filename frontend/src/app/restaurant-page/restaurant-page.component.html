@@ -14,9 +14,9 @@
     </div>
 
     <div class="grid grid-rows-2 grid-cols-1">
-      <div><i class="pi pi-map-marker mr-1"></i>{{selectedRestaurant.location}}</div>
+      <div><i class="pi pi-map-marker mr-1"></i> {{selectedRestaurant.location}}</div>
       <div><i class="pi pi-phone mr-1"></i> {{selectedRestaurant.phone}}</div>
-
+      <div><i class="pi pi-receipt mr-1"></i> Cuisine{{selectedRestaurant.cuisine}}</div>
     </div>
 
     <div class="col-span-1 col-start-4 content-center cursor-pointer hover:underline" (click)="showAllReviews()" >
@@ -27,10 +27,10 @@
       </div>
     </div>
 
-    <div class="col-span-1 col-start-4 content-center">
-      <div class="grid grid-rows-2 grid-cols-1 content-center place-items-end">
-        <p-button (click)="showReviewDialog()"><i class="pi pi-send "> </i> Write a review</p-button>
-        <p-button (click)="showEditDialog()" class="mt-3"><i class="pi pi-file-edit "></i> Propose edits</p-button>
+    <div class="col-span-1 col-start-4 flex justify-end">
+      <div class="flex w-80 mt-3">
+        <p-button (click)="showReviewDialog()" class="flex-1 justify-center"><i class="pi pi-send"></i> Write a review</p-button>
+        <p-button (click)="showEditDialog()" class="flex-2 justify-center"><i class="pi pi-file-edit"></i> Propose an edit</p-button>
       </div>
     </div>
 
