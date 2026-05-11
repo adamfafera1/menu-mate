@@ -31,3 +31,4 @@ backend/menumate/obj/project.assets.json
 backend/menumate/obj/project.nuget.cache
 backend/menumate/obj/Release/net8.0/menumate.AssemblyInfo.cs
 backend/menumate/obj/Release/net8.0/menumate.AssemblyInfoInputs.cache
+node_modules
