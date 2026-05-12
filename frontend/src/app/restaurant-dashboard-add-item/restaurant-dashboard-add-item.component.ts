@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { API_CONFIG } from '../config/api.config';
+import { FileUploadModule } from 'primeng/fileupload';
 
 interface Alergens {
   name: string;
@@ -30,6 +31,7 @@ interface Alergens {
     FormsModule,
     TextareaModule,
     ToastModule,
+    FileUploadModule
   ],
   templateUrl: './restaurant-dashboard-add-item.component.html',
   styleUrl: './restaurant-dashboard-add-item.component.css',
@@ -46,6 +48,7 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
   fats: number | undefined;
   proteins: number | undefined;
   restaurantId: string | null = null;
+  uploadedFiles: any[] = [];
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.paramMap.get('id');
@@ -124,5 +127,28 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
     this.carbs = undefined;
     this.fats = undefined;
     this.proteins = undefined;
+  }
+
+  onImageSelect(event: any): void {
+    // Only allow 1 file, so clear previous uploads
+    this.uploadedFiles = [];
+    
+    if (event.files && event.files.length > 0) {
+      const file = event.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedFiles.push({
+          name: file.name,
+          size: file.size,
+          objectURL: e.target.result,
+          file: file,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeFile(index: number): void {
+    this.uploadedFiles.splice(index, 1);
   }
 }
