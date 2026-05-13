@@ -89,6 +89,7 @@ namespace menumate.Controllers
 
         [HttpGet]
         [Route("current")]
+        [Authorize]
         public IActionResult GetCurrentUser()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
