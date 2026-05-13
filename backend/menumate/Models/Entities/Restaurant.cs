@@ -1,4 +1,4 @@
-﻿namespace menumate.Models.Entities
+namespace menumate.Models.Entities
 {
     public class Restaurant
     {
@@ -9,6 +9,7 @@
         public required string Location { get; set; }
         public required string Phone { get; set; }
         public required string ImagePath { get; set; }
+        public string? Cuisine { get; set; }
         public Guid? OwnerId { get; set; }
         public User? Owner { get; set; }
     }

@@ -12,6 +12,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectModule } from 'primeng/select';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../config/api.config';
@@ -32,6 +33,7 @@ import { RestaurantService } from '../services/restaurant.service';
     InputTextModule,
     TextareaModule,
     MultiSelectModule,
+    SelectModule,
   ],
   standalone: true,
   templateUrl: './restaurant-dashboard-restaurant-self-manage.component.html',
@@ -44,7 +46,12 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
   phone: string | undefined;
   location: string | undefined;
   uploadedFiles: any[] = [];
-  selectedCuisine: string | undefined;
+  selectedCuisine: string | null = null;
+  cuisineOptions: string[] = [
+    'Italian', 'Japanese', 'Chinese', 'Mexican', 'Indian',
+    'French', 'Thai', 'American', 'Mediterranean', 'Greek',
+    'Spanish', 'Korean', 'Vietnamese', 'Middle Eastern', 'Other'
+  ];
   restaurant: any = null;
   restaurantId: string | null = null;
   loading: boolean = true;
@@ -87,6 +94,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
           this.description = data.description;
           this.location = data.location;
           this.phone = data.phone;
+          this.selectedCuisine = data.cuisine ?? null;
 
           this.loading = false;
           console.log('Restaurant data loaded:', this.restaurant);
@@ -155,6 +163,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       imagePath:
         this.restaurant?.imagePath ||
         'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500',
+      cuisine: this.selectedCuisine ?? null,
     };
 
     this.http
@@ -185,6 +194,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       this.description = this.restaurant.description;
       this.location = this.restaurant.location;
       this.phone = this.restaurant.phone;
+      this.selectedCuisine = this.restaurant.cuisine ?? null;
     }
 
     this.messageService.add({
