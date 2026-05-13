@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { RatingServiceService } from '../services/rating-service.service';
 import { AuthService } from '../services/auth.service';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ButtonModule } from 'primeng/button';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-side-menu',
-  imports: [MenuModule, AvatarModule],
+  imports: [MenuModule, AvatarModule, ConfirmDialog, ButtonModule],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css'
 })
@@ -18,6 +21,9 @@ export class SideMenuComponent implements OnInit{
   options : MenuItem[] | undefined;
   reviewCount : number | null = 0;
   private id: string | null = null;
+  private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
+
 
   constructor(private router: Router, private ratingService: RatingServiceService, private authService: AuthService ) {
       this.id = this.router.url.split('/')[2] || null;
@@ -63,14 +69,17 @@ export class SideMenuComponent implements OnInit{
             {
               label: 'Self manage',
               items: [
-                {label: 'Restaurant info', icon:'pi pi-pencil', command: () => {this.navigateRestaurantSelfManage()}},
-                {label: 'Items info', icon:'pi pi-file-edit', command:() => {this.navigateItemsSelfManage()}}
+                {label: 'Update Restaurant', icon:'pi pi-pencil', command: () => {this.navigateRestaurantSelfManage()}},
+                {label: 'Update Items', icon:'pi pi-file-edit', command:() => {this.navigateItemsSelfManage()}}
               ]
             },
             {
               label: 'Options',
               items: [
-                { label:'Sign out', icon:'pi pi-sign-out', command : () => {this.signOut()}}
+                { label:'Sign out', icon:'pi pi-sign-out', command : () => {
+                  // this.signOut()
+                }
+                }
               ]
             }
 
@@ -123,4 +132,30 @@ export class SideMenuComponent implements OnInit{
     this.authService.logout();
     this.router.navigate(['login']);
   }
+
+   confirm2(event: Event) {
+        this.confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: 'Do you want to delete this record?',
+            header: 'Danger Zone',
+            icon: 'pi pi-info-circle',
+            rejectLabel: 'Cancel',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'Delete',
+                severity: 'danger'
+            },
+        
+            accept: () => {
+                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+            },
+            reject: () => {
+                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            }
+        });
+    }
 }

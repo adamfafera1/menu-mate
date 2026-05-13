@@ -1,7 +1,7 @@
 <div class="flex flex-row">
   <app-side-menu />
   <div
-    class="basis-4/5 bg-zinc-900 p-6 mt-6 mr-6 rounded-lg border border-zinc-700"
+    class="basis-4/5 bg-zinc-900 p-6 mt-6 mr-6 rounded-lg border border-zinc-700 mb-3"
   >
     <span class="font-semibold text-4xl text-zinc-600 ml-3"
       >Self manage restaurant</span
@@ -42,9 +42,9 @@
           <label for="phone">Phone</label>
         </p-iftalabel>
 
-        <div>
+        <div >
             <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
-            Upload image
+            Upload restaurant image
             </label>
           <p-fileUpload
             name="image[]"
@@ -56,8 +56,8 @@
             (onSelect)="onImageSelect($event)"
             class="w-full"
           >
-          
             <ng-template pTemplate="content">
+              
                 <ul *ngIf="uploadedFiles.length">
                 <li
                   *ngFor="let file of uploadedFiles; let i = index"

@@ -3,9 +3,14 @@
     <p-menu [model]="items" class="h-auto">
         <ng-template #start>
             <div class="flex justify-center font-semibold text-2xl text-zinc-500">
-                <span >Dashboard</span>
+                <span>Dashboard</span>
             </div>
         </ng-template>
     </p-menu>
+    <div class="card flex justify-center gap-2">
+        <p-confirmdialog />
+        <!-- <p-button (click)="confirm1($event)" label="Save" [outlined]="true" /> -->
+        <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true" />
+    </div>
          
 </div>  

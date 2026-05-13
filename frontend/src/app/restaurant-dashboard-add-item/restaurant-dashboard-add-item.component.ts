@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SideMenuComponent } from '../side-menu/side-menu.component';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -22,6 +23,7 @@ interface Alergens {
   selector: 'app-restaurant-dashboard-add-item',
   standalone: true,
   imports: [
+    CommonModule,
     SideMenuComponent,
     IftaLabelModule,
     MultiSelectModule,
