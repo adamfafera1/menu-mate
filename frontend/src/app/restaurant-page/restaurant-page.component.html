@@ -4,58 +4,60 @@
 @if (selectedRestaurant) {
 <div class="static mx-auto place-content-center w-3/4 surface-card p-4 shadow-2 border-round">
   <div class="relative h-1/12">
-    <img alt="Card" class="rounded-md h-36 w-full object-cover" [src]="getImageUrl(selectedRestaurant?.imagePath)"/>
+    <img alt="Card" class="rounded-md h-36 w-full object-cover" [src]="getImageUrl(selectedRestaurant?.imagePath)" />
   </div>
 
   <div class="text-4xl font-medium mt-3 text-900 mb-3"> {{selectedRestaurant.name}} </div>
   <div class="font-normal text-500 text-gray-400 mb-3"> {{selectedRestaurant.description}} </div>
 
   <div class="grid grid-cols-4 grid-rows-2 content-center">
-    <div class="col-span-1 col-start-1 absolute" >
+    <div class="col-span-1 col-start-1 absolute">
     </div>
 
-    <div class="grid grid-rows-2 grid-cols-1">
+    <div class="grid grid-rows-2 grid-cols-1 gap-1">
       <div><i class="pi pi-map-marker mr-1"></i> {{selectedRestaurant.location}}</div>
       <div><i class="pi pi-phone mr-1"></i> {{selectedRestaurant.phone}}</div>
-      <div><i class="pi pi-receipt mr-1"></i> Cuisine{{selectedRestaurant.cuisine}}</div>
+      <div><i class="pi pi-receipt mr-1"></i> {{selectedRestaurant.cuisine}}</div>
     </div>
 
-    <div class="col-span-1 col-start-4 content-center cursor-pointer hover:underline" (click)="showAllReviews()" >
+    <div class="col-span-1 col-start-4 content-center cursor-pointer hover:underline" (click)="showAllReviews()">
       <div class="grid grid-rows- grid-cols-1 content-center place-items-end">
-        <p-rating [(ngModel)]="restaurantRating" [readonly]="true"/>
-        <h1 class="mt-1" > {{restaurantRating}} / 5</h1>
+        <p-rating [(ngModel)]="restaurantRating" [readonly]="true" />
+        <h1 class="mt-1"> {{restaurantRating}} / 5</h1>
         <div class="text-stone-400">{{reviews.length}} reviews</div>
       </div>
     </div>
 
     <div class="col-span-1 col-start-4 flex justify-end">
       <div class="flex w-80 mt-3">
-        <p-button (click)="showReviewDialog()" class="flex-1 justify-center"><i class="pi pi-send"></i> Write a review</p-button>
-        <p-button (click)="showEditDialog()" class="flex-2 justify-center"><i class="pi pi-file-edit"></i> Propose an edit</p-button>
+        <p-button (click)="showReviewDialog()" class="flex-1 justify-center"><i class="pi pi-send"></i> Write a
+          review</p-button>
+        <p-button (click)="showEditDialog()" class="flex-2 justify-center"><i class="pi pi-file-edit"></i> Propose an
+          edit</p-button>
       </div>
     </div>
 
-    <app-propose-restaurant-edit [restaurantId]="selectedRestaurant.id" [(visible)]="visibleEdit"></app-propose-restaurant-edit>
-    <app-review-restaurant-make [(visible)]="visibleReview" ></app-review-restaurant-make>
+    <app-propose-restaurant-edit [restaurantId]="selectedRestaurant.id"
+      [(visible)]="visibleEdit"></app-propose-restaurant-edit>
+    <app-review-restaurant-make [(visible)]="visibleReview"></app-review-restaurant-make>
 
 
-    
 
-    <p-toast/>
+
+    <p-toast />
 
     <p-dialog header="All Reviews" [modal]="true" [(visible)]="visibleAllReviews" [style]="{ width: '40rem' }">
-      <span class="p-text-secondary block mb-8">All of {{selectedRestaurant.name}}'s reviews</span>    
+      <span class="p-text-secondary block mb-8">All of {{selectedRestaurant.name}}'s reviews</span>
       <div>
         <app-review></app-review>
       </div>
     </p-dialog>
-    
+
   </div>
 
   <div class="flex justify-center items-center rounded-xl bg-zinc-950 mt-5  p-4 overflow-hidden">
     <app-menu-item-card [searchQuery]="searchQuery"></app-menu-item-card>
-</div>
+  </div>
 
 </div>
 }
-
