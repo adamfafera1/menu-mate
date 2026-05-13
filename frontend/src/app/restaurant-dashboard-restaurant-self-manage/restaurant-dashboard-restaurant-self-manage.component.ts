@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -18,6 +19,7 @@ import { API_CONFIG } from '../config/api.config';
 @Component({
   selector: 'app-restaurant-dashboard-restaurant-self-manage',
   imports: [
+    CommonModule,
     IftaLabel,
     FormsModule,
     FileUploadModule,
@@ -188,5 +190,28 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       summary: 'Cancelled',
       detail: 'Changes have been cancelled',
     });
+  }
+
+  onImageSelect(event: any): void {
+    // Only allow 1 file, so clear previous uploads
+    this.uploadedFiles = [];
+    
+    if (event.files && event.files.length > 0) {
+      const file = event.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedFiles.push({
+          name: file.name,
+          size: file.size,
+          objectURL: e.target.result,
+          file: file,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeFile(index: number): void {
+    this.uploadedFiles.splice(index, 1);
   }
 }
