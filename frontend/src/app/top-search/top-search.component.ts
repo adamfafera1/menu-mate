@@ -13,6 +13,7 @@ import { RestaurantService } from '../services/restaurant.service';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
 import { AuthService } from '../services/auth.service';
@@ -33,6 +34,7 @@ import { API_CONFIG } from '../config/api.config';
     FormsModule,
     CommonModule,
     SelectModule,
+    AutoCompleteModule,
     SharedModule,
     Rating,
   ],
@@ -52,6 +54,8 @@ export class TopSearchComponent implements OnInit {
   locations: any[] = [];
   cuisines: any[] = [];
   ratings: any[] = [];
+  locationQuery: string = '';
+  locationSuggestions: any[] = [];
   selectedLocation: any = null;
   selectedCuisine: any = null;
   selectedRating: any = null;
@@ -74,13 +78,7 @@ export class TopSearchComponent implements OnInit {
         this.isBrowsePage = this.router.url === '/browse';
       });
 
-    this.locations = [
-      { name: 'All Locations', code: null },
-      { name: 'New York', code: 'NY' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Tokyo', code: 'TKY' },
-    ];
+    this.locations = [];
 
     this.cuisines = [
       { name: 'All Cuisines', code: null },
@@ -139,6 +137,39 @@ export class TopSearchComponent implements OnInit {
 
   onSearch() {
     this.searchSubject.next(this.searchQuery);
+  }
+
+  searchLocation(event: any) {
+    const query = event.query?.trim();
+    if (!query || query.length < 2) {
+      this.locationSuggestions = [];
+      return;
+    }
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
+    fetch(url, { headers: { 'Accept-Language': 'en' } })
+      .then((r) => r.json())
+      .then((results: any[]) => {
+        this.locationSuggestions = results.map((r) => ({
+          label: r.display_name,
+          lat: +r.lat,
+          lng: +r.lon,
+        }));
+      })
+      .catch(() => { this.locationSuggestions = []; });
+  }
+
+  onLocationSelect(place: any) {
+    this.locationChange.emit({ lat: place.lat, lng: place.lng, label: place.label });
+    if (this.isBrowsePage) {
+      this.filterRestaurants(this.searchQuery);
+    }
+  }
+
+  onLocationClear() {
+    this.locationQuery = '';
+    this.locationSuggestions = [];
+    this.selectedLocation = null;
+    this.locationChange.emit(null);
   }
 
   onLocationChange() {

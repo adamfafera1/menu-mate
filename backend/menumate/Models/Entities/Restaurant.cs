@@ -10,6 +10,8 @@ namespace menumate.Models.Entities
         public required string Phone { get; set; }
         public required string ImagePath { get; set; }
         public string? Cuisine { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public Guid? OwnerId { get; set; }
         public User? Owner { get; set; }
     }

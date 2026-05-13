@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Text.Json;
 
 namespace menumate.Controllers
 {
@@ -13,10 +14,36 @@ namespace menumate.Controllers
     public class RestaurantsController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        public RestaurantsController(ApplicationDbContext dbContext)
+        public RestaurantsController(ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory)
         {
             this.dbContext = dbContext;
+            this.httpClientFactory = httpClientFactory;
+        }
+
+        private async Task<(double? lat, double? lng)> GeocodeAsync(string location)
+        {
+            try
+            {
+                var client = httpClientFactory.CreateClient("Nominatim");
+                var encoded = Uri.EscapeDataString(location);
+                var response = await client.GetAsync($"search?q={encoded}&format=json&limit=1");
+                if (!response.IsSuccessStatusCode) return (null, null);
+
+                var json = await response.Content.ReadAsStringAsync();
+                var results = JsonSerializer.Deserialize<JsonElement[]>(json);
+                if (results == null || results.Length == 0) return (null, null);
+
+                var first = results[0];
+                if (double.TryParse(first.GetProperty("lat").GetString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lat) &&
+                    double.TryParse(first.GetProperty("lon").GetString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lng))
+                {
+                    return (lat, lng);
+                }
+            }
+            catch { }
+            return (null, null);
         }
 
         [HttpGet]
@@ -54,8 +81,10 @@ namespace menumate.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddRestaurant(AddRestaurantDto addRestaurantDto)
+        public async Task<IActionResult> AddRestaurant(AddRestaurantDto addRestaurantDto)
         {
+            var (lat, lng) = await GeocodeAsync(addRestaurantDto.Location);
+
             var restaurantEntity = new Restaurant()
             {
                 Name = addRestaurantDto.Name,
@@ -65,20 +94,24 @@ namespace menumate.Controllers
                 Location = addRestaurantDto.Location,
                 ImagePath = addRestaurantDto.ImagePath,
                 Cuisine = addRestaurantDto.Cuisine,
+                Latitude = lat,
+                Longitude = lng,
             };
 
             dbContext.Restaurants.Add(restaurantEntity);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return Ok(restaurantEntity);
         }
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
+        public async Task<IActionResult> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
         {
             var restaurant = dbContext.Restaurants.Find(id);
 
             if (restaurant == null) { return NotFound(); }
+
+            var locationChanged = restaurant.Location != updateRestaurantDto.Location;
 
             restaurant.Name = updateRestaurantDto.Name;
             restaurant.Location = updateRestaurantDto.Location;
@@ -88,11 +121,16 @@ namespace menumate.Controllers
             restaurant.ImagePath = updateRestaurantDto.ImagePath;
             restaurant.Cuisine = updateRestaurantDto.Cuisine;
 
+            if (locationChanged)
+            {
+                var (lat, lng) = await GeocodeAsync(updateRestaurantDto.Location);
+                restaurant.Latitude = lat;
+                restaurant.Longitude = lng;
+            }
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return Ok(restaurant);
-
         }
 
         [HttpDelete]
@@ -121,10 +159,6 @@ namespace menumate.Controllers
 
             var restaurant = await dbContext.Restaurants.FindAsync(id);
             if (restaurant == null) return NotFound();
-
-            // Note: Ideally verify that the current user owns this restaurant
-            // var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value;
-            // if (userId != restaurant.OwnerId.ToString()) return Forbid();
 
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "restaurants");
             if (!Directory.Exists(folderPath))

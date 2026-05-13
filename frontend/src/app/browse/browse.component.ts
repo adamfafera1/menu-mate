@@ -18,8 +18,9 @@ export class BrowseComponent implements OnInit {
 
   private searchQuery: string = '';
   private selectedCuisine: string | null = null;
-  private selectedLocation: any = null;
+  private selectedLocation: { lat: number; lng: number } | null = null;
   private selectedRating: any = null;
+  private readonly RADIUS_KM = 10;
 
   ngOnInit() {
     Promise.all([
@@ -51,11 +52,22 @@ export class BrowseComponent implements OnInit {
       });
   }
 
+  private haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
   applyFilters() {
     this.filteredRestaurants = this.restaurants.filter((r) => {
       const matchesName = r.name.toLowerCase().includes(this.searchQuery.toLowerCase());
       const matchesCuisine = !this.selectedCuisine || (r.cuisine ?? '').toLowerCase() === this.selectedCuisine.toLowerCase();
-      const matchesLocation = !this.selectedLocation?.code || (r.location ?? '').toLowerCase().includes(this.selectedLocation.name.toLowerCase());
+      const matchesLocation = !this.selectedLocation ||
+        (r.latitude != null && r.longitude != null &&
+          this.haversineKm(this.selectedLocation.lat, this.selectedLocation.lng, r.latitude, r.longitude) <= this.RADIUS_KM);
       const matchesRating = !this.selectedRating || (r.computedRating ?? 0) >= this.selectedRating.value;
       return matchesName && matchesCuisine && matchesLocation && matchesRating;
     });
@@ -71,7 +83,7 @@ export class BrowseComponent implements OnInit {
     this.applyFilters();
   }
 
-  onLocationChange(location: any) {
+  onLocationChange(location: { lat: number; lng: number } | null) {
     this.selectedLocation = location;
     this.applyFilters();
   }

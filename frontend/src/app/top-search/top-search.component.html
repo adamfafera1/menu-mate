@@ -35,15 +35,19 @@
           [showClear]="true"
           class="w-36"
         />
-        <p-select
+        <p-autocomplete
           *ngIf="isBrowsePage"
-          [options]="locations"
           [(ngModel)]="selectedLocation"
-          optionLabel="name"
+          [suggestions]="locationSuggestions"
+          (completeMethod)="searchLocation($event)"
+          (onSelect)="onLocationSelect($event)"
+          (onClear)="onLocationClear()"
+          optionLabel="label"
           placeholder="Location"
-          (onChange)="onLocationChange()"
           [showClear]="true"
-          class="w-36"
+          class="w-48"
+          [dropdown]="false"
+          [forceSelection]="true"
         />
 
         <p-select
