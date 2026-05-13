@@ -1,9 +1,10 @@
-﻿using menumate.Data;
+using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace menumate.Controllers
 {
@@ -108,6 +109,44 @@ namespace menumate.Controllers
             dbContext.Remove(id);
             dbContext.SaveChanges();
             return Ok("Successfully deleted item with id: " + id);
+        }
+
+        [HttpPost("{id:guid}/upload-image")]
+        [Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UploadImage(Guid id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var item = await dbContext.Items.FindAsync(id);
+            if (item == null) return NotFound();
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "items");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var extension = Path.GetExtension(file.FileName);
+            var fileName = $"{id}{extension}";
+            var filePath = Path.Combine(folderPath, fileName);
+
+            var existingFiles = Directory.GetFiles(folderPath, $"{id}.*");
+            foreach (var existingFile in existingFiles)
+            {
+                System.IO.File.Delete(existingFile);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            item.Image = $"/uploads/items/{fileName}";
+            dbContext.Items.Update(item);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new { imagePath = item.Image });
         }
     }
 }

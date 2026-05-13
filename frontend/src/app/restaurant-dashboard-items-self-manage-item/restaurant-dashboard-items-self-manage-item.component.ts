@@ -62,12 +62,49 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     private http: HttpClient,
   ) {}
 
-  onUpload(event: UploadEvent) {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Success',
-      detail: 'File Uploaded with Basic Mode',
-    });
+  onUpload(event: any) {
+    if (event.files && event.files.length > 0) {
+      const file = event.files[0];
+      if (!this.itemId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Item ID not found',
+        });
+        return;
+      }
+
+      this.loading = true;
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      this.http.post<{ imagePath: string }>(`${API_CONFIG.baseUrl}/Items/${this.itemId}/upload-image`, formData).subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Item image updated successfully'
+          });
+          this.fetchItemData();
+        },
+        error: (error) => {
+          console.error('Upload failed:', error);
+          this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update item image'
+          });
+        }
+      });
+    }
+  }
+
+  getImageUrl(path: string | undefined): string {
+    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
+    if (path.startsWith('http')) return path;
+    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
+    return `${serverUrl}${path}`;
   }
 
   updateItem(): void {

@@ -1,8 +1,16 @@
-﻿using menumate.Data;
+using menumate.Data;
 using menumate.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
 using menumate.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OutputCaching;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 namespace menumate.Controllers
 {
@@ -53,6 +61,7 @@ namespace menumate.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize]
         public IActionResult UpdateUser(Guid id, UpdateUserDto updateUserDto)
         {
             var user = dbContext.Users.Find(id);
@@ -72,6 +81,7 @@ namespace menumate.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public IActionResult DeleteUser(Guid id) 
         {
             var user = dbContext.Users.Find(id);
@@ -89,10 +99,10 @@ namespace menumate.Controllers
 
         [HttpGet]
         [Route("current")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetCurrentUser()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
             if (userId == null)
             {
@@ -113,6 +123,47 @@ namespace menumate.Controllers
                 user.Email,
                 user.ImgPath
             });
+        }
+        [HttpPost("upload-image")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var userIdString = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            if (userIdString == null) return Unauthorized();
+
+            var userId = Guid.Parse(userIdString);
+            var user = await dbContext.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "users");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var extension = Path.GetExtension(file.FileName);
+            var fileName = $"{userId}{extension}";
+            var filePath = Path.Combine(folderPath, fileName);
+
+            var existingFiles = Directory.GetFiles(folderPath, $"{userId}.*");
+            foreach (var existingFile in existingFiles)
+            {
+                System.IO.File.Delete(existingFile);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            user.ImgPath = $"/uploads/users/{fileName}";
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new { imgPath = user.ImgPath });
         }
     }
 }

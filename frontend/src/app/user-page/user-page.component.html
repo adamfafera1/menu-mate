@@ -2,12 +2,22 @@
     <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
 </div>
 
-<div class="flex flex-col items-center">
+<p-toast></p-toast>
 
-    <img class="m-3 rounded-full w-1/12 shadow-slate-950 shadow-lg" src={{user.imgPath}}>
+<div class="flex flex-col items-center" *ngIf="!loading && user">
+
+    <div class="m-3 flex flex-col items-center gap-4">
+        <div class="relative w-32 h-32 group cursor-pointer" (click)="fileInput.click()">
+            <img class="rounded-full w-full h-full object-cover shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50" [src]="getImageUrl(user?.imgPath)">
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="pi pi-upload text-3xl text-white"></i>
+            </div>
+            <input #fileInput type="file" accept="image/*" class="hidden" (change)="onUpload({files: fileInput.files})">
+        </div>
+    </div>
+    
     <p class="text-sm text-slate-400"> {{user.email || "Not found" }}</p>
-    <h1 class="m-3 text-3xl"> {{user.userName}}
-    </h1>
+    <h1 class="m-3 text-3xl"> {{user.userName}}</h1>
     
     
     <div class="card w-5/6 sm:w-3/4 xl:w-2/3">

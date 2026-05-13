@@ -159,4 +159,13 @@ export class AuthService {
       console.error('Failed to decode user ID from token');
     }
   }
+
+  uploadProfileImage(file: File): Observable<{ imgPath: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ imgPath: string }>(
+      `${API_CONFIG.baseUrl}/Users/upload-image`,
+      formData
+    );
+  }
 }

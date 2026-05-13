@@ -15,6 +15,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../config/api.config';
+import { RestaurantService } from '../services/restaurant.service';
 
 @Component({
   selector: 'app-restaurant-dashboard-restaurant-self-manage',
@@ -53,7 +54,8 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     private messageService: MessageService,
     private route: ActivatedRoute,
     private http: HttpClient,
-  ) {}
+    private restaurantService: RestaurantService
+  ) { }
 
   ngOnInit(): void {
     this.restaurantId = this.route.snapshot.paramMap.get('id');
@@ -192,26 +194,46 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     });
   }
 
-  onImageSelect(event: any): void {
-    // Only allow 1 file, so clear previous uploads
-    this.uploadedFiles = [];
-    
+  onUpload(event: any) {
     if (event.files && event.files.length > 0) {
       const file = event.files[0];
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.uploadedFiles.push({
-          name: file.name,
-          size: file.size,
-          objectURL: e.target.result,
-          file: file,
+      if (!this.restaurantId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Restaurant ID not found',
         });
-      };
-      reader.readAsDataURL(file);
+        return;
+      }
+
+      this.loading = true;
+      this.restaurantService.uploadRestaurantImage(this.restaurantId, file).subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Restaurant image updated successfully'
+          });
+          // Refresh data to get new image
+          this.fetchRestaurantData();
+        },
+        error: (error) => {
+          console.error('Upload failed:', error);
+          this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update restaurant image'
+          });
+        }
+      });
     }
   }
 
-  removeFile(index: number): void {
-    this.uploadedFiles.splice(index, 1);
+  getImageUrl(path: string | undefined): string {
+    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
+    if (path.startsWith('http')) return path;
+    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
+    return `${serverUrl}${path}`;
   }
 }

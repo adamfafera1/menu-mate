@@ -1,52 +1,76 @@
 <div class="flex flex-row">
-    <app-side-menu/>
+    <app-side-menu />
     <div class="basis-4/5 bg-zinc-900 p-6 mt-6 mb-3 mr-6 rounded-lg border border-zinc-700">
         <span class="font-semibold text-4xl text-zinc-600 ml-3">
             Self manage an item: {{loading ? 'Loading...' : (item?.name || 'Unknown Item')}}
         </span>
-        
+
         <p-toast></p-toast>
         <div class="flex justify-center mt-5">
             <div class="grid grid-cols-1 w-1/2 gap-3" *ngIf="!loading">
-                
+
                 <p-iftalabel>
                     <input id="name" pInputText [(ngModel)]="name" class="w-full" [disabled]="loading" />
                     <label for="name">Item name</label>
                 </p-iftalabel>
                 <p-ifta-label>
-                    <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN" locale="pl-PL" class="w-full" [disabled]="loading" />
+                    <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN"
+                        locale="pl-PL" class="w-full" [disabled]="loading" />
                     <label for="price"> Price </label>
                 </p-ifta-label>
-                <p-iftalabel>   
-                    <textarea pTextarea id="description" [(ngModel)]="description" class="w-full" rows="5" cols="30" style="resize: none" [disabled]="loading"></textarea>
+                <p-iftalabel>
+                    <textarea pTextarea id="description" [(ngModel)]="description" class="w-full" rows="5" cols="30"
+                        style="resize: none" [disabled]="loading"></textarea>
                     <label for="description">Description</label>
                 </p-iftalabel>
-                <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name" placeholder="Select Alergens" class="w-full" [disabled]="loading"/>
+                <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name"
+                    placeholder="Select Alergens" class="w-full" [disabled]="loading" />
                 <div class="grid grid-cols-2 gap-2">
                     <p-ifta-label>
-                        <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" g" class="w-full" [disabled]="loading" />
+                        <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" g" class="w-full"
+                            [disabled]="loading" />
                         <label for="price"> Calories </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full" [disabled]="loading" />
+                        <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full"
+                            [disabled]="loading" />
                         <label for="carbs"> Carbohydrates </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full" [disabled]="loading" />
+                        <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full"
+                            [disabled]="loading" />
                         <label for="fats"> Fats </label>
                     </p-ifta-label>
                     <p-ifta-label>
-                        <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g" class="w-full" [disabled]="loading" />
+                        <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g"
+                            class="w-full" [disabled]="loading" />
                         <label for="proteins"> Proteins </label>
                     </p-ifta-label>
                 </div>
-                <div class="mt-3">
-                    <p-button (click)="updateItem()" [disabled]="loading"><i class="pi pi-pencil"></i> Update item </p-button>
-                    <p-button severity="secondary" class="ml-3 mt-3" (click)="cancelUpdate()" [disabled]="loading"><i class="pi pi-times"></i> Cancel update </p-button>
+                <div class="mt-3 mb-5">
+                    <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
+                        Upload item image
+                    </label>
+                    <div class="relative w-full h-32 group cursor-pointer" (click)="fileInput.click()">
+                        <img class="w-full h-full object-cover rounded-lg shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50"
+                            [src]="getImageUrl(item?.image)">
+                        <div
+                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i class="pi pi-upload text-3xl text-white"></i>
+                        </div>
+                        <input #fileInput type="file" accept="image/*" class="hidden"
+                            (change)="onUpload({files: fileInput.files})">
+                    </div>
                 </div>
-                <!-- <p-fileupload mode="basic" name="demo[]" chooseIcon="pi pi-upload" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)" [auto]="true" chooseLabel="Browse" />                -->
+                <div class="mt-3">
+                    <p-button (click)="updateItem()" [disabled]="loading"><i class="pi pi-pencil"></i> Update item
+                    </p-button>
+                    <p-button severity="secondary" class="ml-3 mt-3" (click)="cancelUpdate()" [disabled]="loading"><i
+                            class="pi pi-times"></i> Cancel update </p-button>
+                </div>
+
             </div>
-            
+
             <div class="flex justify-center items-center h-96" *ngIf="loading">
                 <div class="text-center">
                     <i class="pi pi-spin pi-spinner text-4xl text-zinc-400 mb-4"></i>

@@ -67,8 +67,8 @@
       <div routerLink="/user" class="cursor-pointer">
         <p-avatar
           shape="circle"
-          class="shadow-sm shadow-black"
-          image="https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png"
+          class="shadow-sm shadow-black w-10 h-10 overflow-hidden"
+          [image]="getImageUrl(user?.imgPath)"
         ></p-avatar>
       </div>
     </ng-template>

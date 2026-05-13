@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
+import { AuthService } from '../services/auth.service';
+import { API_CONFIG } from '../config/api.config';
 
 @Component({
   selector: 'app-top-search',
@@ -36,7 +38,7 @@ import { Rating } from 'primeng/rating';
   ],
   templateUrl: './top-search.component.html',
   styleUrl: './top-search.component.css',
-  providers: [RestaurantService],
+  providers: [RestaurantService, AuthService],
 })
 export class TopSearchComponent implements OnInit {
   @Output() searchQueryChange = new EventEmitter<string>();
@@ -53,11 +55,13 @@ export class TopSearchComponent implements OnInit {
   selectedLocation: any = null;
   selectedCuisine: any = null;
   selectedRating: any = null;
+  user: any = null;
   private searchSubject = new Subject<string>();
 
   constructor(
     private router: Router,
     private restaurantService: RestaurantService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -102,6 +106,24 @@ export class TopSearchComponent implements OnInit {
         }
         this.searchQueryChange.emit(query);
       });
+
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser() {
+    if (this.authService.isAuthenticated()) {
+      const userFromToken = this.authService.getUserFromToken();
+      if (userFromToken && userFromToken.id) {
+        this.authService.getUserById(userFromToken.id).subscribe({
+          next: (user) => {
+            this.user = user;
+          },
+          error: (error) => {
+            console.error('Failed to fetch user data', error);
+          }
+        });
+      }
+    }
   }
 
   onSearch() {
@@ -140,5 +162,12 @@ export class TopSearchComponent implements OnInit {
 
   filterMenuItems() {
     console.log('Filtering menu items with query:', this.searchQuery);
+  }
+
+  getImageUrl(path: string | undefined): string {
+    if (!path) return 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png';
+    if (path.startsWith('http')) return path;
+    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
+    return `${serverUrl}${path}`;
   }
 }

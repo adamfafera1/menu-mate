@@ -1,7 +1,8 @@
 <div class="mb-4 p-8 flex items-center justify-center">
-    <p-card (click)="goToRestaurant()" [style]="{width: '25rem', height: '22rem', overflow: 'hidden' }" class="flex flex-col cursor-pointer hover:shadow-xl rounded-xl hover:shadow-slate-300/20">
+    <p-card (click)="goToRestaurant()" [style]="{width: '25rem', height: '22rem', overflow: 'hidden' }"
+        class="flex flex-col cursor-pointer hover:shadow-xl rounded-xl hover:shadow-slate-300/20">
         <ng-template #header>
-            <img alt="Card" class="h-40 w-full object-cover" src={{restaurant.imagePath}} />
+            <img alt="Card" class="h-40 w-full object-cover" [src]="getImageUrl(restaurant?.imagePath)" />
         </ng-template>
         <ng-template #title> {{restaurant.name}} </ng-template>
         <ng-template #subtitle> <p-rating [(ngModel)]="rating" [readonly]="true"></p-rating>
@@ -10,12 +11,5 @@
         <p class="flex-1 overflow-hidden text-ellipsis line-clamp-3">
             {{restaurant.description}}
         </p>
-        <ng-template #footer>
-            <div class="flex gap-4 mt-1">
-                <a  class="w-full">
-                    <!-- <p-button  label="Go to restaurant" class="w-full" styleClass="w-full" /> -->
-                </a>    
-            </div>
-        </ng-template>
     </p-card>
-</div>  
+</div>
