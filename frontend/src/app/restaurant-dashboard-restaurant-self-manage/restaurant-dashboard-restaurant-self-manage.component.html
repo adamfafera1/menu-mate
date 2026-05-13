@@ -46,43 +46,13 @@
             <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
             Upload restaurant image
             </label>
-          <p-fileUpload
-            name="image[]"
-            [multiple]="false"
-            accept="image/*"
-            [showUploadButton]="false"
-            [showCancelButton]="false"
-            [customUpload]="true"
-            (onSelect)="onImageSelect($event)"
-            class="w-full"
-          >
-            <ng-template pTemplate="content">
-              
-                <ul *ngIf="uploadedFiles.length">
-                <li
-                  *ngFor="let file of uploadedFiles; let i = index"
-                  class="flex items-center justify-between"
-                >
-                  <div class="flex items-center gap-2">
-                    <img
-                      [src]="file.objectURL"
-                      [alt]="file.name"
-                      width="50"
-                      class="rounded"
-                    />
-                    <span>{{ file.name }}</span>
-                  </div>
-                  <button
-                    type="button"
-                    (click)="removeFile(i)"
-                    class="text-red-500 hover:text-red-700 transition"
-                  >
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </li>
-              </ul>
-            </ng-template>
-          </p-fileUpload>
+            <div class="relative w-full h-48 group cursor-pointer" (click)="fileInput.click()">
+                <img class="w-full h-full object-cover rounded-lg shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50" [src]="getImageUrl(restaurant?.imagePath)">
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="pi pi-upload text-3xl text-white"></i>
+                </div>
+                <input #fileInput type="file" accept="image/*" class="hidden" (change)="onUpload({files: fileInput.files})">
+            </div>
         </div>
 
         <p-toast />

@@ -128,4 +128,11 @@ export class MenuItemCardComponent implements OnChanges {
         console.error('Error fetching items:', error);
       });
   }
+
+  getImageUrl(path: string | undefined): string {
+    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
+    if (path.startsWith('http')) return path;
+    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
+    return `${serverUrl}${path}`;
+  }
 }

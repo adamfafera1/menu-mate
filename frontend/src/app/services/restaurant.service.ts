@@ -15,7 +15,16 @@ export class RestaurantService {
     return this.http.get<any[]>(`${this.apiUrl}/Restaurants`);
   }
 
-  getRestaurantById(restaurantId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Restaurants/${restaurantId}`);
+  getRestaurantById(restaurantId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Restaurants/${restaurantId}`);
+  }
+
+  uploadRestaurantImage(restaurantId: string, file: File): Observable<{ imagePath: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ imagePath: string }>(
+      `${this.apiUrl}/Restaurants/${restaurantId}/upload-image`,
+      formData
+    );
   }
 }
