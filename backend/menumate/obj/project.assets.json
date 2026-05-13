@@ -5057,11 +5057,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\menumate.csproj",
+      "projectUniqueName": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\menumate.csproj",
       "projectName": "menumate",
-      "projectPath": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\menumate.csproj",
+      "projectPath": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\menumate.csproj",
       "packagesPath": "C:\\Users\\ADASF\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADASF\\Desktop\\menu-mate\\backend\\menumate\\obj\\",
+      "outputPath": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

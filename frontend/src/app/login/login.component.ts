@@ -8,16 +8,20 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from "primeng/toast";
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, ButtonModule, FloatLabelModule, RouterLink, ToastModule],
+  imports: [CommonModule, FormsModule, ButtonModule, FloatLabelModule, RouterLink, ToastModule, InputTextModule],
   standalone: true,
   providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+
+  email = '';
+  password = '';
 
   constructor(
     private authService: AuthService, 
@@ -37,8 +41,8 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem('editLoggedOut');
   }
 
-  onLogin(email: string, password: string){
-    this.authService.login(email,password).subscribe({
+  onLogin(){
+    this.authService.login(this.email, this.password).subscribe({
       next: res => {
         console.log('Login response:', res);
         this.authService.setToken(res.token);
