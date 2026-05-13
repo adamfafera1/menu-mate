@@ -4,11 +4,15 @@
     <div class="basis-4/5 bg-zinc-900 p-6 mt-6 mb-3 mr-6 rounded-lg border border-zinc-700">
         <span class="font-semibold text-4xl text-zinc-600 ml-3">main screen</span>
         <div class="flex justify-center gap-20 mt-3 mb-5">
-            <div>
-                <img class="rounded-xl w-96 h-96 object-fill" src="{{restaurant.imagePath}}"/>
+            <div class="flex flex-col items-center">
                 <span class="text-5xl"> <strong> {{restaurant.name}}</strong></span>
+                <div class="relative group w-96 h-96 cursor-pointer rounded-xl overflow-hidden shadow-sm">
+                    <img class="w-full h-full object-cover transition duration-300 group-hover:brightness-50" src="{{restaurant.imagePath}}"/>
+                    <div routerLink="./restaurant-self-manage" class="absolute inset-0 flex items-center justify-center bg-black/0 transition duration-300 group-hover:bg-black/40">
+                        <i  class="pi pi-pencil text-white text-5xl opacity-0 transition duration-300 group-hover:opacity-100"></i>
+                    </div>
+                </div>         
             </div>
-            
             <div class="grid grid-cols-2 gap-2">
                 <div routerLink="./edits" class="grid-cols-3 gap-3 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-2">
                     <span class="font-bold text-xl"> Pending restaurant edits </span>         

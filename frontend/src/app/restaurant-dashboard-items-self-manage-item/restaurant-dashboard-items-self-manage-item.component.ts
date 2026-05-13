@@ -92,14 +92,17 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     this.loading = true;
 
     const updateData = {
+      restaurantId: this.item?.restaurantId,
       name: this.name,
       description: this.description,
       price: this.price,
+      currency: this.item?.currency || 0,
       calories: this.cals || 0,
       carbs: this.carbs || 0,
       fats: this.fats || 0,
       proteins: this.proteins || 0,
       allergens: this.selectedAlergens?.map((a) => a.name).join(', ') || '',
+      image: this.item?.image || '',
     };
 
     this.http

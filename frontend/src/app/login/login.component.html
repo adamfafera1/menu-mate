@@ -5,15 +5,15 @@
     <div class="w-80">
         <span class="block text-center mb-8 text-2xl">Log in to your account</span>
         <p-floatLabel>
-            <input pInputText #email type="email" id="email" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <input pInputText [(ngModel)]="email" type="email" id="email" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
             <label for="email">Email</label>
         </p-floatLabel>
         <p-floatLabel class="mt-8">
-            <input pInputText #password type="password" id="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
+            <input pInputText [(ngModel)]="password" type="password" id="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" />
             <label for="password">Password</label>
         </p-floatLabel>
         <div class="flex justify-center mt-6">
-            <p-button label="Login" (click)="onLogin(email.value, password.value)" class="w-auto"></p-button>
+            <p-button label="Login" (click)="onLogin()" class="w-auto"></p-button>
         </div>
         <div class="text-center mt-12 text-sm text-gray-300">
             <a routerLink="/register" class="hover:underline cursor-pointer">No account yet? Register here</a>
