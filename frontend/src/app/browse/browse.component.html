@@ -1,6 +1,11 @@
 <div>
   <div class="mt-1">
-    <app-top-search (searchQueryChange)="onSearchQueryChange($event)"></app-top-search>
+    <app-top-search
+      (searchQueryChange)="onSearchQueryChange($event)"
+      (cuisineChange)="onCuisineChange($event)"
+      (locationChange)="onLocationChange($event)"
+      (ratingChange)="onRatingChange($event)">
+    </app-top-search>
   </div>
 
 

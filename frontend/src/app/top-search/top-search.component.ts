@@ -84,10 +84,21 @@ export class TopSearchComponent implements OnInit {
 
     this.cuisines = [
       { name: 'All Cuisines', code: null },
-      { name: 'Italian', code: 'ITA' },
-      { name: 'Chinese', code: 'CHN' },
-      { name: 'Indian', code: 'IND' },
-      { name: 'Mexican', code: 'MEX' },
+      { name: 'Italian', code: 'Italian' },
+      { name: 'Japanese', code: 'Japanese' },
+      { name: 'Chinese', code: 'Chinese' },
+      { name: 'Mexican', code: 'Mexican' },
+      { name: 'Indian', code: 'Indian' },
+      { name: 'French', code: 'French' },
+      { name: 'Thai', code: 'Thai' },
+      { name: 'American', code: 'American' },
+      { name: 'Mediterranean', code: 'Mediterranean' },
+      { name: 'Greek', code: 'Greek' },
+      { name: 'Spanish', code: 'Spanish' },
+      { name: 'Korean', code: 'Korean' },
+      { name: 'Vietnamese', code: 'Vietnamese' },
+      { name: 'Middle Eastern', code: 'Middle Eastern' },
+      { name: 'Other', code: 'Other' },
     ];
 
     this.ratings = [
@@ -145,7 +156,7 @@ export class TopSearchComponent implements OnInit {
   }
 
   onCuisineChange() {
-    this.cuisineChange.emit(this.selectedCuisine);
+    this.cuisineChange.emit(this.selectedCuisine?.code ?? null);
     if (this.isBrowsePage) {
       this.filterRestaurants(this.searchQuery);
     }
