@@ -64,6 +64,7 @@ namespace menumate.Controllers
                 Phone = addRestaurantDto.Phone,
                 Location = addRestaurantDto.Location,
                 ImagePath = addRestaurantDto.ImagePath,
+                Cuisine = addRestaurantDto.Cuisine,
             };
 
             dbContext.Restaurants.Add(restaurantEntity);
@@ -85,6 +86,7 @@ namespace menumate.Controllers
             restaurant.Description = updateRestaurantDto.Description;
             restaurant.Phone = updateRestaurantDto.Phone;
             restaurant.ImagePath = updateRestaurantDto.ImagePath;
+            restaurant.Cuisine = updateRestaurantDto.Cuisine;
 
 
             dbContext.SaveChanges();

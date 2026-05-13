@@ -42,6 +42,18 @@
           <label for="phone">Phone</label>
         </p-iftalabel>
 
+        <div>
+          <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">Cuisine</label>
+          <p-select
+            id="cuisine"
+            [options]="cuisineOptions"
+            [(ngModel)]="selectedCuisine"
+            placeholder="Select a cuisine"
+            [showClear]="true"
+            styleClass="w-full"
+          />
+        </div>
+
         <div >
             <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
             Upload restaurant image

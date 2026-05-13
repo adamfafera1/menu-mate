@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("menumate")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+58929c3e93b87242e375a2a9052b7fa1479d5a44")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bebc8fca04c085300e5f7d30d4db81c0bc3aa344")]
 [assembly: System.Reflection.AssemblyProductAttribute("menumate")]
 [assembly: System.Reflection.AssemblyTitleAttribute("menumate")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

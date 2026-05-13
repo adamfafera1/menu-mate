@@ -1,4 +1,4 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
     public class AddRestaurantDto
     {
@@ -8,5 +8,6 @@
         public string Location { get; set; }
         public string Phone { get; set; }
         public string ImagePath { get; set; }
+        public string? Cuisine { get; set; }
     }
 }
