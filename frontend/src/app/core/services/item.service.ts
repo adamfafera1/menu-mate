@@ -14,4 +14,8 @@ export class ItemService {
   getItemsByRestaurantId(restaurantId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Items/Restaurant/${restaurantId}`);
   }
+
+  getItemById(itemId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Items/${itemId}`);
+  }
 }

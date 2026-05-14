@@ -1,4 +1,4 @@
-﻿namespace menumate.Models.Entities
+namespace menumate.Models.Entities
 {
     public class Review
     {
@@ -10,5 +10,6 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public float Rating { get; set; }
+        public Restaurant Restaurant { get; set; }
     }
 }

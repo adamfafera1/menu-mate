@@ -9,9 +9,12 @@
                         <span class="text-zinc-400 col-span-1 col-start-2 row-start-1 row-span-2 h-24 text-pretty overflow-clip"> {{item.description}} </span>  
                         <span class="text-zinc-400 row-start-2 font-semibold text-lg"> {{item.price}} {{getCurrencySymbol(item.currency)}}</span>
                     </div>
-                    <div class="basis-1/12">
-                        @if (item.reviews>0) { 
-                        <p-badge value="{{item.reviews}}"/>
+                    <div class="basis-1/12 flex flex-col gap-2 items-center">
+                        @if (item.reviews > 0) { 
+                            <p-badge [value]="item.reviews" severity="info" title="Reviews"></p-badge>
+                        }
+                        @if (item.pendingEditsCount > 0) {
+                            <p-badge [value]="item.pendingEditsCount" severity="warn" title="Pending Edits"></p-badge>
                         }
                     </div>
                 </div>

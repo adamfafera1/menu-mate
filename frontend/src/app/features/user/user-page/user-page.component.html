@@ -41,9 +41,11 @@
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-3">
                   <p-avatar shape="circle"
-                    [image]="review.userImagePath || 'https://innostudio.de/fileuploader/images/default-avatar.png'" />
+                    [image]="mediaService.getImageUrl(review.type === 'restaurant' ? review.restaurant?.imagePath : review.item?.image)" />
                   <div>
-                    <p class="font-bold text-white leading-tight">{{review.userName}}</p>
+                    <p class="font-bold text-white leading-tight">
+                      {{ review.type === 'restaurant' ? review.restaurant?.name : review.item?.name }}
+                    </p>
                   </div>
                 </div>
                 <p-rating [(ngModel)]="review.rating" [readonly]="true"></p-rating>

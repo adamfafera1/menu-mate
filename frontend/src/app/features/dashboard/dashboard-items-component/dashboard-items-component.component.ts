@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ItemService } from '../../../core/services/item.service';
 import { MediaService } from '../../../core/services/media.service';
+import { EditService } from '../../../core/services/edit.service';
+import { forkJoin, catchError, of } from 'rxjs';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
@@ -30,6 +32,7 @@ export class DashboardItemsComponentComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private itemService: ItemService,
     public mediaService: MediaService,
+    private editService: EditService
   ) { }
 
   ngOnInit(): void {
@@ -39,9 +42,20 @@ export class DashboardItemsComponentComponent implements OnInit {
 
       if (!id) return;
 
-      this.itemService.getItemsByRestaurantId(id).subscribe({
-        next: (data) => {
-          this.items = data;
+      forkJoin({
+        items: this.itemService.getItemsByRestaurantId(id),
+        edits: this.editService.getPendingItemEditsByRestaurant(id).pipe(
+          catchError(err => {
+            console.error('Error fetching edits, showing items anyway:', err);
+            return of([]);
+          })
+        )
+      }).subscribe({
+        next: ({ items, edits }) => {
+          this.items = items.map(item => ({
+            ...item,
+            pendingEditsCount: edits.filter(e => e.itemId === item.id).length
+          }));
         },
         error: (error) => {
           console.error('Error fetching items:', error);

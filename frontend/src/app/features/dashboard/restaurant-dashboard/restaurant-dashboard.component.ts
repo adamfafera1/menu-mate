@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -10,6 +10,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RestaurantService } from '../../../core/services/restaurant.service';
 import { RatingServiceService } from '../../../core/services/rating-service.service';
 import { MediaService } from '../../../core/services/media.service';
+import { EditService } from '../../../core/services/edit.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-restaurant-dashboard',
@@ -23,21 +25,25 @@ import { MediaService } from '../../../core/services/media.service';
     BadgeModule,
     CardModule,
     RouterLink,
+    CommonModule
   ],
   templateUrl: './restaurant-dashboard.component.html',
   styleUrl: './restaurant-dashboard.component.css',
 })
-export class RestaurantDashboardComponent {
+export class RestaurantDashboardComponent implements OnInit {
   urlId: string | null = null;
   restaurant: any = null;
   rating: number = 0;
   reviewCount: number = 0;
+  pendingRestaurantEditsCount: number = 0;
+  pendingItemEditsCount: number = 0;
 
   constructor(
     private restaurantSerivce: RestaurantService,
     private ratingService: RatingServiceService,
     private route: ActivatedRoute,
-    public mediaService: MediaService
+    public mediaService: MediaService,
+    private editService: EditService
   ) {}
 
   ngOnInit() {
@@ -71,6 +77,16 @@ export class RestaurantDashboardComponent {
           console.error('Failed to fetch count of reivews: ', err);
           this.reviewCount = 0;
         },
+      });
+
+      this.editService.getPendingRestaurantEditsCount(this.urlId).subscribe({
+        next: (count) => this.pendingRestaurantEditsCount = count,
+        error: (err) => console.error('Error fetching restaurant edits count', err)
+      });
+
+      this.editService.getPendingItemEditsCountByRestaurant(this.urlId).subscribe({
+        next: (count) => this.pendingItemEditsCount = count,
+        error: (err) => console.error('Error fetching item edits count', err)
       });
     }
   }

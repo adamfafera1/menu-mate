@@ -2,6 +2,7 @@ using menumate.Data;
 using menumate.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace menumate.Controllers
 {
@@ -26,7 +27,11 @@ namespace menumate.Controllers
         [Route("user/{id:guid}")]
         public IActionResult GetReviewItemsByUserId(Guid id)
         {
-            var reviews = dbContext.ReviewItems.Where(item => item.UserId == id);
+            var reviews = dbContext.ReviewItems
+                .Include(r => r.Item)
+                .Where(item => item.UserId == id)
+                .ToList();
+
             return Ok(reviews);
         }
 

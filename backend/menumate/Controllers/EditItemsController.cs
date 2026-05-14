@@ -1,7 +1,6 @@
-﻿using menumate.Data;
+using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +8,7 @@ namespace menumate.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EditItemsController : Controller
+    public class EditItemsController : ControllerBase
     {
         public readonly ApplicationDbContext dbContext;
 
@@ -25,8 +24,7 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
-        [HttpGet]
-        [Route("{id:guid}")]
+        [HttpGet("{id:guid}")]
         public IActionResult GetEditById(Guid id)
         {
             var edit = dbContext.EditItems.Where(e => e.ItemId == id).ToList();
@@ -37,6 +35,16 @@ namespace menumate.Controllers
             }
 
             return Ok(edit);
+        }
+
+        [HttpGet("Restaurant/{restaurantId:guid}")]
+        public IActionResult GetEditsByRestaurantId(Guid restaurantId)
+        {
+            var edits = dbContext.EditItems
+                .Include(e => e.Item)
+                .Where(e => e.Item.RestaurantId == restaurantId)
+                .ToList();
+            return Ok(edits);
         }
 
         [HttpPost]
@@ -59,8 +67,7 @@ namespace menumate.Controllers
             return Ok(edit);
         }
 
-        [HttpPut]
-        [Route("{id:guid}/approve")]
+        [HttpPut("{id:guid}/approve")]
         public IActionResult ApproveEdit(Guid id)
         {
             var edit = dbContext.EditItems
@@ -94,8 +101,7 @@ namespace menumate.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public IActionResult DeleteEdit(Guid id)
         {
             var edit = dbContext.EditItems.Find(id);

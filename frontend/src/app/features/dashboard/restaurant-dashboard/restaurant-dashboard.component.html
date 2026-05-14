@@ -5,7 +5,7 @@
         <span class="font-semibold text-4xl text-zinc-600 ml-3">Home</span>
         <div class="flex justify-center gap-20 mt-3 mb-5">
             <div class="flex flex-col items-center">
-                <span class="text-5xl mb-3"> <strong> {{restaurant.name}}</strong></span>
+                <span class="text-5xl mb-3 self-start ml-3"> <strong> {{restaurant.name}}</strong></span>
                 <div class="relative group w-96 h-96 cursor-pointer rounded-xl overflow-hidden shadow-sm">
                     <img class="w-full h-full object-cover transition duration-300 group-hover:brightness-50"
                         [src]="mediaService.getImageUrl(restaurant?.imagePath)" />
@@ -18,21 +18,26 @@
             </div>
             <div class="grid grid-cols-2 gap-2">
                 <div routerLink="./edits"
-                    class="grid-cols-3 gap-3 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-2">
+                    class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4 relative">
                     <span class="font-bold text-xl"> Pending restaurant edits </span>
+                    @if (pendingRestaurantEditsCount > 0) {
+                        <p-badge [value]="pendingRestaurantEditsCount" severity="warn" class="absolute top-2 right-2"></p-badge>
+                    }
                 </div>
                 <div routerLink="./item-edits"
-                    class="grid-cols-3 gap-3 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-2">
+                    class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4 relative">
                     <span class="font-bold text-xl"> Pending menu items edits </span>
+                    @if (pendingItemEditsCount > 0) {
+                        <p-badge [value]="pendingItemEditsCount" severity="warn" class="absolute top-2 right-2"></p-badge>
+                    }
                 </div>
                 <div routerLink="./reviews"
-                    class="grid-cols-3 gap-3 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-2">
+                    class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4">
                     <span class="font-bold text-xl"> Rating - reviews of restaurant </span>
                 </div>
                 <div routerLink="./item-reviews"
-                    class="grid-cols-3 gap-3 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-2">
+                    class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4">
                     <span class="font-bold text-xl"> Rating - reviews of menu items (avg) </span>
-
                 </div>
             </div>
         </div>
