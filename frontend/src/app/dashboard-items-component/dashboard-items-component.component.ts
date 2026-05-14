@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ItemService } from '../services/item.service';
+import { MediaService } from '../services/media.service';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
@@ -21,14 +23,17 @@ enum Currency {
 export class DashboardItemsComponentComponent implements OnInit {
   items: any[] = [];
 
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private itemService: ItemService,
-  ) {}
+    public mediaService: MediaService,
+  ) { }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((params) => {
+    this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const id = params.get('id');
       console.log('Id mam nadzieje restauracji: ', id);
 
@@ -62,10 +67,5 @@ export class DashboardItemsComponentComponent implements OnInit {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
+
 }

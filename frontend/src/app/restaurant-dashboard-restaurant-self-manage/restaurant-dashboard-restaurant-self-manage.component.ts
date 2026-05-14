@@ -20,6 +20,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../config/api.config';
 import { RestaurantService } from '../services/restaurant.service';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-restaurant-dashboard-restaurant-self-manage',
@@ -69,7 +70,8 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     private messageService: MessageService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private restaurantService: RestaurantService
+    private restaurantService: RestaurantService,
+    public mediaService: MediaService
   ) { }
 
   ngOnInit(): void {
@@ -297,10 +299,4 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     this.locationSuggestions = [];
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

@@ -18,6 +18,7 @@ import { ProposeItemEditComponent } from '../propose-item-edit/propose-item-edit
 import { ReviewItemMakeComponent } from '../review-item-make/review-item-make.component';
 import { API_CONFIG } from '../config/api.config';
 import { ItemService } from '../services/item.service';
+import { MediaService } from '../services/media.service';
 
 enum Currency {
   PLN = 0,
@@ -53,7 +54,7 @@ export class MenuItemCardComponent implements OnChanges {
   value: number = 4;
   selectedItem = signal<any | null>(null);
 
-  constructor(private route: ActivatedRoute, private itemService: ItemService) {}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, public mediaService: MediaService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['searchQuery']) {
@@ -127,10 +128,4 @@ export class MenuItemCardComponent implements OnChanges {
     });
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

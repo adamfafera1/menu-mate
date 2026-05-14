@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { RatingServiceService } from '../services/rating-service.service';
-import { API_CONFIG } from '../config/api.config';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-restaurant-card',
@@ -18,7 +18,7 @@ export class RestaurantCardComponent {
   @Input() restaurant:any;
   @Input() rating: number = 0;
 
-  constructor(private router: Router, private ratingService: RatingServiceService) {}
+  constructor(private router: Router, private ratingService: RatingServiceService, public mediaService: MediaService) {}
 
   ngOnInit(){
     if(this.restaurant?.id){
@@ -41,10 +41,4 @@ export class RestaurantCardComponent {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

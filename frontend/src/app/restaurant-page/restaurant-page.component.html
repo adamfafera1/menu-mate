@@ -4,7 +4,7 @@
 @if (selectedRestaurant) {
 <div class="static mx-auto place-content-center w-3/4 surface-card p-4 shadow-2 border-round">
   <div class="relative h-1/12">
-    <img alt="Card" class="rounded-md h-36 w-full object-cover" [src]="getImageUrl(selectedRestaurant?.imagePath)" />
+    <img alt="Card" class="rounded-md h-36 w-full object-cover" [src]="mediaService.getImageUrl(selectedRestaurant?.imagePath)" />
   </div>
 
   <div class="text-4xl font-medium mt-3 text-900 mb-3"> {{selectedRestaurant.name}} </div>

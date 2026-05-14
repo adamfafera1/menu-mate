@@ -53,7 +53,7 @@
                     </label>
                     <div class="relative w-full h-32 group cursor-pointer" (click)="fileInput.click()">
                         <img class="w-full h-full object-cover rounded-lg shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50"
-                            [src]="getImageUrl(item?.image)">
+                            [src]="mediaService.getImageUrl(item?.image)">
                         <div
                             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <i class="pi pi-upload text-3xl text-white"></i>

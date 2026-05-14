@@ -2,7 +2,7 @@
     <p-card (click)="goToRestaurant()" [style]="{width: '25rem', height: '22rem', overflow: 'hidden' }"
         class="flex flex-col cursor-pointer hover:shadow-xl rounded-xl hover:shadow-slate-300/20">
         <ng-template #header>
-            <img alt="Card" class="h-40 w-full object-cover" [src]="getImageUrl(restaurant?.imagePath)" />
+            <img alt="Card" class="h-40 w-full object-cover" [src]="mediaService.getImageUrl(restaurant?.imagePath)" />
         </ng-template>
         <ng-template #title> {{restaurant.name}} </ng-template>
         <ng-template #subtitle> <p-rating [(ngModel)]="rating" [readonly]="true"></p-rating>

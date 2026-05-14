@@ -7,7 +7,7 @@
             <div class="flex flex-col items-center">
                 <span class="text-5xl"> <strong> {{restaurant.name}}</strong></span>
                 <div class="relative group w-96 h-96 cursor-pointer rounded-xl overflow-hidden shadow-sm">
-                    <img class="w-full h-full object-cover transition duration-300 group-hover:brightness-50" [src]="getImageUrl(restaurant?.imagePath)"/>
+                    <img class="w-full h-full object-cover transition duration-300 group-hover:brightness-50" [src]="mediaService.getImageUrl(restaurant?.imagePath)"/>
                     <div routerLink="./restaurant-self-manage" class="absolute inset-0 flex items-center justify-center bg-black/0 transition duration-300 group-hover:bg-black/40">
                         <i  class="pi pi-pencil text-white text-5xl opacity-0 transition duration-300 group-hover:opacity-100"></i>
                     </div>

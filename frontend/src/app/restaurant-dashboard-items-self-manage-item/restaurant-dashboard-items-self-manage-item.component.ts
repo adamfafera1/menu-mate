@@ -13,6 +13,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MediaService } from '../services/media.service';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -60,6 +61,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private http: HttpClient,
+    public mediaService: MediaService
   ) {}
 
   onUpload(event: any) {
@@ -100,12 +102,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
+
 
   updateItem(): void {
     if (!this.itemId) {

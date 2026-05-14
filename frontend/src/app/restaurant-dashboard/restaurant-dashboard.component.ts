@@ -9,7 +9,7 @@ import { CardModule } from 'primeng/card';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RestaurantService } from '../services/restaurant.service';
 import { RatingServiceService } from '../services/rating-service.service';
-import { API_CONFIG } from '../config/api.config';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-restaurant-dashboard',
@@ -37,6 +37,7 @@ export class RestaurantDashboardComponent {
     private restaurantSerivce: RestaurantService,
     private ratingService: RatingServiceService,
     private route: ActivatedRoute,
+    public mediaService: MediaService
   ) {}
 
   ngOnInit() {
@@ -74,10 +75,4 @@ export class RestaurantDashboardComponent {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

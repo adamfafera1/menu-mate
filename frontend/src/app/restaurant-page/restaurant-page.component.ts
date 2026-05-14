@@ -15,9 +15,9 @@ import { MessageService } from 'primeng/api';
 import { ReviewComponent } from '../review/review.component';
 import { ProposeRestaurantEditComponent } from '../propose-restaurant-edit/propose-restaurant-edit.component';
 import { ReviewRestaurantMakeComponent } from '../review-restaurant-make/review-restaurant-make.component';
-import { API_CONFIG } from '../config/api.config';
 import { RestaurantService } from '../services/restaurant.service';
 import { RatingServiceService } from '../services/rating-service.service';
+import { MediaService } from '../services/media.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -85,7 +85,8 @@ export class RestaurantPageComponent implements OnInit {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private restaurantService: RestaurantService,
-    private ratingService: RatingServiceService
+    private ratingService: RatingServiceService,
+    public mediaService: MediaService
   ) {}
 
   ngOnInit() {
@@ -125,10 +126,4 @@ export class RestaurantPageComponent implements OnInit {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

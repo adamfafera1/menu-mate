@@ -43,7 +43,7 @@
     <ng-template pTemplate="end">
       <div routerLink="/user" class="cursor-pointer">
         <p-avatar shape="circle" class="shadow-sm shadow-black w-10 h-10 overflow-hidden"
-          [image]="getImageUrl(user?.imgPath)"></p-avatar>
+          [image]="mediaService.getUserImageUrl(user?.imgPath)"></p-avatar>
       </div>
     </ng-template>
   </p-toolbar>

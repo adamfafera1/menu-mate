@@ -9,7 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { AuthService } from '../services/auth.service';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { API_CONFIG } from '../config/api.config';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-user-page',
@@ -28,7 +28,8 @@ export class UserPageComponent {
     private authService: AuthService, 
     private router: Router, 
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public mediaService: MediaService
   ) {}
 
   ngOnInit(){
@@ -102,10 +103,4 @@ export class UserPageComponent {
     }
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?20210521171500';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

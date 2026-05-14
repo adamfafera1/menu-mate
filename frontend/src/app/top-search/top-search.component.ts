@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, DestroyRef, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -12,6 +12,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { FormsModule } from '@angular/forms';
 import { RestaurantService } from '../services/restaurant.service';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -19,7 +20,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
 import { AuthService } from '../services/auth.service';
-import { API_CONFIG } from '../config/api.config';
+import { MediaService } from '../services/media.service';
 
 @Component({
   selector: 'app-top-search',
@@ -65,11 +66,14 @@ export class TopSearchComponent implements OnInit {
   user: any = null;
   private searchSubject = new Subject<string>();
 
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(
     private router: Router,
     private restaurantService: RestaurantService,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    public mediaService: MediaService
   ) { }
 
   ngOnInit() {
@@ -77,7 +81,7 @@ export class TopSearchComponent implements OnInit {
 
     // Update isBrowsePage status on every navigation end
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.isBrowsePage = this.router.url === '/browse';
       });
@@ -112,7 +116,7 @@ export class TopSearchComponent implements OnInit {
     ];
 
     this.searchSubject
-      .pipe(debounceTime(300), distinctUntilChanged())
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((query) => {
         if (this.isBrowsePage) {
           this.filterRestaurants(query);
@@ -231,10 +235,4 @@ export class TopSearchComponent implements OnInit {
     console.log('Filtering menu items with query:', this.searchQuery);
   }
 
-  getImageUrl(path: string | undefined): string {
-    if (!path) return 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png';
-    if (path.startsWith('http')) return path;
-    const serverUrl = API_CONFIG.baseUrl.replace('/api', '');
-    return `${serverUrl}${path}`;
-  }
 }

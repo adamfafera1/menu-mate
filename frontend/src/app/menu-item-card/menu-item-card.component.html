@@ -2,7 +2,7 @@
     @for (item of filteredItems; track item) {
     <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }" class="cursor-pointer transition-all duration-300 hover:shadow-2xl rounded-xl hover:shadow-slate-300/20">
         <ng-template #header>
-            <img alt="Card" class="h-32 w-full object-cover" [src]="getImageUrl(item.image)" />
+            <img alt="Card" class="h-32 w-full object-cover" [src]="mediaService.getImageUrl(item.image)" />
         </ng-template>
         <ng-template #title> {{item.name}} </ng-template>
         <ng-template #subtitle> {{item.price}} {{getCurrencySymbol(item.currency)}}</ng-template>
@@ -38,7 +38,7 @@
         </p-tablist>
         <p-tabpanels>
             <p-tabpanel value="0">
-                <img alt="" class="h-72 w-full rounded-lg object-cover" [src]="getImageUrl(selectedItem()?.image)" />
+                <img alt="" class="h-72 w-full rounded-lg object-cover" [src]="mediaService.getImageUrl(selectedItem()?.image)" />
                 <p class="mt-3 text-2xl">
                     {{selectedItem()?.name}}
                 </p>
