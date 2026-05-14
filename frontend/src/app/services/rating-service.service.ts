@@ -34,4 +34,21 @@ export class RatingServiceService {
       .get<any[]>(`${this.apiUrl}/Reviews/${restaurantId}`)
       .pipe(map((reviews) => reviews.length));
   }
+
+
+  calculateAverageRatings(reviews: any[]): Map<string, { sum: number; count: number }> {
+    const ratingMap = new Map<string, { sum: number; count: number }>();
+    for (const review of reviews) {
+      const id = review.restaurantId || review.itemId;
+      if (!id) continue;
+      
+      if (!ratingMap.has(id)) {
+        ratingMap.set(id, { sum: 0, count: 0 });
+      }
+      const entry = ratingMap.get(id)!;
+      entry.sum += review.rating;
+      entry.count += 1;
+    }
+    return ratingMap;
+  }
 }

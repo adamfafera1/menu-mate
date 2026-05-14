@@ -21,6 +21,7 @@ import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
 import { AuthService } from '../services/auth.service';
 import { MediaService } from '../services/media.service';
+import { GeolocationService } from '../services/geolocation.service';
 
 @Component({
   selector: 'app-top-search',
@@ -72,7 +73,8 @@ export class TopSearchComponent implements OnInit {
     private restaurantService: RestaurantService,
     private authService: AuthService,
     private http: HttpClient,
-    public mediaService: MediaService
+    public mediaService: MediaService,
+    private geolocationService: GeolocationService
   ) { }
 
   ngOnInit() {
@@ -146,38 +148,10 @@ export class TopSearchComponent implements OnInit {
     this.searchSubject.next(this.searchQuery);
   }
 
-  private formatAddress(address: any): string {
-    const road = address?.road || address?.pedestrian || address?.path || address?.footway;
-    const number = address?.house_number;
-    const city = address?.city || address?.town || address?.village || address?.municipality || address?.county;
-    const parts: string[] = [];
-    if (road) parts.push(number ? `${road} ${number}` : road);
-    if (city) parts.push(city);
-    return parts.join(', ');
-  }
-
   searchLocation(event: any) {
-    const query = event.query?.trim();
-    if (!query || query.length < 2) {
-      this.locationSuggestions = [];
-      return;
-    }
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
-    this.http.get<any[]>(url, { headers: { 'Accept-Language': 'en' } }).subscribe({
+    this.geolocationService.searchLocations(event.query).subscribe({
       next: (results) => {
-        const seen = new Set<string>();
-        this.locationSuggestions = results
-          .map((r) => ({
-            label: this.formatAddress(r.address) || r.display_name,
-            lat: +r.lat,
-            lng: +r.lon,
-          }))
-          .filter((s) => {
-            const key = s.label.split(',')[0].trim().toLowerCase();
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-          });
+        this.locationSuggestions = results;
       },
       error: () => {
         this.locationSuggestions = [];

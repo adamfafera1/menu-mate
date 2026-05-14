@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RestaurantService } from '../services/restaurant.service';
 import { RatingServiceService } from '../services/rating-service.service';
+import { GeolocationService } from '../services/geolocation.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -27,7 +28,8 @@ export class BrowseComponent implements OnInit {
 
   constructor(
     private restaurantService: RestaurantService,
-    private ratingService: RatingServiceService
+    private ratingService: RatingServiceService,
+    private geolocationService: GeolocationService
   ) {}
 
   ngOnInit() {
@@ -36,14 +38,7 @@ export class BrowseComponent implements OnInit {
       reviews: this.ratingService.getAllReviews()
     }).subscribe({
       next: ({ restaurants, reviews }) => {
-        const ratingMap = new Map<string, { sum: number; count: number }>();
-        for (const review of reviews) {
-          const id = review.restaurantId;
-          if (!ratingMap.has(id)) ratingMap.set(id, { sum: 0, count: 0 });
-          const entry = ratingMap.get(id)!;
-          entry.sum += review.rating;
-          entry.count += 1;
-        }
+        const ratingMap = this.ratingService.calculateAverageRatings(reviews);
 
         this.restaurants = restaurants.map((r: any) => {
           const entry = ratingMap.get(r.id);
@@ -63,22 +58,18 @@ export class BrowseComponent implements OnInit {
     });
   }
 
-  private haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) ** 2 +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  }
+
 
   applyFilters() {
     this.filteredRestaurants = this.restaurants.filter((r) => {
       const matchesName = r.name.toLowerCase().includes(this.searchQuery.toLowerCase());
       const matchesCuisine = !this.selectedCuisine || (r.cuisine ?? '').toLowerCase() === this.selectedCuisine.toLowerCase();
       const matchesLocation = !this.selectedLocation ||
-        (r.latitude != null && r.longitude != null &&
-          this.haversineKm(this.selectedLocation.lat, this.selectedLocation.lng, r.latitude, r.longitude) <= this.RADIUS_KM);
+        this.geolocationService.isWithinRadius(
+          this.selectedLocation,
+          { lat: r.latitude, lng: r.longitude },
+          this.RADIUS_KM
+        );
       const matchesRating = !this.selectedRating || (r.computedRating ?? 0) >= this.selectedRating.value;
       return matchesName && matchesCuisine && matchesLocation && matchesRating;
     });
