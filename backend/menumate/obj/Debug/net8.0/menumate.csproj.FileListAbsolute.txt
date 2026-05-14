@@ -524,3 +524,10 @@ C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\obj\Debug\net8.0\refi
 C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\obj\Debug\net8.0\menumate.pdb
 C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\obj\Debug\net8.0\menumate.genruntimeconfig.cache
 C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\obj\Debug\net8.0\ref\menumate.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\azurestorage.json
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\Azure.Storage.Blobs.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\Azure.Storage.Common.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
+C:\Users\ADASF\Desktop\gitrepos\menu-mate\backend\menumate\bin\Debug\net8.0\System.IO.Hashing.dll

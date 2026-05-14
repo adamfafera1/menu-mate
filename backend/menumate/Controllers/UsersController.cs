@@ -2,6 +2,7 @@ using menumate.Data;
 using menumate.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using menumate.Services;
 using System.IO;
 using System.Threading.Tasks;
 using menumate.Models.Entities;
@@ -19,10 +20,12 @@ namespace menumate.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IImageService imageService;
 
-        public UsersController(ApplicationDbContext dbContext)
+        public UsersController(ApplicationDbContext dbContext, IImageService imageService)
         {
             this.dbContext = dbContext;
+            this.imageService = imageService;
         }
 
         [HttpGet]
@@ -138,28 +141,14 @@ namespace menumate.Controllers
             var user = await dbContext.Users.FindAsync(userId);
             if (user == null) return NotFound();
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "users");
-            if (!Directory.Exists(folderPath))
+            if (!string.IsNullOrEmpty(user.ImgPath))
             {
-                Directory.CreateDirectory(folderPath);
+                await imageService.DeleteImageAsync(user.ImgPath);
             }
 
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{userId}{extension}";
-            var filePath = Path.Combine(folderPath, fileName);
+            var imageUrl = await imageService.UploadImageAsync(file, "users");
 
-            var existingFiles = Directory.GetFiles(folderPath, $"{userId}.*");
-            foreach (var existingFile in existingFiles)
-            {
-                System.IO.File.Delete(existingFile);
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            user.ImgPath = $"/uploads/users/{fileName}";
+            user.ImgPath = imageUrl;
             dbContext.Users.Update(user);
             await dbContext.SaveChangesAsync();
 

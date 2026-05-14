@@ -1,6 +1,7 @@
 using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
+using menumate.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,13 @@ namespace menumate.Controllers
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly IImageService imageService;
 
-        public RestaurantsController(ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory)
+        public RestaurantsController(ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory, IImageService imageService)
         {
             this.dbContext = dbContext;
             this.httpClientFactory = httpClientFactory;
+            this.imageService = imageService;
         }
 
         private async Task<(double? lat, double? lng)> GeocodeAsync(string location)
@@ -177,28 +180,14 @@ namespace menumate.Controllers
             var restaurant = await dbContext.Restaurants.FindAsync(id);
             if (restaurant == null) return NotFound();
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "restaurants");
-            if (!Directory.Exists(folderPath))
+            if (!string.IsNullOrEmpty(restaurant.ImagePath))
             {
-                Directory.CreateDirectory(folderPath);
+                await imageService.DeleteImageAsync(restaurant.ImagePath);
             }
 
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{id}{extension}";
-            var filePath = Path.Combine(folderPath, fileName);
+            var imageUrl = await imageService.UploadImageAsync(file, "restaurants");
 
-            var existingFiles = Directory.GetFiles(folderPath, $"{id}.*");
-            foreach (var existingFile in existingFiles)
-            {
-                System.IO.File.Delete(existingFile);
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            restaurant.ImagePath = $"/uploads/restaurants/{fileName}";
+            restaurant.ImagePath = imageUrl;
             dbContext.Restaurants.Update(restaurant);
             await dbContext.SaveChangesAsync();
 

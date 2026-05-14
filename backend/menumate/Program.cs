@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using menumate.Models.Entities;
-
+using menumate.Services;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("azurestorage.json", optional: true, reloadOnChange: true);
 
 builder.WebHost.UseUrls("https://localhost:7084");
 
@@ -21,6 +24,9 @@ builder.Services.AddHttpClient("Nominatim", client =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration["AzureStorage:ConnectionString"]));
+builder.Services.AddScoped<IImageService, AzureBlobStorageService>();
 
 // connection to db
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

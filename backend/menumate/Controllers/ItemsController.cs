@@ -1,6 +1,7 @@
 using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
+using menumate.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,13 @@ namespace menumate.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        public readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext dbContext;
+        private readonly IImageService imageService;
 
-        public ItemsController(ApplicationDbContext dbContext)
+        public ItemsController(ApplicationDbContext dbContext, IImageService imageService)
         {
             this.dbContext = dbContext;
+            this.imageService = imageService;
         }
 
         [HttpGet]
@@ -121,28 +124,14 @@ namespace menumate.Controllers
             var item = await dbContext.Items.FindAsync(id);
             if (item == null) return NotFound();
 
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "items");
-            if (!Directory.Exists(folderPath))
+            if (!string.IsNullOrEmpty(item.Image))
             {
-                Directory.CreateDirectory(folderPath);
+                await imageService.DeleteImageAsync(item.Image);
             }
 
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{id}{extension}";
-            var filePath = Path.Combine(folderPath, fileName);
+            var imageUrl = await imageService.UploadImageAsync(file, "items");
 
-            var existingFiles = Directory.GetFiles(folderPath, $"{id}.*");
-            foreach (var existingFile in existingFiles)
-            {
-                System.IO.File.Delete(existingFile);
-            }
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            item.Image = $"/uploads/items/{fileName}";
+            item.Image = imageUrl;
             dbContext.Items.Update(item);
             await dbContext.SaveChangesAsync();
 
