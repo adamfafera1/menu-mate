@@ -14,7 +14,6 @@ import { InputTextModule } from 'primeng/inputtext';
   selector: 'app-login',
   imports: [CommonModule, FormsModule, ButtonModule, FloatLabelModule, RouterLink, ToastModule, InputTextModule],
   standalone: true,
-  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

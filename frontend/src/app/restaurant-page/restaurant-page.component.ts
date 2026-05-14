@@ -40,7 +40,6 @@ import { forkJoin } from 'rxjs';
   ],
   templateUrl: './restaurant-page.component.html',
   styleUrl: './restaurant-page.component.css',
-  providers: [MessageService],
 })
 export class RestaurantPageComponent implements OnInit {
   restaurants: any[] = [];

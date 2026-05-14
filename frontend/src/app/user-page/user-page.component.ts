@@ -15,7 +15,6 @@ import { MediaService } from '../services/media.service';
   selector: 'app-user-page',
   standalone: true,
   imports: [CommonModule, ButtonModule, AvatarModule, TabsModule, RouterLink, ConfirmDialogModule, FileUploadModule, ToastModule],
-  providers: [AuthService, ConfirmationService, MessageService],
   templateUrl: './user-page.component.html',
   styleUrl: './user-page.component.css'
 })

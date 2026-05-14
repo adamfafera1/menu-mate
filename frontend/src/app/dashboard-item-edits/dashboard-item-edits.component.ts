@@ -13,7 +13,6 @@ import { DatePipe } from '@angular/common';
   imports: [CardModule, ButtonModule, ToastModule, DatePipe],
   templateUrl: './dashboard-item-edits.component.html',
   styleUrl: './dashboard-item-edits.component.css',
-  providers: [MessageService],
 })
 export class DashboardItemEditsComponent implements OnInit {
   pendingEdits: any[] = [];

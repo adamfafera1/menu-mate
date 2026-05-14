@@ -17,7 +17,6 @@ import { UserRole } from '../models/user-roles';
   imports: [CommonModule, FormsModule, ButtonModule, FloatLabel, InputText, RouterLink, Toast, SelectButtonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
-  providers: [MessageService]
 })
 export class RegisterComponent {
 

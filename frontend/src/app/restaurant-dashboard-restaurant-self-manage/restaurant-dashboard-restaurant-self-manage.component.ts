@@ -45,7 +45,6 @@ import { MediaService } from '../services/media.service';
   standalone: true,
   templateUrl: './restaurant-dashboard-restaurant-self-manage.component.html',
   styleUrl: './restaurant-dashboard-restaurant-self-manage.component.css',
-  providers: [ConfirmationService, MessageService],
 })
 export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit {
   name: string | undefined;

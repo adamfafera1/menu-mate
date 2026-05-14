@@ -37,7 +37,6 @@ interface Alergens {
   ],
   templateUrl: './restaurant-dashboard-add-item.component.html',
   styleUrl: './restaurant-dashboard-add-item.component.css',
-  providers: [MessageService],
 })
 export class RestaurantDashboardAddItemComponent implements OnInit {
   name!: string;

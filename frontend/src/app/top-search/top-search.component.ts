@@ -44,7 +44,6 @@ import { MediaService } from '../services/media.service';
   ],
   templateUrl: './top-search.component.html',
   styleUrl: './top-search.component.css',
-  providers: [RestaurantService, AuthService],
 })
 export class TopSearchComponent implements OnInit {
   @Output() searchQueryChange = new EventEmitter<string>();

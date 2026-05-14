@@ -30,7 +30,6 @@ import { DatePipe } from '@angular/common';
   ],
   templateUrl: './restaurant-dashboard-edits.component.html',
   styleUrl: './restaurant-dashboard-edits.component.css',
-  providers: [MessageService, RestaurantService],
 })
 export class RestaurantDashboardEditsComponent implements OnInit {
   pendingEdits: any[] = [];

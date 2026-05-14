@@ -11,7 +11,6 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-side-menu',
   imports: [MenuModule, AvatarModule, ConfirmDialogModule],
-  providers: [ConfirmationService],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.css'
 })

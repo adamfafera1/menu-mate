@@ -40,7 +40,6 @@ interface Alergens {
   ],
   templateUrl: './restaurant-dashboard-items-self-manage-item.component.html',
   styleUrl: './restaurant-dashboard-items-self-manage-item.component.css',
-  providers: [MessageService],
 })
 export class RestaurantDashboardItemsSelfManageItemComponent {
   name: string | undefined;

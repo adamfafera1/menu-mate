@@ -6,6 +6,7 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,5 +30,7 @@ export const appConfig: ApplicationConfig = {
       ripple: true
      }),
      provideHttpClient(withInterceptors([AuthInterceptor])),
+     MessageService,
+     ConfirmationService,
     ]
 };
