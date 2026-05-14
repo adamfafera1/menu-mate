@@ -47,9 +47,26 @@ namespace menumate.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetRestaurants()
+        public async Task<IActionResult> GetRestaurants()
         {
-            return Ok(dbContext.Restaurants.ToList());
+            var restaurants = dbContext.Restaurants.ToList();
+
+            var missing = restaurants
+                .Where(r => r.Latitude == null && !string.IsNullOrWhiteSpace(r.Location))
+                .ToList();
+
+            foreach (var r in missing)
+            {
+                var (lat, lng) = await GeocodeAsync(r.Location);
+                r.Latitude = lat;
+                r.Longitude = lng;
+                await Task.Delay(1100);
+            }
+
+            if (missing.Count > 0)
+                await dbContext.SaveChangesAsync();
+
+            return Ok(restaurants);
         }
 
         [HttpGet]

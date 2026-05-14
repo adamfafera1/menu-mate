@@ -9,57 +9,30 @@
         <p-floatlabel variant="on">
           <p-iconfield>
             <p-inputicon class="pi pi-search" />
-            <input
-              class="text-center sm:w-auto lg:w-80 h-10 rounded-2xl"
-              pInputText
-              id="on_label"
-              autocomplete="off"
-              [(ngModel)]="searchQuery"
-              (input)="onSearch()"
-            />
-            <p-inputicon
-              *ngIf="searchQuery"
-              class="pi pi-times cursor-pointer"
-              (click)="searchQuery = ''; onSearch()"
-            />
+            <input class="text-center sm:w-auto lg:w-80 h-10 rounded-2xl" pInputText id="on_label" autocomplete="off"
+              [(ngModel)]="searchQuery" (input)="onSearch()" />
+            <p-inputicon *ngIf="searchQuery" class="pi pi-times cursor-pointer"
+              (click)="searchQuery = ''; onSearch()" />
           </p-iconfield>
           <label for="on_label" style="color: aliceblue"> Search</label>
         </p-floatlabel>
-        <p-select
-          *ngIf="isBrowsePage"
-          [options]="cuisines"
-          [(ngModel)]="selectedCuisine"
-          optionLabel="name"
-          placeholder="Cuisine"
-          (onChange)="onCuisineChange()"
-          [showClear]="true"
-          class="w-36"
-        />
-        <p-autocomplete
-          *ngIf="isBrowsePage"
-          [(ngModel)]="selectedLocation"
-          [suggestions]="locationSuggestions"
-          (completeMethod)="searchLocation($event)"
-          (onSelect)="onLocationSelect($event)"
-          (onClear)="onLocationClear()"
-          optionLabel="label"
-          placeholder="Location"
-          [showClear]="true"
-          class="w-48"
-          [dropdown]="false"
-          [forceSelection]="true"
-        />
 
-        <p-select
-          *ngIf="isBrowsePage"
-          [options]="ratings"
-          [(ngModel)]="selectedRating"
-          optionLabel="name"
-          placeholder="Rating"
-          (onChange)="onRatingChange()"
-          [showClear]="true"
-          class="w-36"
-        >
+        <p-floatlabel *ngIf="isBrowsePage" variant="on">
+          <p-iconfield>
+            <p-inputicon class="pi pi-map-marker" />
+            <p-autocomplete inputId="location_label" [(ngModel)]="selectedLocation" [suggestions]="locationSuggestions"
+              (completeMethod)="searchLocation($event)" (onSelect)="onLocationSelect($event)"
+              (onClear)="onLocationClear()" optionLabel="label" [showClear]="true" [dropdown]="false"
+              [forceSelection]="true" appendTo="body" inputStyleClass="sm:w-auto lg:w-64 h-10 rounded-2xl" />
+          </p-iconfield>
+          <label for="location_label" style="color: aliceblue"> Location</label>
+        </p-floatlabel>
+
+        <p-select *ngIf="isBrowsePage" [options]="cuisines" [(ngModel)]="selectedCuisine" optionLabel="name"
+          placeholder="Cuisine" (onChange)="onCuisineChange()" [showClear]="true" class="w-36" />
+
+        <p-select *ngIf="isBrowsePage" [options]="ratings" [(ngModel)]="selectedRating" optionLabel="name"
+          placeholder="Rating" (onChange)="onRatingChange()" [showClear]="true" class="w-36">
           <ng-template pTemplate="item" let-rating>
             <p-rating [ngModel]="rating.value" [readonly]="true" />
           </ng-template>
@@ -69,11 +42,8 @@
 
     <ng-template pTemplate="end">
       <div routerLink="/user" class="cursor-pointer">
-        <p-avatar
-          shape="circle"
-          class="shadow-sm shadow-black w-10 h-10 overflow-hidden"
-          [image]="getImageUrl(user?.imgPath)"
-        ></p-avatar>
+        <p-avatar shape="circle" class="shadow-sm shadow-black w-10 h-10 overflow-hidden"
+          [image]="getImageUrl(user?.imgPath)"></p-avatar>
       </div>
     </ng-template>
   </p-toolbar>

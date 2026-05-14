@@ -3,16 +3,17 @@ import { RestaurantCardComponent } from '../restaurant-card/restaurant-card.comp
 import { TopSearchComponent } from '../top-search/top-search.component';
 import { CommonModule } from '@angular/common';
 import { API_CONFIG } from '../config/api.config';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-browse',
   standalone: true,
-  imports: [RestaurantCardComponent, TopSearchComponent, CommonModule],
+  imports: [RestaurantCardComponent, TopSearchComponent, CommonModule, ProgressSpinnerModule],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.css',
 })
 export class BrowseComponent implements OnInit {
-  visible: boolean = false;
+  loading: boolean = true;
   restaurants: any[] = [];
   filteredRestaurants: any[] = [];
 
@@ -46,9 +47,11 @@ export class BrowseComponent implements OnInit {
         });
 
         this.filteredRestaurants = [...this.restaurants];
+        this.loading = false;
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+        this.loading = false;
       });
   }
 

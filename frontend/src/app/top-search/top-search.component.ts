@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
 import { AuthService } from '../services/auth.service';
@@ -35,6 +36,7 @@ import { API_CONFIG } from '../config/api.config';
     CommonModule,
     SelectModule,
     AutoCompleteModule,
+    InputTextModule,
     SharedModule,
     Rating,
   ],
@@ -66,7 +68,7 @@ export class TopSearchComponent implements OnInit {
     private router: Router,
     private restaurantService: RestaurantService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isBrowsePage = this.router.url === '/browse';
@@ -139,6 +141,16 @@ export class TopSearchComponent implements OnInit {
     this.searchSubject.next(this.searchQuery);
   }
 
+  private formatAddress(address: any): string {
+    const road = address?.road || address?.pedestrian || address?.path || address?.footway;
+    const number = address?.house_number;
+    const city = address?.city || address?.town || address?.village || address?.municipality || address?.county;
+    const parts: string[] = [];
+    if (road) parts.push(number ? `${road} ${number}` : road);
+    if (city) parts.push(city);
+    return parts.join(', ');
+  }
+
   searchLocation(event: any) {
     const query = event.query?.trim();
     if (!query || query.length < 2) {
@@ -150,7 +162,7 @@ export class TopSearchComponent implements OnInit {
       .then((r) => r.json())
       .then((results: any[]) => {
         this.locationSuggestions = results.map((r) => ({
-          label: r.display_name,
+          label: this.formatAddress(r.address) || r.display_name,
           lat: +r.lat,
           lng: +r.lon,
         }));
@@ -158,7 +170,8 @@ export class TopSearchComponent implements OnInit {
       .catch(() => { this.locationSuggestions = []; });
   }
 
-  onLocationSelect(place: any) {
+  onLocationSelect(event: any) {
+    const place = event?.value ?? event;
     this.locationChange.emit({ lat: place.lat, lng: place.lng, label: place.label });
     if (this.isBrowsePage) {
       this.filterRestaurants(this.searchQuery);

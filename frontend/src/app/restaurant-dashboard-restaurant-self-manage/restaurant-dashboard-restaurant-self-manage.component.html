@@ -25,12 +25,24 @@
           <label for="description">Description</label>
         </p-iftalabel>
         <p-iftalabel>
-          <input
-            id="location"
-            pInputText
-            [(ngModel)]="location"
-            class="w-full"
-          />
+          <p-iconfield class="w-full">
+            <p-inputicon class="pi pi-map-marker" />
+            <p-autocomplete
+              inputId="location"
+              [(ngModel)]="selectedLocationObj"
+              [suggestions]="locationSuggestions"
+              (completeMethod)="searchLocation($event)"
+              (onSelect)="onLocationSelect($event)"
+              (onClear)="onLocationClear()"
+              optionLabel="label"
+              [showClear]="true"
+              [dropdown]="false"
+              [forceSelection]="false"
+              appendTo="body"
+              inputStyleClass="w-full"
+              styleClass="w-full"
+            />
+          </p-iconfield>
           <label for="location">Location</label>
         </p-iftalabel>
         <p-iftalabel>
