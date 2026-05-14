@@ -1,8 +1,9 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
     public class AddReviewItemDto
     {
         public Guid ItemId { get; set; }
+        public Guid UserId { get; set; }
         public string UserName { get; set; }
         public string UserImagePath { get; set; }
         public string Title { get; set; }

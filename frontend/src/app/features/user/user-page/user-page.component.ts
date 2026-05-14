@@ -10,11 +10,16 @@ import { AuthService } from '../../../core/services/auth.service';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { MediaService } from '../../../core/services/media.service';
+import { RatingServiceService } from '../../../core/services/rating-service.service';
+import { RatingItemService } from '../../../core/services/rating-item.service';
+import { forkJoin } from 'rxjs';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-page',
   standalone: true,
-  imports: [CommonModule, ButtonModule, AvatarModule, TabsModule, RouterLink, ConfirmDialogModule, FileUploadModule, ToastModule],
+  imports: [CommonModule, ButtonModule, AvatarModule, TabsModule, RouterLink, ConfirmDialogModule, FileUploadModule, ToastModule, RatingModule, FormsModule],
   templateUrl: './user-page.component.html',
   styleUrl: './user-page.component.css'
 })
@@ -22,13 +27,16 @@ export class UserPageComponent {
   
   loading: boolean = true;
   user: any = null;
+  userReviews: any[] = [];
     
   constructor(
     private authService: AuthService, 
     private router: Router, 
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    public mediaService: MediaService
+    public mediaService: MediaService,
+    private ratingService: RatingServiceService,
+    private ratingItemService: RatingItemService
   ) {}
 
   ngOnInit(){
@@ -46,7 +54,7 @@ export class UserPageComponent {
       this.authService.getUserById(userFromToken.id).subscribe(
         (user) => {
           this.user = user;
-          this.loading = false;
+          this.loadUserReviews(user.id);
         },
         (error) => {
           console.error('Failed to fetch user data by ID', error);
@@ -57,6 +65,27 @@ export class UserPageComponent {
       console.error('Failed to decode user ID from token');
       this.router.navigate(['/login']);
     }
+  }
+
+  loadUserReviews(userId: string) {
+    forkJoin({
+      restaurantReviews: this.ratingService.getReviewsByUserId(userId),
+      itemReviews: this.ratingItemService.getReviewsByUserId(userId)
+    }).subscribe({
+      next: (results) => {
+        // Tag them to distinguish in the UI
+        const rReviews = results.restaurantReviews.map(r => ({ ...r, type: 'restaurant' }));
+        const iReviews = results.itemReviews.map(i => ({ ...i, type: 'item' }));
+        
+        this.userReviews = [...rReviews, ...iReviews];
+        // If there was a date, we would sort here.
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load user reviews', err);
+        this.loading = false;
+      }
+    });
   }
 
   confirmLogout() {

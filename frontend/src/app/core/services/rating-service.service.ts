@@ -19,6 +19,10 @@ export class RatingServiceService {
     return this.http.get<any[]>(`${this.apiUrl}/Reviews/${restaurantId}`);
   }
 
+  getReviewsByUserId(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Reviews/user/${userId}`);
+  }
+
   getRestaurantRating(restaurantId: string): Observable<number> {
     return this.http.get<any[]>(`${this.apiUrl}/Reviews/${restaurantId}`).pipe(
       map((reviews) => {

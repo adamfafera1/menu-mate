@@ -1,8 +1,9 @@
-﻿namespace menumate.Models.Entities
+namespace menumate.Models.Entities
 {
     public class ReviewItem
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public Guid ItemId { get; set; }
         public string UserName { get; set; }
         public string UserImagePath { get; set; }

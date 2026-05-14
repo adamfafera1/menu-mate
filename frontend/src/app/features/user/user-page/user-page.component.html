@@ -1,42 +1,72 @@
-<div routerLink='/browse'class="p-3 absolute top-0 left-0">
-    <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
+<div routerLink='/browse' class="p-3 absolute top-0 left-0">
+  <p-button router><i class="pi pi-arrow-left p-1"></i></p-button>
 </div>
 
 <p-toast></p-toast>
 
 <div class="flex flex-col items-center" *ngIf="!loading && user">
 
-    <div class="m-3 flex flex-col items-center gap-4">
-        <div class="relative w-32 h-32 group cursor-pointer" (click)="fileInput.click()">
-            <img class="rounded-full w-full h-full object-cover shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50" [src]="mediaService.getImageUrl(user?.imgPath)">
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="pi pi-upload text-3xl text-white"></i>
+  <div class="m-3 flex flex-col items-center gap-4">
+    <div class="relative w-32 h-32 group cursor-pointer" (click)="fileInput.click()">
+      <img
+        class="rounded-full w-full h-full object-cover shadow-slate-950 shadow-lg transition-all duration-300 group-hover:brightness-50"
+        [src]="mediaService.getImageUrl(user?.imgPath)">
+      <div
+        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <i class="pi pi-upload text-3xl text-white"></i>
+      </div>
+      <input #fileInput type="file" accept="image/*" class="hidden" (change)="onUpload({files: fileInput.files})">
+    </div>
+  </div>
+
+  <p class="text-sm text-slate-400"> {{user.email || "Not found" }}</p>
+  <h1 class="m-3 text-3xl"> {{user.userName}}</h1>
+
+  <div class="mb-4">
+    <p-button (click)="confirmLogout()" severity="danger" size="small">
+      <i class="pi pi-sign-out mr-2"></i>Logout
+    </p-button>
+  </div>
+
+
+  <div class="card w-5/6 sm:w-3/4 xl:w-2/3">
+    <p-tabs value="0" class="rounded-2xl">
+      <p-tablist class="rounded-2xl">
+        <p-tab value="0">Reviews</p-tab>
+      </p-tablist>
+      <p-tabpanels class="rounded-b-xl text-center">
+        <p-tabpanel value="0">
+          <div *ngIf="userReviews.length > 0" class="flex flex-col gap-4 p-4 text-left">
+            <div *ngFor="let review of userReviews" class="rounded-xl p-4 mt-3 border border-zinc-700 bg-zinc-900/30">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <p-avatar shape="circle"
+                    [image]="review.userImagePath || 'https://innostudio.de/fileuploader/images/default-avatar.png'" />
+                  <div>
+                    <p class="font-bold text-white leading-tight">{{review.userName}}</p>
+                  </div>
+                </div>
+                <p-rating [(ngModel)]="review.rating" [readonly]="true"></p-rating>
+              </div>
+
+              <div class="mb-2">
+                <p class="font-bold text-lg text-zinc-100">{{review.title}}</p>
+              </div>
+
+              <div class="text-zinc-300 leading-relaxed">
+                <p>{{review.description}}</p>
+              </div>
             </div>
-            <input #fileInput type="file" accept="image/*" class="hidden" (change)="onUpload({files: fileInput.files})">
-        </div>
-    </div>
-    
-    <p class="text-sm text-slate-400"> {{user.email || "Not found" }}</p>
-    <h1 class="m-3 text-3xl"> {{user.userName}}</h1>
-    
-    
-    <div class="card w-5/6 sm:w-3/4 xl:w-2/3">
-      <p-tabs value="0" class="rounded-2xl">
-        <p-tablist class="rounded-2xl">
-          <p-tab value="0">Reviews</p-tab>
-        </p-tablist>
-        <p-tabpanels class="rounded-b-xl text-center">
-          <p-tabpanel value="0">
-            <p class="m-0">
-              You haven't posted any reviews yet.
-            </p>
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
-    </div>
-    
-    <div class="flex row-auto bottom-0">
-      <p-button (click)="confirmLogout()" severity="danger" class="m-3"><i class="pi pi-sign-out"></i>Logout</p-button>
-      <p-confirmDialog />
-    </div>
-</div> 
+          </div>
+
+          <div *ngIf="userReviews.length === 0" class="p-10 text-slate-400">
+            <i class="pi pi-comments text-4xl mb-4 block opacity-20"></i>
+            You haven't posted any reviews yet.
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+
+  <p-confirmDialog />
+</div>

@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\azurestorage.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\azurestorage.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,10 +35,6 @@
       "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\models\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|c:\\users\\adasf\\desktop\\gitrepos\\menu-mate\\backend\\menumate\\migrations\\20250930042131_adduserroles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61385E0A-FFFC-4E7A-BE02-6399DACB6177}|menumate\\menumate.csproj|solutionrelative:menumate\\migrations\\20250930042131_adduserroles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -34,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,7 +54,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
+              "Title": "azurestorage.json",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\azurestorage.json",
+              "RelativeDocumentMoniker": "menumate\\azurestorage.json",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\azurestorage.json",
+              "RelativeToolTip": "menumate\\azurestorage.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAADbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T18:44:29.761Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "menumate\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.Development.json",
+              "RelativeToolTip": "menumate\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T18:39:52.834Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "menumate\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Properties\\launchSettings.json",
+              "RelativeToolTip": "menumate\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T18:35:17.664Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "20250930042131_AddUserRoles.cs",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Migrations\\20250930042131_AddUserRoles.cs",
               "RelativeDocumentMoniker": "menumate\\Migrations\\20250930042131_AddUserRoles.cs",
@@ -54,7 +105,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "RegisterDto.cs",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Models\\RegisterDto.cs",
               "RelativeDocumentMoniker": "menumate\\Models\\RegisterDto.cs",
@@ -66,20 +117,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "menumate\\Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Controllers\\UsersController.cs",
               "RelativeToolTip": "menumate\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGQAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGcAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-29T18:23:41.724Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "menumate\\Controllers\\AuthController.cs",
@@ -91,19 +142,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.json",
               "RelativeDocumentMoniker": "menumate\\appsettings.json",
               "ToolTip": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\appsettings.json",
               "RelativeToolTip": "menumate\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-29T02:33:31.548Z"
+              "WhenOpened": "2025-09-29T02:33:31.548Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\Program.cs",
               "RelativeDocumentMoniker": "menumate\\Program.cs",

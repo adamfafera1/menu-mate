@@ -1,4 +1,4 @@
-﻿using menumate.Data;
+using menumate.Data;
 using menumate.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,15 +23,18 @@ namespace menumate.Controllers
         }
 
         [HttpGet]
+        [Route("user/{id:guid}")]
+        public IActionResult GetReviewItemsByUserId(Guid id)
+        {
+            var reviews = dbContext.ReviewItems.Where(item => item.UserId == id);
+            return Ok(reviews);
+        }
+
+        [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetReviewItemsByItemId(Guid id)
         {
             var items = dbContext.ReviewItems.Where(item => item.ItemId == id);
-            
-            if (items == Empty)
-            {
-                return NotFound();
-            }
             return Ok(items);
         }
 
@@ -41,6 +44,7 @@ namespace menumate.Controllers
             var reviewItemEntity = new Models.Entities.ReviewItem()
             {
                 ItemId = addReviewItemDto.ItemId,
+                UserId = addReviewItemDto.UserId,
                 UserName = addReviewItemDto.UserName,
                 UserImagePath  = addReviewItemDto.UserImagePath,
                 Title = addReviewItemDto.Title,
