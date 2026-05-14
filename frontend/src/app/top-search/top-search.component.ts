@@ -161,11 +161,19 @@ export class TopSearchComponent implements OnInit {
     fetch(url, { headers: { 'Accept-Language': 'en' } })
       .then((r) => r.json())
       .then((results: any[]) => {
-        this.locationSuggestions = results.map((r) => ({
-          label: this.formatAddress(r.address) || r.display_name,
-          lat: +r.lat,
-          lng: +r.lon,
-        }));
+        const seen = new Set<string>();
+        this.locationSuggestions = results
+          .map((r) => ({
+            label: this.formatAddress(r.address) || r.display_name,
+            lat: +r.lat,
+            lng: +r.lon,
+          }))
+          .filter((s) => {
+            const key = s.label.split(',')[0].trim().toLowerCase();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
       })
       .catch(() => { this.locationSuggestions = []; });
   }
