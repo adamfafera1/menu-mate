@@ -20,3 +20,4 @@ backend/.vs/menumate/v17/DocumentLayout.json
 node_modules
 frontend/package-lock.json
 backend/.vs/menumate/CopilotIndices
+/frontend/dist/
