@@ -41,10 +41,13 @@
     </ng-template>
 
     <ng-template pTemplate="end">
-      <div routerLink="/user" class="cursor-pointer">
+      <div *ngIf="user; else loginButton" routerLink="/user" class="cursor-pointer">
         <p-avatar shape="circle" class="shadow-sm shadow-black w-10 h-10 overflow-hidden"
           [image]="mediaService.getUserImageUrl(user?.imgPath)"></p-avatar>
       </div>
+      <ng-template #loginButton>
+        <p-button label="Sign in" icon="pi pi-user" routerLink="/login" variant="text" />
+      </ng-template>
     </ng-template>
   </p-toolbar>
 </div>
