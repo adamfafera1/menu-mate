@@ -1,14 +1,29 @@
 <div>
   <div class="mt-1">
-    <app-top-search (searchQueryChange)="onSearchQueryChange($event)"></app-top-search>
+    <app-top-search
+      (searchQueryChange)="onSearchQueryChange($event)"
+      (cuisineChange)="onCuisineChange($event)"
+      (locationChange)="onLocationChange($event)"
+      (ratingChange)="onRatingChange($event)">
+    </app-top-search>
   </div>
 
+  @if (loading) {
+    <div class="flex flex-col items-center justify-center mt-32 gap-4">
+      <p-progressspinner
+        strokeWidth="4"
+        style="width: 64px; height: 64px;"
+        animationDuration=".8s"
+      />
+      <span class="text-zinc-400 text-sm">Loading restaurants...</span>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 p-4">
+      <app-restaurant-card
+        *ngFor="let restaurant of filteredRestaurants"
+        [restaurant]="restaurant">
+      </app-restaurant-card>
+    </div>
+  }
 
-  <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 p-4" >
-    <app-restaurant-card
-      *ngFor="let restaurant of filteredRestaurants"
-      [restaurant]="restaurant">
-    </app-restaurant-card>
-  </div>
-  
-</div>
+</div>

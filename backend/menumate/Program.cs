@@ -13,7 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("https://localhost:7084");
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddHttpClient("Nominatim", client =>
+{
+    client.BaseAddress = new Uri("https://nominatim.openstreetmap.org/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("MenuMate/1.0 (contact@menumate.app)");
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

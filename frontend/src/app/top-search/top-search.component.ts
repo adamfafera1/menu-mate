@@ -13,6 +13,8 @@ import { RestaurantService } from '../services/restaurant.service';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
 import { Rating } from 'primeng/rating';
 import { AuthService } from '../services/auth.service';
@@ -33,6 +35,8 @@ import { API_CONFIG } from '../config/api.config';
     FormsModule,
     CommonModule,
     SelectModule,
+    AutoCompleteModule,
+    InputTextModule,
     SharedModule,
     Rating,
   ],
@@ -52,6 +56,8 @@ export class TopSearchComponent implements OnInit {
   locations: any[] = [];
   cuisines: any[] = [];
   ratings: any[] = [];
+  locationQuery: string = '';
+  locationSuggestions: any[] = [];
   selectedLocation: any = null;
   selectedCuisine: any = null;
   selectedRating: any = null;
@@ -62,7 +68,7 @@ export class TopSearchComponent implements OnInit {
     private router: Router,
     private restaurantService: RestaurantService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isBrowsePage = this.router.url === '/browse';
@@ -74,20 +80,25 @@ export class TopSearchComponent implements OnInit {
         this.isBrowsePage = this.router.url === '/browse';
       });
 
-    this.locations = [
-      { name: 'All Locations', code: null },
-      { name: 'New York', code: 'NY' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Tokyo', code: 'TKY' },
-    ];
+    this.locations = [];
 
     this.cuisines = [
       { name: 'All Cuisines', code: null },
-      { name: 'Italian', code: 'ITA' },
-      { name: 'Chinese', code: 'CHN' },
-      { name: 'Indian', code: 'IND' },
-      { name: 'Mexican', code: 'MEX' },
+      { name: 'Italian', code: 'Italian' },
+      { name: 'Japanese', code: 'Japanese' },
+      { name: 'Chinese', code: 'Chinese' },
+      { name: 'Mexican', code: 'Mexican' },
+      { name: 'Indian', code: 'Indian' },
+      { name: 'French', code: 'French' },
+      { name: 'Thai', code: 'Thai' },
+      { name: 'American', code: 'American' },
+      { name: 'Mediterranean', code: 'Mediterranean' },
+      { name: 'Greek', code: 'Greek' },
+      { name: 'Spanish', code: 'Spanish' },
+      { name: 'Korean', code: 'Korean' },
+      { name: 'Vietnamese', code: 'Vietnamese' },
+      { name: 'Middle Eastern', code: 'Middle Eastern' },
+      { name: 'Other', code: 'Other' },
     ];
 
     this.ratings = [
@@ -130,6 +141,50 @@ export class TopSearchComponent implements OnInit {
     this.searchSubject.next(this.searchQuery);
   }
 
+  private formatAddress(address: any): string {
+    const road = address?.road || address?.pedestrian || address?.path || address?.footway;
+    const number = address?.house_number;
+    const city = address?.city || address?.town || address?.village || address?.municipality || address?.county;
+    const parts: string[] = [];
+    if (road) parts.push(number ? `${road} ${number}` : road);
+    if (city) parts.push(city);
+    return parts.join(', ');
+  }
+
+  searchLocation(event: any) {
+    const query = event.query?.trim();
+    if (!query || query.length < 2) {
+      this.locationSuggestions = [];
+      return;
+    }
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
+    fetch(url, { headers: { 'Accept-Language': 'en' } })
+      .then((r) => r.json())
+      .then((results: any[]) => {
+        this.locationSuggestions = results.map((r) => ({
+          label: this.formatAddress(r.address) || r.display_name,
+          lat: +r.lat,
+          lng: +r.lon,
+        }));
+      })
+      .catch(() => { this.locationSuggestions = []; });
+  }
+
+  onLocationSelect(event: any) {
+    const place = event?.value ?? event;
+    this.locationChange.emit({ lat: place.lat, lng: place.lng, label: place.label });
+    if (this.isBrowsePage) {
+      this.filterRestaurants(this.searchQuery);
+    }
+  }
+
+  onLocationClear() {
+    this.locationQuery = '';
+    this.locationSuggestions = [];
+    this.selectedLocation = null;
+    this.locationChange.emit(null);
+  }
+
   onLocationChange() {
     this.locationChange.emit(this.selectedLocation);
     if (this.isBrowsePage) {
@@ -145,7 +200,7 @@ export class TopSearchComponent implements OnInit {
   }
 
   onCuisineChange() {
-    this.cuisineChange.emit(this.selectedCuisine);
+    this.cuisineChange.emit(this.selectedCuisine?.code ?? null);
     if (this.isBrowsePage) {
       this.filterRestaurants(this.searchQuery);
     }

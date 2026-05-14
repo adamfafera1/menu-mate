@@ -13,6 +13,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../config/api.config';
@@ -34,6 +37,9 @@ import { RestaurantService } from '../services/restaurant.service';
     TextareaModule,
     MultiSelectModule,
     SelectModule,
+    AutoCompleteModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   standalone: true,
   templateUrl: './restaurant-dashboard-restaurant-self-manage.component.html',
@@ -55,6 +61,8 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
   restaurant: any = null;
   restaurantId: string | null = null;
   loading: boolean = true;
+  locationSuggestions: any[] = [];
+  selectedLocationObj: any = null;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -93,6 +101,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
           this.name = data.name;
           this.description = data.description;
           this.location = data.location;
+          this.selectedLocationObj = data.location ? { label: data.location } : null;
           this.phone = data.phone;
           this.selectedCuisine = data.cuisine ?? null;
 
@@ -143,7 +152,13 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       return;
     }
 
-    if (!this.name || !this.description || !this.location || !this.phone) {
+    const locationText = this.selectedLocationObj
+      ? (typeof this.selectedLocationObj === 'string'
+          ? this.selectedLocationObj
+          : this.selectedLocationObj.label)
+      : this.location;
+
+    if (!this.name || !this.description || !locationText || !this.phone) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -157,7 +172,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     const updateData = {
       name: this.name,
       description: this.description,
-      location: this.location,
+      location: locationText,
       phone: this.phone,
       rating: this.restaurant?.rating || 0,
       imagePath:
@@ -193,6 +208,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       this.name = this.restaurant.name;
       this.description = this.restaurant.description;
       this.location = this.restaurant.location;
+      this.selectedLocationObj = this.restaurant.location ? { label: this.restaurant.location } : null;
       this.phone = this.restaurant.phone;
       this.selectedCuisine = this.restaurant.cuisine ?? null;
     }
@@ -238,6 +254,45 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
         }
       });
     }
+  }
+
+  private formatAddress(address: any): string {
+    const road = address?.road || address?.pedestrian || address?.path || address?.footway;
+    const number = address?.house_number;
+    const city = address?.city || address?.town || address?.village || address?.municipality || address?.county;
+    const parts: string[] = [];
+    if (road) parts.push(number ? `${road} ${number}` : road);
+    if (city) parts.push(city);
+    return parts.join(', ');
+  }
+
+  searchLocation(event: any): void {
+    const query = event.query?.trim();
+    if (!query || query.length < 2) {
+      this.locationSuggestions = [];
+      return;
+    }
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
+    fetch(url, { headers: { 'Accept-Language': 'en' } })
+      .then((r) => r.json())
+      .then((results: any[]) => {
+        this.locationSuggestions = results.map((r) => ({
+          label: this.formatAddress(r.address) || r.display_name,
+          lat: +r.lat,
+          lng: +r.lon,
+        }));
+      })
+      .catch(() => { this.locationSuggestions = []; });
+  }
+
+  onLocationSelect(event: any): void {
+    const place = event?.value ?? event;
+    this.location = place.label;
+  }
+
+  onLocationClear(): void {
+    this.selectedLocationObj = null;
+    this.locationSuggestions = [];
   }
 
   getImageUrl(path: string | undefined): string {

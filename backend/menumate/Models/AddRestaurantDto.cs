@@ -9,5 +9,7 @@ namespace menumate.Models
         public string Phone { get; set; }
         public string ImagePath { get; set; }
         public string? Cuisine { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
     }
 }
