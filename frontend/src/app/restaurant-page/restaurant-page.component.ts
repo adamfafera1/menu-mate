@@ -16,6 +16,9 @@ import { ReviewComponent } from '../review/review.component';
 import { ProposeRestaurantEditComponent } from '../propose-restaurant-edit/propose-restaurant-edit.component';
 import { ReviewRestaurantMakeComponent } from '../review-restaurant-make/review-restaurant-make.component';
 import { API_CONFIG } from '../config/api.config';
+import { RestaurantService } from '../services/restaurant.service';
+import { RatingServiceService } from '../services/rating-service.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-restaurant-page',
@@ -81,6 +84,8 @@ export class RestaurantPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageService,
+    private restaurantService: RestaurantService,
+    private ratingService: RatingServiceService
   ) {}
 
   ngOnInit() {
@@ -91,34 +96,19 @@ export class RestaurantPageComponent implements OnInit {
       return;
     }
 
-    fetch(`${API_CONFIG.baseUrl}/Restaurants/${urlID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch restaurant data');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        this.selectedRestaurant = data;
-      })
-      .catch((error) => {
-        console.error('Error fetching restaurant:', error);
-      });
-
-    fetch(`${API_CONFIG.baseUrl}/Reviews/${urlID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch reviews data');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        this.reviews = data;
+    forkJoin({
+      restaurant: this.restaurantService.getRestaurantById(urlID),
+      reviews: this.ratingService.getReviews(urlID)
+    }).subscribe({
+      next: ({ restaurant, reviews }) => {
+        this.selectedRestaurant = restaurant;
+        this.reviews = reviews;
         this.updateAverageRating();
-      })
-      .catch((error) => {
-        console.error('Error fetching reviews:', error);
-      });
+      },
+      error: (error) => {
+        console.error('Error fetching restaurant or reviews:', error);
+      }
+    });
   }
 
   updateAverageRating(): void {

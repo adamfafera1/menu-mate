@@ -5,6 +5,7 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { API_CONFIG } from '../config/api.config';
+import { RatingItemService } from '../services/rating-item.service';
 
 @Component({
   selector: 'app-review-item',
@@ -24,6 +25,8 @@ export class ReviewItemComponent implements OnChanges {
   restaurantRating: number = 0;
   @Input() urlID: string | null = null;
 
+  constructor(private ratingItemService: RatingItemService) {}
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['urlID'] && this.urlID) {
       this.fetchReviews();
@@ -38,21 +41,16 @@ export class ReviewItemComponent implements OnChanges {
 
     console.log('Fetching reviews for item:', this.urlID);
 
-    fetch(`${API_CONFIG.baseUrl}/ReviewItems/${this.urlID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch reviews');
-        }
-        return response.json();
-      })
-      .then((data) => {
+    this.ratingItemService.getReviewsByItemId(this.urlID).subscribe({
+      next: (data) => {
         this.reviews = data;
         this.calculateAverageRating();
         console.log('Reviews loaded:', this.reviews);
-      })
-      .catch((error) => {
+      },
+      error: (error) => {
         console.error('Error fetching reviews:', error);
-      });
+      }
+    });
   }
 
   calculateAverageRating(): number {

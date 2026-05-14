@@ -11,6 +11,10 @@ export class RatingServiceService {
 
   constructor(private http: HttpClient) {}
 
+  getAllReviews(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Reviews`);
+  }
+
   getReviews(restaurantId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/Reviews/${restaurantId}`);
   }

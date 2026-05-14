@@ -17,6 +17,7 @@ import { ReviewItemComponent } from '../review-item/review-item.component';
 import { ProposeItemEditComponent } from '../propose-item-edit/propose-item-edit.component';
 import { ReviewItemMakeComponent } from '../review-item-make/review-item-make.component';
 import { API_CONFIG } from '../config/api.config';
+import { ItemService } from '../services/item.service';
 
 enum Currency {
   PLN = 0,
@@ -52,7 +53,7 @@ export class MenuItemCardComponent implements OnChanges {
   value: number = 4;
   selectedItem = signal<any | null>(null);
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private itemService: ItemService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['searchQuery']) {
@@ -112,21 +113,18 @@ export class MenuItemCardComponent implements OnChanges {
   ngOnInit() {
     const urlID = this.route.snapshot.paramMap.get('id');
 
-    fetch(`${API_CONFIG.baseUrl}/Items/Restaurant/${urlID}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch items data');
-        }
-        return response.json();
-      })
-      .then((data) => {
+    if (!urlID) return;
+
+    this.itemService.getItemsByRestaurantId(urlID).subscribe({
+      next: (data) => {
         this.items = data;
         this.filterItems();
         console.log(this.items);
-      })
-      .catch((error) => {
+      },
+      error: (error) => {
         console.error('Error fetching items:', error);
-      });
+      }
+    });
   }
 
   getImageUrl(path: string | undefined): string {

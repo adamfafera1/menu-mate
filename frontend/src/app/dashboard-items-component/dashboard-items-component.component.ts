@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { API_CONFIG } from '../config/api.config';
+import { ItemService } from '../services/item.service';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
@@ -25,7 +24,7 @@ export class DashboardItemsComponentComponent implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private http: HttpClient,
+    private itemService: ItemService,
   ) {}
 
   ngOnInit(): void {
@@ -33,14 +32,16 @@ export class DashboardItemsComponentComponent implements OnInit {
       const id = params.get('id');
       console.log('Id mam nadzieje restauracji: ', id);
 
-      fetch(`${API_CONFIG.baseUrl}/Items/Restaurant/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
+      if (!id) return;
+
+      this.itemService.getItemsByRestaurantId(id).subscribe({
+        next: (data) => {
           this.items = data;
-        })
-        .catch((error) => {
+        },
+        error: (error) => {
           console.error('Error fetching items:', error);
-        });
+        }
+      });
     });
   }
 

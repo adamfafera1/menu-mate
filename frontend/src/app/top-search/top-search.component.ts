@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -68,6 +69,7 @@ export class TopSearchComponent implements OnInit {
     private router: Router,
     private restaurantService: RestaurantService,
     private authService: AuthService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -158,9 +160,8 @@ export class TopSearchComponent implements OnInit {
       return;
     }
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
-    fetch(url, { headers: { 'Accept-Language': 'en' } })
-      .then((r) => r.json())
-      .then((results: any[]) => {
+    this.http.get<any[]>(url, { headers: { 'Accept-Language': 'en' } }).subscribe({
+      next: (results) => {
         const seen = new Set<string>();
         this.locationSuggestions = results
           .map((r) => ({
@@ -174,8 +175,11 @@ export class TopSearchComponent implements OnInit {
             seen.add(key);
             return true;
           });
-      })
-      .catch(() => { this.locationSuggestions = []; });
+      },
+      error: () => {
+        this.locationSuggestions = [];
+      }
+    });
   }
 
   onLocationSelect(event: any) {

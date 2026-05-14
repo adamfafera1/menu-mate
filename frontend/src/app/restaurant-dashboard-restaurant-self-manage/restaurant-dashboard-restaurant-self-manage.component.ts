@@ -273,16 +273,18 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       return;
     }
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`;
-    fetch(url, { headers: { 'Accept-Language': 'en' } })
-      .then((r) => r.json())
-      .then((results: any[]) => {
+    this.http.get<any[]>(url, { headers: { 'Accept-Language': 'en' } }).subscribe({
+      next: (results) => {
         this.locationSuggestions = results.map((r) => ({
           label: this.formatAddress(r.address) || r.display_name,
           lat: +r.lat,
           lng: +r.lon,
         }));
-      })
-      .catch(() => { this.locationSuggestions = []; });
+      },
+      error: () => {
+        this.locationSuggestions = [];
+      }
+    });
   }
 
   onLocationSelect(event: any): void {

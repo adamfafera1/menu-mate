@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantCardComponent } from '../restaurant-card/restaurant-card.component';
 import { TopSearchComponent } from '../top-search/top-search.component';
 import { CommonModule } from '@angular/common';
-import { API_CONFIG } from '../config/api.config';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RestaurantService } from '../services/restaurant.service';
+import { RatingServiceService } from '../services/rating-service.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-browse',
@@ -23,12 +25,17 @@ export class BrowseComponent implements OnInit {
   private selectedRating: any = null;
   private readonly RADIUS_KM = 10;
 
+  constructor(
+    private restaurantService: RestaurantService,
+    private ratingService: RatingServiceService
+  ) {}
+
   ngOnInit() {
-    Promise.all([
-      fetch(`${API_CONFIG.baseUrl}/Restaurants`).then((r) => r.json()),
-      fetch(`${API_CONFIG.baseUrl}/Reviews`).then((r) => r.json()),
-    ])
-      .then(([restaurants, reviews]) => {
+    forkJoin({
+      restaurants: this.restaurantService.getRestaurants(),
+      reviews: this.ratingService.getAllReviews()
+    }).subscribe({
+      next: ({ restaurants, reviews }) => {
         const ratingMap = new Map<string, { sum: number; count: number }>();
         for (const review of reviews) {
           const id = review.restaurantId;
@@ -48,11 +55,12 @@ export class BrowseComponent implements OnInit {
 
         this.filteredRestaurants = [...this.restaurants];
         this.loading = false;
-      })
-      .catch((error) => {
+      },
+      error: (error) => {
         console.error('Error fetching data:', error);
         this.loading = false;
-      });
+      }
+    });
   }
 
   private haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
