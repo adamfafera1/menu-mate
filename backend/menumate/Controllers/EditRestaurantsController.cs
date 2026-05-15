@@ -1,4 +1,4 @@
-﻿using menumate.Data;
+using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
 using Microsoft.AspNetCore.Http;
@@ -17,12 +17,14 @@ namespace menumate.Controllers
             this.dbContext = dbContext;
         }
 
+        // Pobranie wszystkich propozycji zmian dla restauracji
         [HttpGet]
         public IActionResult GetEditRestaurants()
         {
             return Ok(dbContext.EditRestaurants.ToList());
         }
 
+        // Pobranie propozycji zmian dla konkretnej restauracji
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetEditRestaurantById(Guid id)
@@ -36,10 +38,11 @@ namespace menumate.Controllers
             return Ok(editRestaurant);
         }
 
+        // Dodanie nowej propozycji zmiany danych restauracji
         [HttpPost]
         public IActionResult AddEditRestaurant(AddEditRestaurantDto addEditRestaurantDto)
         {
-
+            // Sprawdzenie poprawności nazwy właściwości w modelu Restaurant
             var property = typeof(Restaurant).GetProperty(addEditRestaurantDto.PropertyName);
             if (property == null)
                 return BadRequest("Invalid property name");
@@ -57,6 +60,7 @@ namespace menumate.Controllers
             return Ok(edit);
         }
 
+        // Zatwierdzenie i naniesienie zmiany na profil restauracji
         [HttpPut]
         [Route("{id:guid}/approve")]
         public IActionResult ApproveEdit(string id)
@@ -78,9 +82,11 @@ namespace menumate.Controllers
 
             try
             {
+                // Dynamiczne przypisanie nowej wartości do właściwości modelu
                 var convertedValue = Convert.ChangeType(edit.NewValue, property.PropertyType);
                 property.SetValue(restaurant, convertedValue);
 
+                // Usunięcie wpisu o propozycji zmiany po jej zatwierdzeniu
                 dbContext.EditRestaurants.Remove(edit);
                 dbContext.SaveChanges();
 
@@ -93,6 +99,7 @@ namespace menumate.Controllers
         }
 
 
+        // Usunięcie (odrzucenie) propozycji zmiany restauracji
         [HttpDelete]
         [Route("{id:guid}")]
         public IActionResult DeleteEditRestaurant(Guid id)

@@ -22,6 +22,7 @@ namespace menumate.Controllers
             this.imageService = imageService;
         }
 
+        // Pobranie listy wszystkich dań
         [HttpGet]
         public IActionResult GetItems()
         {
@@ -29,6 +30,7 @@ namespace menumate.Controllers
         }
 
 
+        // Pobranie danych konkretnego dania na podstawie ID
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetItemById(Guid id)
@@ -43,6 +45,7 @@ namespace menumate.Controllers
             return Ok(item);
         }
 
+        // Pobranie wszystkich dań należących do konkretnej restauracji
         [HttpGet]
         [Route("Restaurant/{id:guid}")]
         public IActionResult GetItemsByRestaurant(Guid id)
@@ -52,6 +55,7 @@ namespace menumate.Controllers
         }
         
 
+        // Dodanie nowego dania do menu
         [HttpPost]
         public IActionResult AddItem(AddItemDto addItemDto)
         {
@@ -75,6 +79,7 @@ namespace menumate.Controllers
             return Ok(itemEntity);
         }
 
+        // Aktualizacja danych istniejącego dania
         [HttpPut]
         [Route("{id:guid}")]
         public IActionResult UpdateItem(UpdateItemDto updateItemDto, Guid id) 
@@ -99,6 +104,7 @@ namespace menumate.Controllers
             return Ok(itemEntity);
         }
 
+        // Usunięcie dania z menu
         [HttpDelete]
         public IActionResult DeleteItem(Guid id)
         {
@@ -114,23 +120,28 @@ namespace menumate.Controllers
             return Ok("Successfully deleted item with id: " + id);
         }
 
+        // Przesłanie i aktualizacja zdjęcia potrawy
         [HttpPost("{id:guid}/upload-image")]
         [Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UploadImage(Guid id, IFormFile file)
         {
+            // Walidacja przesłanego pliku
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
             var item = await dbContext.Items.FindAsync(id);
             if (item == null) return NotFound();
 
+            // Usunięcie poprzedniego zdjęcia z serwera
             if (!string.IsNullOrEmpty(item.Image))
             {
                 await imageService.DeleteImageAsync(item.Image);
             }
 
+            // Przesłanie nowej grafiki do folderu "items"
             var imageUrl = await imageService.UploadImageAsync(file, "items");
 
+            // Zapisanie nowej ścieżki w bazie danych
             item.Image = imageUrl;
             dbContext.Items.Update(item);
             await dbContext.SaveChangesAsync();

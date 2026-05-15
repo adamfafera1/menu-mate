@@ -25,6 +25,7 @@ namespace menumate.Controllers
             this.imageService = imageService;
         }
 
+        // Zamiana adresu tekstowego na współrzędne geograficzne (Geokodowanie)
         private async Task<(double? lat, double? lng)> GeocodeAsync(string location)
         {
             try
@@ -49,6 +50,7 @@ namespace menumate.Controllers
             return (null, null);
         }
 
+        // Pobranie listy wszystkich restauracji wraz z uzupełnieniem brakujących współrzędnych
         [HttpGet]
         public async Task<IActionResult> GetRestaurants()
         {
@@ -72,6 +74,7 @@ namespace menumate.Controllers
             return Ok(restaurants);
         }
 
+        // Pobranie danych restauracji na podstawie identyfikatora ID
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetRestaurantByID(Guid id)
@@ -86,6 +89,7 @@ namespace menumate.Controllers
             return Ok(restaurant);
         }
 
+        // Pobranie danych restauracji przypisanej do konkretnego właściciela
         [HttpGet]
         [Route("owner/{ownerId:guid}")]
         public IActionResult GetRestaurantByOwnerId(Guid ownerId)
@@ -100,6 +104,7 @@ namespace menumate.Controllers
             return Ok(restaurant);
         }
 
+        // Dodanie nowej restauracji wraz z wyznaczeniem współrzędnych geograficznych
         [HttpPost]
         public async Task<IActionResult> AddRestaurant(AddRestaurantDto addRestaurantDto)
         {
@@ -123,6 +128,7 @@ namespace menumate.Controllers
             return Ok(restaurantEntity);
         }
 
+        // Aktualizacja danych restauracji (w tym przeliczenie współrzędnych przy zmianie adresu)
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
@@ -153,6 +159,7 @@ namespace menumate.Controllers
             return Ok(restaurant);
         }
 
+        // Usunięcie restauracji z bazy danych
         [HttpDelete]
         [Route("{id:guid}")]
         public IActionResult DeleteRestaurant(Guid id)
@@ -170,23 +177,28 @@ namespace menumate.Controllers
             return Ok();
         }
 
+        // Przesłanie i aktualizacja zdjęcia restauracji
         [HttpPost("{id:guid}/upload-image")]
         [Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UploadImage(Guid id, IFormFile file)
         {
+            // Sprawdzenie poprawności przesłanego pliku
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
             var restaurant = await dbContext.Restaurants.FindAsync(id);
             if (restaurant == null) return NotFound();
 
+            // Usunięcie starego zdjęcia z serwera, jeśli istnieje
             if (!string.IsNullOrEmpty(restaurant.ImagePath))
             {
                 await imageService.DeleteImageAsync(restaurant.ImagePath);
             }
 
+            // Przesłanie nowego pliku do folderu "restaurants"
             var imageUrl = await imageService.UploadImageAsync(file, "restaurants");
 
+            // Aktualizacja ścieżki w bazie danych
             restaurant.ImagePath = imageUrl;
             dbContext.Restaurants.Update(restaurant);
             await dbContext.SaveChangesAsync();

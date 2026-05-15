@@ -1,4 +1,4 @@
-﻿using menumate.Models;
+using menumate.Models;
 using menumate.Models.Entities;
 using menumate.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +26,7 @@ namespace menumate.Controllers
             _context = context;
         }
 
+        // Rejestracja nowego użytkownika
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
@@ -37,7 +38,7 @@ namespace menumate.Controllers
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            // If the user is a restaurant owner, create a default restaurant
+            // Automatyczne tworzenie profilu restauracji dla kont typu RestaurantOwner
             if (registerDto.Role == "RestaurantOwner")
             {
                 var restaurant = new Restaurant
@@ -61,13 +62,16 @@ namespace menumate.Controllers
             return Ok();
         }
 
+        // Logowanie użytkownika i generowanie tokena JWT
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            // Wyszukanie użytkownika i weryfikacja hasła
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized("Invalid credentials");
             
+            // Przygotowanie roszczeń (claims) dla tokena
             var claims = new[] { 
                 new Claim(ClaimTypes.Name, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role ?? "User")
@@ -76,6 +80,7 @@ namespace menumate.Controllers
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            // Tworzenie struktury tokena JWT
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
@@ -84,6 +89,7 @@ namespace menumate.Controllers
                 signingCredentials: creds
                 );
 
+            // Zwrócenie wygenerowanego tokena
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
         

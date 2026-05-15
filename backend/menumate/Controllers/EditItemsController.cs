@@ -17,6 +17,7 @@ namespace menumate.Controllers
             this.dbContext = dbContext;
         }
 
+        // Pobranie wszystkich oczekujących propozycji zmian
         [HttpGet]
         public IActionResult GetEdits()
         {
@@ -24,6 +25,7 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
+        // Pobranie propozycji zmian dla konkretnego dania
         [HttpGet("item/{itemId:guid}")]
         public IActionResult GetEditsByItemId(Guid itemId)
         {
@@ -37,6 +39,7 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
+        // Pobranie propozycji zmian dla wszystkich dań w danej restauracji
         [HttpGet("Restaurant/{restaurantId:guid}")]
         public IActionResult GetEditsByRestaurantId(Guid restaurantId)
         {
@@ -47,9 +50,11 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
+        // Dodanie nowej propozycji zmiany dla elementu menu
         [HttpPost]
         public IActionResult AddEdit(AddEditItemDto addEditItemDto)
         {
+            // Weryfikacja istnienia właściwości w modelu MenuItem
             var property = typeof(MenuItem).GetProperty(addEditItemDto.PropertyName);
             if (property == null)
                 return BadRequest("Invalid property name");
@@ -67,6 +72,7 @@ namespace menumate.Controllers
             return Ok(edit);
         }
 
+        // Zatwierdzenie i naniesienie propozycji zmiany na element menu
         [HttpPut("{id:guid}/approve")]
         public IActionResult ApproveEdit(Guid id)
         {
@@ -87,9 +93,11 @@ namespace menumate.Controllers
 
             try
             {
+                // Dynamiczna konwersja typu i aktualizacja wartości właściwości
                 var convertedValue = Convert.ChangeType(edit.NewValue, property.PropertyType);
                 property.SetValue(item, convertedValue);
 
+                // Usunięcie zrealizowanej propozycji zmiany
                 dbContext.EditItems.Remove(edit);
                 dbContext.SaveChanges();
 
@@ -101,6 +109,7 @@ namespace menumate.Controllers
             }
         }
 
+        // Usunięcie (odrzucenie) propozycji zmiany
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteEdit(Guid id)
         {

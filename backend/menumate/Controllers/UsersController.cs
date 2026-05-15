@@ -28,12 +28,14 @@ namespace menumate.Controllers
             this.imageService = imageService;
         }
 
+        // Pobranie listy wszystkich użytkowników z bazy danych
         [HttpGet]
         public IActionResult GetUsers()
         {
             return Ok(dbContext.Users.ToList());
         }
 
+        // Pobranie danych konkretnego użytkownika na podstawie identyfikatora ID (Guid)
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetUserById(Guid id)
@@ -48,6 +50,7 @@ namespace menumate.Controllers
             return Ok(user);
         }
 
+        // Dodanie nowego użytkownika do bazy danych
         [HttpPost]
         public IActionResult AddUser(AddUserDto addUserDto)
         {
@@ -62,6 +65,7 @@ namespace menumate.Controllers
             return Ok(user);
         }
 
+        // Aktualizacja danych istniejącego użytkownika (wymaga autoryzacji)
         [HttpPut]
         [Route("{id:guid}")]
         [Authorize]
@@ -83,6 +87,7 @@ namespace menumate.Controllers
             return Ok(user);
         }
 
+        // Usunięcie użytkownika z bazy danych na podstawie ID (wymaga autoryzacji)
         [HttpDelete]
         [Authorize]
         public IActionResult DeleteUser(Guid id) 
@@ -97,19 +102,19 @@ namespace menumate.Controllers
             dbContext.Users.Remove(user);
             dbContext.SaveChanges();
             return Ok();
-           
         }
 
+        // Pobranie danych obecnie zalogowanego użytkownika na podstawie tokena JWT
         [HttpGet]
         [Route("current")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetCurrentUser()
         {
+            // Wyciągnięcie ID użytkownika z tokena
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
             if (userId == null)
             {
-                
                 return Unauthorized();
             }
 
@@ -120,6 +125,7 @@ namespace menumate.Controllers
                 return NotFound();
             }
 
+            // Zwrócenie tylko niezbędnych danych użytkownika
             return Ok(new {
                 user.Id,
                 user.Name,
@@ -131,27 +137,34 @@ namespace menumate.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
+            // Sprawdzenie, czy plik został przesłany i nie jest pusty
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
+            // Pobranie ID użytkownika z roszczeń (claims) tokena JWT
             var userIdString = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             if (userIdString == null) return Unauthorized();
 
+            // Konwersja ID na format Guid i wyszukanie użytkownika w bazie danych
             var userId = Guid.Parse(userIdString);
             var user = await dbContext.Users.FindAsync(userId);
             if (user == null) return NotFound();
 
+            // Usunięcie starego pliku z serwera, jeśli użytkownik posiada już przypisane zdjęcie
             if (!string.IsNullOrEmpty(user.ImgPath))
             {
                 await imageService.DeleteImageAsync(user.ImgPath);
             }
 
+            // Przesłanie nowego zdjęcia za pomocą usługi imageService do folderu "users"
             var imageUrl = await imageService.UploadImageAsync(file, "users");
 
+            // Aktualizacja ścieżki do zdjęcia w obiekcie użytkownika i zapisanie zmian w bazie
             user.ImgPath = imageUrl;
             dbContext.Users.Update(user);
             await dbContext.SaveChangesAsync();
 
+            // Zwrócenie nowej ścieżki do zdjęcia w odpowiedzi
             return Ok(new { imgPath = user.ImgPath });
         }
     }

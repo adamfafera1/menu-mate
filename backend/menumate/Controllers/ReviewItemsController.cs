@@ -17,12 +17,14 @@ namespace menumate.Controllers
             this.dbContext = dbContext;
         }
 
+        // Pobranie wszystkich recenzji dań
         [HttpGet]
         public IActionResult GetReviewItems()
         {
             return Ok(dbContext.ReviewItems.ToList());
         }
 
+        // Pobranie recenzji wystawionych przez konkretnego użytkownika
         [HttpGet]
         [Route("user/{id:guid}")]
         public IActionResult GetReviewItemsByUserId(Guid id)
@@ -35,6 +37,7 @@ namespace menumate.Controllers
             return Ok(reviews);
         }
 
+        // Pobranie wszystkich recenzji dla konkretnego dania
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetReviewItemsByItemId(Guid id)
@@ -43,6 +46,7 @@ namespace menumate.Controllers
             return Ok(items);
         }
 
+        // Dodanie nowej recenzji dania
         [HttpPost]
         public IActionResult AddReviewItem(AddReviewItemDto addReviewItemDto)
         {
@@ -62,6 +66,7 @@ namespace menumate.Controllers
             return Ok(reviewItemEntity);
         }
 
+        // Aktualizacja istniejącej recenzji dania
         [HttpPut]
         [Route("{id:guid}")]
         public IActionResult UpdateReviewItem(Guid id, UpdateReviewItem updateReviewItemDto)
@@ -78,6 +83,7 @@ namespace menumate.Controllers
             return Ok(existingItem);
         }
 
+        // Usunięcie recenzji dania
         [HttpDelete]
         [Route("{id:guid}")]
         public IActionResult DeleteReviewItem(Guid id)

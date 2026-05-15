@@ -18,12 +18,14 @@ namespace menumate.Controllers
             this.dbContext = dbContext;
         }
 
+        // Pobranie listy wszystkich recenzji restauracji
         [HttpGet]
         public IActionResult GetReviews()
         {
             return Ok(dbContext.Reviews.ToList());
         }
 
+        // Pobranie wszystkich recenzji dla danej restauracji
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetReviewByRestaurantId(Guid id)
@@ -38,6 +40,7 @@ namespace menumate.Controllers
             return Ok(review);
         }
 
+        // Pobranie recenzji wystawionych przez konkretnego użytkownika
         [HttpGet]
         [Route("user/{id:guid}")]
         public IActionResult GetReviewsByUserId(Guid id)
@@ -50,6 +53,7 @@ namespace menumate.Controllers
             return Ok(review);
         }
 
+        // Dodanie nowej recenzji restauracji
         [HttpPost]
         public IActionResult AddReview(AddReviewDto addReviewDto)
         {
@@ -69,6 +73,7 @@ namespace menumate.Controllers
             return Ok(reviewEntity);
         }
 
+        // Usunięcie recenzji restauracji
         [HttpDelete]    
         public IActionResult DeleteReview(Guid id)
         {
