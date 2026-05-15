@@ -1,17 +1,19 @@
-<p-dialog header="Review" (onHide)="closeDialog()" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem' }">
-      <span class="p-text-secondary block mb-8">Leave this restaurant a review.</span>
-      <div class="flex items-center gap-4 mb-4">
-        <label for="title" class="font-semibold ">Title*</label>
-        <input pInputText [(ngModel)]="title" id="title" class="flex-auto" autocomplete="off" />
-        <p-rating [(ngModel)]="rating" class="flex-auto"></p-rating>
-      </div>
-      <div class="flex items-center gap-5 mb-8">
-        <p-floatlabel variant="in">
-          <label for="review" class="font-semibold w-24">Description</label>
-          <textarea rows="8" cols="50" id="review" [(ngModel)]="description" class="flex-auto " autocomplete="off" pTextarea [autoResize]="true"> </textarea>
-        </p-floatlabel>
-      </div>
-      <div class="flex justify-end gap-2">
-        <p-button label="Post" (click)="postReview();visible = false" ><i class="pi pi-send"></i> </p-button>
-      </div>
+<p-dialog header="Review" (onHide)="closeDialog()" [modal]="true" [(visible)]="visible"
+  [style]="{ width: '40rem', minHeight: '30rem' }">
+  <span class="p-text-secondary block mb-8">Leave this restaurant a review.</span>
+  <div class="flex items-center gap-4 mb-4">
+    <label for="title" class="font-semibold ">Title*</label>
+    <input pInputText [(ngModel)]="title" id="title" class="flex-auto" autocomplete="off" />
+    <p-rating [(ngModel)]="rating" class="flex-auto"></p-rating>
+  </div>
+  <div class="flex items-center gap-5 mb-8">
+    <p-floatlabel variant="in">
+      <label for="review" class="font-semibold w-24">Description</label>
+      <textarea rows="8" cols="50" id="review" [(ngModel)]="description" class="flex-auto " autocomplete="off" pTextarea
+        [autoResize]="true"> </textarea>
+    </p-floatlabel>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Post" (click)="postReview();visible = false"><i class="pi pi-send"></i> </p-button>
+  </div>
 </p-dialog>

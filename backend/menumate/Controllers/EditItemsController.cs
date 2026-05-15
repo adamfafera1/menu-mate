@@ -24,17 +24,17 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
-        [HttpGet("{id:guid}")]
-        public IActionResult GetEditById(Guid id)
+        [HttpGet("item/{itemId:guid}")]
+        public IActionResult GetEditsByItemId(Guid itemId)
         {
-            var edit = dbContext.EditItems.Where(e => e.ItemId == id).ToList();
+            var edits = dbContext.EditItems.Where(e => e.ItemId == itemId).ToList();
             
-            if (edit == null)
+            if (edits == null)
             {
                 return NotFound();
             }
 
-            return Ok(edit);
+            return Ok(edits);
         }
 
         [HttpGet("Restaurant/{restaurantId:guid}")]

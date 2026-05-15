@@ -30,7 +30,7 @@ export class EditService {
   }
 
   getPendingItemEdits(itemId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/EditItems/${itemId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/EditItems/item/${itemId}`);
   }
 
   getPendingItemEditsByRestaurant(restaurantId: string): Observable<any[]> {

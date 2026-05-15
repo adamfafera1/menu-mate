@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, Input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -18,12 +18,16 @@ enum Currency {
 
 @Component({
   selector: 'app-dashboard-items-component',
+  standalone: true,
   imports: [CardModule, BadgeModule, ToastModule],
   templateUrl: './dashboard-items-component.component.html',
   styleUrl: './dashboard-items-component.component.css',
 })
 export class DashboardItemsComponentComponent implements OnInit {
+  @Input() onlyWithEdits: boolean = false;
+  @Input() onlyWithReviews: boolean = false;
   items: any[] = [];
+  allLoadedItems: any[] = [];
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -52,16 +56,27 @@ export class DashboardItemsComponentComponent implements OnInit {
         )
       }).subscribe({
         next: ({ items, edits }) => {
-          this.items = items.map(item => ({
+          this.allLoadedItems = items.map(item => ({
             ...item,
             pendingEditsCount: edits.filter(e => e.itemId === item.id).length
           }));
+          this.filterItems();
         },
         error: (error) => {
           console.error('Error fetching items:', error);
         }
       });
     });
+  }
+
+  private filterItems() {
+    this.items = this.allLoadedItems;
+    if (this.onlyWithEdits) {
+      this.items = this.items.filter(item => item.pendingEditsCount > 0);
+    }
+    if (this.onlyWithReviews) {
+      this.items = this.items.filter(item => item.reviews > 0);
+    }
   }
 
   goToItem(itemId: number) {

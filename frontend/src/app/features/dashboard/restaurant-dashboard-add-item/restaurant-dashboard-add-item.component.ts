@@ -81,7 +81,7 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   addMenuItem() {
     const menuItem = {
@@ -98,15 +98,34 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
       image: '',
     };
 
-    this.http.post(`${API_CONFIG.baseUrl}/Items`, menuItem).subscribe({
+    this.http.post<any>(`${API_CONFIG.baseUrl}/Items`, menuItem).subscribe({
       next: (response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'New menu item added!',
-        });
-        console.log('Successfully added new item: ', response);
-        this.clearForm();
+        const newItemId = response.id;
+
+        if (this.uploadedFiles.length > 0) {
+          const fileToUpload = this.uploadedFiles[0].file;
+          const formData = new FormData();
+          formData.append('file', fileToUpload);
+
+          this.http.post(`${API_CONFIG.baseUrl}/Items/${newItemId}/upload-image`, formData).subscribe({
+            next: () => {
+              this.showSuccess();
+              this.clearForm();
+            },
+            error: (uploadErr) => {
+              console.error('Error uploading item image: ', uploadErr);
+              this.messageService.add({
+                severity: 'warn',
+                summary: 'Item added',
+                detail: 'Item added, but image upload failed.',
+              });
+              this.clearForm();
+            }
+          });
+        } else {
+          this.showSuccess();
+          this.clearForm();
+        }
       },
       error: (err) => {
         this.messageService.add({
@@ -119,6 +138,14 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
     });
   }
 
+  private showSuccess() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'New menu item added!',
+    });
+  }
+
   private clearForm(): void {
     this.name = '';
     this.price = 0;
@@ -128,12 +155,13 @@ export class RestaurantDashboardAddItemComponent implements OnInit {
     this.carbs = undefined;
     this.fats = undefined;
     this.proteins = undefined;
+    this.uploadedFiles = [];
   }
 
   onImageSelect(event: any): void {
     // Only allow 1 file, so clear previous uploads
     this.uploadedFiles = [];
-    
+
     if (event.files && event.files.length > 0) {
       const file = event.files[0];
       const reader = new FileReader();

@@ -1,94 +1,77 @@
 <div class="flex flex-row">
-    <app-side-menu/>
-    <div class="basis-4/5 bg-zinc-900 p-6 mt-6 mb-3 mr-6 rounded-lg border border-zinc-700">
-        <span class="font-semibold text-4xl text-zinc-600 ml-3">Add new item</span>
-        <p-toast/>
-        <div class="flex justify-center mt-5">
-            <div class="grid grid-cols-1 w-1/2 gap-3 ">
-                
-                <p-iftalabel>
-                    <input id="name" pInputText [(ngModel)]="name" class="w-full" />
-                    <label for="name">Item name</label>
-                </p-iftalabel>
-                <p-ifta-label>
-                    <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN" locale="pl-PL" class="w-full" />
-                    <label for="price"> Price </label>
-                </p-ifta-label>
-                <p-iftalabel>   
-                    <textarea pTextarea id="description" [(ngModel)]="description" class="w-full" rows="5" cols="30" style="resize: none"></textarea>
-                    <label for="description">Description</label>
-                </p-iftalabel>
-                <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name" placeholder="Select Alergens" class="w-full"/>
-                <p-ifta-label>
+  <app-side-menu />
+  <div class="basis-4/5 bg-zinc-900 p-6 mt-6 mb-3 mr-6 rounded-lg border border-zinc-700">
+    <span class="font-semibold text-4xl text-zinc-600 ml-3">Add new item</span>
+    <p-toast />
+    <div class="flex justify-center mt-5">
+      <div class="grid grid-cols-1 w-1/2 gap-3 ">
 
-                </p-ifta-label>
-                <div class="grid grid-cols-2 gap-2">
-                    <p-ifta-label>
-                        <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" g" class="w-full" />
-                        <label for="price"> Calories </label>
-                    </p-ifta-label>
-                    <p-ifta-label>
-                        <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full" />
-                        <label for="carbs"> Carbohydrates </label>
-                    </p-ifta-label>
-                    <p-ifta-label>
-                        <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full" />
-                        <label for="fats"> Fats </label>
-                    </p-ifta-label>
-                    <p-ifta-label>
-                        <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g" class="w-full" />
-                        <label for="proteins"> Proteins </label>
-                    </p-ifta-label>
-                </div>
-                
-            </div>
-        </div>
-        <div class="flex justify-center mt-5">
-          <div class="w-1/2">
-            <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
-              Upload item image
-            </label>
-            <p-fileUpload
-              name="image[]"
-              [multiple]="false"
-              accept="image/*"
-              [showUploadButton]="false"
-              [showCancelButton]="false"
-              [customUpload]="true"
-              (onSelect)="onImageSelect($event)"
-              class="w-full"
-            >
-              <ng-template pTemplate="content">
-                <ul *ngIf="uploadedFiles.length">
-                  <li
-                    *ngFor="let file of uploadedFiles; let i = index"
-                    class="flex items-center justify-between"
-                  >
-                    <div class="flex items-center gap-2">
-                      <img
-                        [src]="file.objectURL"
-                        [alt]="file.name"
-                        width="50"
-                        class="rounded"
-                      />
-                      <span>{{ file.name }}</span>
-                    </div>
-                    <button
-                      type="button"
-                      (click)="removeFile(i)"
-                      class="text-red-500 hover:text-red-700 transition"
-                    >
-                      <i class="pi pi-trash"></i>
-                    </button>
-                  </li>
-                </ul>
-              </ng-template>
-            </p-fileUpload>
-            <div class="mt-3">
-                    <p-button (click)="addMenuItem()"><i class="pi pi-check"></i> Add new item </p-button>
-                </div>
-        </div>
+        <p-iftalabel>
+          <input id="name" pInputText [(ngModel)]="name" class="w-full" />
+          <label for="name">Item name</label>
+        </p-iftalabel>
+        <p-ifta-label>
+          <p-inputnumber id="price" [(ngModel)]="price" inputId="currency-pl" mode="currency" currency="PLN"
+            locale="pl-PL" class="w-full" />
+          <label for="price"> Price </label>
+        </p-ifta-label>
+        <p-iftalabel>
+          <textarea pTextarea id="description" [(ngModel)]="description" class="w-full" rows="5" cols="30"
+            style="resize: none"></textarea>
+          <label for="description">Description</label>
+        </p-iftalabel>
+        <p-multiselect [options]="alergens" [(ngModel)]="selectedAlergens" optionLabel="name"
+          placeholder="Select Alergens" class="w-full" />
+        <p-ifta-label>
+
+        </p-ifta-label>
+        <div class="grid grid-cols-2 gap-2">
+          <p-ifta-label>
+            <p-inputnumber id="cals" [(ngModel)]="cals" inputId="cals" suffix=" kcal" class="w-full" />
+            <label for="price"> Calories </label>
+          </p-ifta-label>
+          <p-ifta-label>
+            <p-inputnumber id="carbs" [(ngModel)]="carbs" inputId="carbs" suffix=" g" class="w-full" />
+            <label for="carbs"> Carbohydrates </label>
+          </p-ifta-label>
+          <p-ifta-label>
+            <p-inputnumber id="fats" [(ngModel)]="fats" inputId="fats" suffix=" g" class="w-full" />
+            <label for="fats"> Fats </label>
+          </p-ifta-label>
+          <p-ifta-label>
+            <p-inputnumber id="proteins" [(ngModel)]="proteins" inputId="currency-pl" suffix=" g" class="w-full" />
+            <label for="proteins"> Proteins </label>
+          </p-ifta-label>
         </div>
 
+      </div>
     </div>
+    <div class="flex justify-center mt-5">
+      <div class="w-1/2">
+        <label class="block text-sm font-medium text-zinc-400 mb-2 ml-1">
+          Upload item image
+        </label>
+        <p-fileUpload name="image[]" [multiple]="false" accept="image/*" [showUploadButton]="false"
+          [showCancelButton]="false" [customUpload]="true" (onSelect)="onImageSelect($event)" class="w-full">
+          <ng-template pTemplate="content">
+            <ul *ngIf="uploadedFiles.length">
+              <li *ngFor="let file of uploadedFiles; let i = index" class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <img [src]="file.objectURL" [alt]="file.name" width="50" class="rounded" />
+                  <span>{{ file.name }}</span>
+                </div>
+                <button type="button" (click)="removeFile(i)" class="text-red-500 hover:text-red-700 transition">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </li>
+            </ul>
+          </ng-template>
+        </p-fileUpload>
+        <div class="mt-3">
+          <p-button (click)="addMenuItem()"><i class="pi pi-check"></i> Add new item </p-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

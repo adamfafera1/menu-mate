@@ -1,6 +1,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 p-4">
     @for (item of filteredItems; track item) {
-    <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }" class="cursor-pointer transition-all duration-300 hover:shadow-2xl rounded-xl hover:shadow-slate-300/20">
+    <p-card (click)="showDialog(item)" [style]="{ width: '18rem',height:'20rem', overflow: 'hidden' }"
+        class="cursor-pointer transition-all duration-300 hover:shadow-2xl rounded-xl hover:shadow-slate-300/20">
         <ng-template #header>
             <img alt="Card" class="h-32 w-full object-cover" [src]="mediaService.getImageUrl(item.image)" />
         </ng-template>
@@ -24,10 +25,10 @@
     }
 </div>
 
-<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '30rem' }">   
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '30rem' }">
     <ng-template #header>
-        <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold text-2xl whitespace-nowrap"> {{selectedItem()?.name}} </span>
+        <div class="flex items-center gap-2 max-w-[calc(30rem-100px)]">
+            <span class="font-bold text-2xl truncate" [title]="selectedItem()?.name"> {{selectedItem()?.name}} </span>
         </div>
     </ng-template>
     <p-tabs value="0">
@@ -38,7 +39,8 @@
         </p-tablist>
         <p-tabpanels>
             <p-tabpanel value="0">
-                <img alt="" class="h-72 w-full rounded-lg object-cover" [src]="mediaService.getImageUrl(selectedItem()?.image)" />
+                <img alt="" class="h-72 w-full rounded-lg object-cover"
+                    [src]="mediaService.getImageUrl(selectedItem()?.image)" />
                 <p class="mt-3 text-2xl">
                     {{selectedItem()?.name}}
                 </p>
@@ -87,7 +89,7 @@
     </p-tabs>
     <ng-template #footer>
         <p-button (click)="showEdit()" label="Propose an edit" />
-        <p-button (click)="showReview()" label="Review"  />
+        <p-button (click)="showReview()" label="Review" />
     </ng-template>
 
     <app-propose-item-edit [(visible)]="visibleEdit" [itemId]="selectedItem()?.id"></app-propose-item-edit>

@@ -21,14 +21,15 @@
                     class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4 relative">
                     <span class="font-bold text-xl"> Pending restaurant edits </span>
                     @if (pendingRestaurantEditsCount > 0) {
-                        <p-badge [value]="pendingRestaurantEditsCount" severity="warn" class="absolute top-2 right-2"></p-badge>
+                    <p-badge [value]="pendingRestaurantEditsCount" severity="warn"
+                        class="absolute top-2 right-2"></p-badge>
                     }
                 </div>
                 <div routerLink="./item-edits"
                     class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4 relative">
                     <span class="font-bold text-xl"> Pending menu items edits </span>
                     @if (pendingItemEditsCount > 0) {
-                        <p-badge [value]="pendingItemEditsCount" severity="warn" class="absolute top-2 right-2"></p-badge>
+                    <p-badge [value]="pendingItemEditsCount" severity="warn" class="absolute top-2 right-2"></p-badge>
                     }
                 </div>
                 <div routerLink="./reviews"
@@ -37,7 +38,7 @@
                 </div>
                 <div routerLink="./item-reviews"
                     class="flex flex-col justify-center gap-1 cursor-pointer rounded-lg border border-zinc-700 hover:shadow-white-xl p-4">
-                    <span class="font-bold text-xl"> Rating - reviews of menu items (avg) </span>
+                    <span class="font-bold text-xl"> Rating - reviews of menu items </span>
                 </div>
             </div>
         </div>
