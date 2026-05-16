@@ -1,5 +1,7 @@
 namespace menumate.Models
 {
+    // backend/menumate/Models/AddRestaurantDto.cs
+    // Dodawanie i aktualizacja restauracji
     public class AddRestaurantDto
     {
         public string Name { get; set; }

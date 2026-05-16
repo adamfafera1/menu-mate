@@ -1,5 +1,7 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
+    // backend/menumate/Models/RegisterDto.cs
+    // Rejestracja nowego konta
     public class RegisterDto
     {
         public required string Email { get; set; }

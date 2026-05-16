@@ -25,7 +25,8 @@ namespace menumate.Controllers
             this.imageService = imageService;
         }
 
-        // Zamiana adresu tekstowego na współrzędne geograficzne (Geokodowanie)
+        // Konwersja adresu tekstowego na współrzędne geograficzne przy użyciu zewnętrznego API Nominatim.
+        // Metoda zapewnia obsługę błędów sieciowych i zwraca wartości null w przypadku niepowodzenia geokodowania.
         private async Task<(double? lat, double? lng)> GeocodeAsync(string location)
         {
             try
@@ -40,6 +41,7 @@ namespace menumate.Controllers
                 if (results == null || results.Length == 0) return (null, null);
 
                 var first = results[0];
+                // Parsowanie szerokości i długości geograficznej z formatu niezależnego od kultury (invariant culture)
                 if (double.TryParse(first.GetProperty("lat").GetString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lat) &&
                     double.TryParse(first.GetProperty("lon").GetString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var lng))
                 {
@@ -104,7 +106,8 @@ namespace menumate.Controllers
             return Ok(restaurant);
         }
 
-        // Dodanie nowej restauracji wraz z wyznaczeniem współrzędnych geograficznych
+        // Utworzenie nowej encji restauracji w bazie danych.
+        // Proces obejmuje automatyczne pobranie współrzędnych geograficznych na podstawie podanego adresu tekstowego.
         [HttpPost]
         public async Task<IActionResult> AddRestaurant(AddRestaurantDto addRestaurantDto)
         {
@@ -128,7 +131,8 @@ namespace menumate.Controllers
             return Ok(restaurantEntity);
         }
 
-        // Aktualizacja danych restauracji (w tym przeliczenie współrzędnych przy zmianie adresu)
+        // Aktualizacja danych istniejącej restauracji.
+        // W przypadku wykrycia zmiany adresu tekstowego następuje ponowne wywołanie procesu geokodowania w celu aktualizacji mapy.
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateRestaurant(Guid id, UpdateRestaurantDto updateRestaurantDto)
@@ -137,6 +141,7 @@ namespace menumate.Controllers
 
             if (restaurant == null) { return NotFound(); }
 
+            // Weryfikacja zmiany lokalizacji w celu optymalizacji zapytań do API geokodowania
             var locationChanged = restaurant.Location != updateRestaurantDto.Location;
 
             restaurant.Name = updateRestaurantDto.Name;

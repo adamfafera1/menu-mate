@@ -1,5 +1,7 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
+    // backend/menumate/Models/UpdateUserDto.cs
+    // Zarządzanie danymi użytkownika
     public class UpdateUserDto
     {
         public string Name { get; set; }

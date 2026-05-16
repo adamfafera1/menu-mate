@@ -1,3 +1,5 @@
+// backend/menumate/Models/Entities/EditItem.cs
+
 namespace menumate.Models.Entities
 {
     public class EditItem
@@ -17,7 +19,7 @@ namespace menumate.Models.Entities
         // Data utworzenia zgłoszenia
         public DateTime CreatedAt { get; set; }
 
-        // Obiekt powiązanego dania (relacja)
+        // Powiązana encja dania
         public MenuItem Item { get; set; }
     }
 }

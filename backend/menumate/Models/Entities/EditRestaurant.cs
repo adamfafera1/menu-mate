@@ -11,13 +11,13 @@ namespace menumate.Models.Entities
         // Nazwa właściwości podlegającej zmianie (np. Name, Location)
         public string PropertyName { get; set; }
 
-        // Nowa proponowana wartość
+        // Nowa proponowana wartość zmiany
         public string NewValue { get; set; }
 
-        // Data utworzenia zgłoszenia
+        // Data utworzenia zgłoszenia zmiany
         public DateTime CreatedAt { get; set; }
 
-        // Obiekt powiązanej restauracji (relacja)
+        // Powiązana encja restauracji
         public Restaurant Restaurant { get; set; }
     }
 }

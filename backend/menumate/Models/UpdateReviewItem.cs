@@ -1,5 +1,7 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
+    // backend/menumate/Models/UpdateReviewItem.cs
+    // Aktualizacja recenzji dania
     public class UpdateReviewItem
     {
         public Guid ItemId { get; set; }

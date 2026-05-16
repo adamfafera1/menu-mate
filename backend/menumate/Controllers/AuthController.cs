@@ -15,10 +15,16 @@ namespace menumate.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        // Usługa zarządzania użytkownikami z systemu ASP.NET Core Identity
         private readonly UserManager<User> _userManager;
+
+        // Dostęp do konfiguracji aplikacji (np. kluczy JWT)
         private readonly IConfiguration _config;
+
+        // Kontekst bazy danych aplikacji
         private readonly ApplicationDbContext _context;
         
+        // Konstruktor kontrolera z wstrzykiwaniem zależności
         public AuthController(UserManager<User> userManager, IConfiguration config, ApplicationDbContext context)
         {
             _userManager = userManager;
@@ -26,19 +32,22 @@ namespace menumate.Controllers
             _context = context;
         }
 
-        // Rejestracja nowego użytkownika
+        // Rejestracja nowej tożsamości użytkownika. 
+        // W przypadku wybrania roli 'RestaurantOwner', proces automatycznie inicjalizuje pusty profil restauracji przypisany do nowego konta.
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
+            // Utworzenie nowego użytkownika na podstawie danych z formularza
             var user = new User { 
                 UserName = registerDto.UserName, 
                 Email = registerDto.Email,
                 Role = registerDto.Role
             };
+            // Próba utworzenia konta z podanym hasłem (zabezpieczonym haszowaniem)
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            // Automatyczne tworzenie profilu restauracji dla kont typu RestaurantOwner
+            // Automatyczne tworzenie rekordu w tabeli Restaurants dla nowo zarejestrowanych właścicieli
             if (registerDto.Role == "RestaurantOwner")
             {
                 var restaurant = new Restaurant
@@ -53,6 +62,7 @@ namespace menumate.Controllers
                     OwnerId = user.Id
                 };
 
+                // Dodanie do bazy danych
                 _context.Restaurants.Add(restaurant);
                 await _context.SaveChangesAsync();
 
@@ -62,25 +72,27 @@ namespace menumate.Controllers
             return Ok();
         }
 
-        // Logowanie użytkownika i generowanie tokena JWT
+        // Uwierzytelnianie użytkownika i generowanie bezpiecznego tokena JWT (JSON Web Token).
+        // Token zawiera informacje o tożsamości użytkownika (ID) oraz przypisanych mu uprawnieniach (Role).
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            // Wyszukanie użytkownika i weryfikacja hasła
+            // Weryfikacja istnienia użytkownika w bazie Identity i poprawności hasła
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized("Invalid credentials");
             
-            // Przygotowanie roszczeń (claims) dla tokena
+            // Definicja roszczeń (claims) zaszyfrowanych wewnątrz tokena
             var claims = new[] { 
                 new Claim(ClaimTypes.Name, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role ?? "User")
             };
             
+            // Przygotowanie klucza kryptograficznego na podstawie konfiguracji aplikacji
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Tworzenie struktury tokena JWT
+            // Konstrukcja struktury tokena z określonym wystawcą (issuer), odbiorcą (audience) i czasem wygaśnięcia
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
@@ -89,10 +101,8 @@ namespace menumate.Controllers
                 signingCredentials: creds
                 );
 
-            // Zwrócenie wygenerowanego tokena
+            // Serializacja tokena do formatu tekstowego (Base64) gotowego do przesłania w nagłówku HTTP
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
-        
-
     }
 }

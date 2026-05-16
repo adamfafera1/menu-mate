@@ -1,5 +1,7 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
+    // backend/menumate/Models/AddUserDto.cs
+    // Rejestracja nowego użytkownika (starsza wersja)
     public class AddUserDto
     {
         public string Name { get; set; }

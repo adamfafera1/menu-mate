@@ -1,3 +1,5 @@
+// backend/menumate/Controllers/EditItemsController.cs
+
 using menumate.Data;
 using menumate.Models;
 using menumate.Models.Entities;
@@ -50,11 +52,11 @@ namespace menumate.Controllers
             return Ok(edits);
         }
 
-        // Dodanie nowej propozycji zmiany dla elementu menu
+        // Rejestracja nowej propozycji zmiany dla wybranego elementu menu.
         [HttpPost]
         public IActionResult AddEdit(AddEditItemDto addEditItemDto)
         {
-            // Weryfikacja istnienia właściwości w modelu MenuItem
+            // Dynamiczne sprawdzenie, czy wskazana nazwa właściwości istnieje w modelu MenuItem przy użyciu refleksji
             var property = typeof(MenuItem).GetProperty(addEditItemDto.PropertyName);
             if (property == null)
                 return BadRequest("Invalid property name");
@@ -72,10 +74,11 @@ namespace menumate.Controllers
             return Ok(edit);
         }
 
-        // Zatwierdzenie i naniesienie propozycji zmiany na element menu
+        // Zatwierdzenie i automatyczne aplikowanie propozycji zmiany na docelowy rekord w bazie danych.
         [HttpPut("{id:guid}/approve")]
         public IActionResult ApproveEdit(Guid id)
         {
+            // Pobranie propozycji zmiany wraz z daniem, którego dotyczy zmiana
             var edit = dbContext.EditItems
                 .Include(e => e.Item)
                 .FirstOrDefault(e => e.Id == id);
@@ -87,17 +90,21 @@ namespace menumate.Controllers
             if (item == null)
                 return NotFound("Item not found");
 
+            // Pobranie informacji o właściwości modelu MenuItem na podstawie nazwy zapisanej w edycji
             var property = typeof(MenuItem).GetProperty(edit.PropertyName);
+
+            // Sprawdzenie, czy właściwość istnieje
             if (property == null)
                 return BadRequest("Invalid property name");
 
             try
             {
-                // Dynamiczna konwersja typu i aktualizacja wartości właściwości
+                // Dynamiczna konwersja tekstowej wartości NewValue na typ docelowy (np. float, int) właściwości obiektu
                 var convertedValue = Convert.ChangeType(edit.NewValue, property.PropertyType);
+                // Przypisanie skonwertowanej wartości bezpośrednio do obiektu przy użyciu refleksji
                 property.SetValue(item, convertedValue);
 
-                // Usunięcie zrealizowanej propozycji zmiany
+                // Usunięcie rekordu propozycji z bazy danych po pomyślnym naniesieniu zmian
                 dbContext.EditItems.Remove(edit);
                 dbContext.SaveChanges();
 

@@ -1,3 +1,4 @@
+// backend/menumate/Models/Entities/ReviewItem.cs
 namespace menumate.Models.Entities
 {
     public class ReviewItem
@@ -11,10 +12,10 @@ namespace menumate.Models.Entities
         // Identyfikator dania, którego dotyczy recenzja
         public Guid ItemId { get; set; }
 
-        // Nazwa wyświetlana użytkownika
+        // Nazwa użytkownika wystawiającego opinię
         public string UserName { get; set; }
 
-        // Ścieżka do zdjęcia profilowego autora
+        // Ścieżka do zdjęcia profilowego użytkownika wystawiającego opinię
         public string UserImagePath { get; set; }
 
         // Tytuł recenzji
@@ -26,7 +27,7 @@ namespace menumate.Models.Entities
         // Ocena punktowa dania
         public float Rating { get; set; }
 
-        // Obiekt powiązanego dania (relacja)
+        // Powiązana encja dania
         public MenuItem Item { get; set; }
     }
 }

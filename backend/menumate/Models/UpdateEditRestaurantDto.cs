@@ -1,7 +1,9 @@
-﻿using menumate.Models.Entities;
+using menumate.Models.Entities;
 
 namespace menumate.Models
 {
+    // backend/menumate/Models/UpdateEditRestaurantDto.cs
+    // Aktualizacja propozycji edycji restauracji
     public class UpdateEditRestaurantDto
     {
         public Guid RestaurantId { get; set; }

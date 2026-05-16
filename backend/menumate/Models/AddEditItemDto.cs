@@ -1,7 +1,6 @@
-﻿using menumate.Models.Entities;
-
 namespace menumate.Models
 {
+    // backend/menumate/Models/AddEditItemDto.cs | Propozycja zmiany parametrów produktu
     public class AddEditItemDto
     {
         public Guid ItemId { get; set; }

@@ -1,5 +1,7 @@
-﻿namespace menumate.Models
+namespace menumate.Models
 {
+    // backend/menumate/Models/AddReviewDto.cs
+    // Recenzja lokalu lub produktu
     public class AddReviewDto
     {
         public Guid RestaurantId { get; set; }

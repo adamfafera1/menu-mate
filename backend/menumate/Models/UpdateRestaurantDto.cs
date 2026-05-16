@@ -1,5 +1,7 @@
 namespace menumate.Models.Entities
 {
+    // backend/menumate/Models/UpdateRestaurantDto.cs
+    // Aktualizacja danych restauracji
     public class UpdateRestaurantDto
     {
         public string Name { get; set; }

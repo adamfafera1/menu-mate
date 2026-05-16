@@ -1,8 +1,10 @@
-﻿using menumate.Models.Entities;
+using menumate.Models.Entities;
 using System.ComponentModel;
 
 namespace menumate.Models
 {
+    // backend/menumate/Models/UpdateItemDto.cs
+    // Aktualizacja pozycji w menu
     public class UpdateItemDto
     {
         public Guid RestaurantId { get; set; }
