@@ -1,3 +1,4 @@
+// Path: frontend/src/app/core/services/role-navigation.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -6,10 +7,12 @@ import { UserRole, RolePermissions } from '../models/user-roles';
 @Injectable({
   providedIn: 'root'
 })
+// Serwis nawigacji ról odpowiedzialny za automatyczne przekierowania oraz sterowanie widocznością elementów UI na podstawie uprawnień ról użytkowników
 export class RoleNavigationService {
 
   constructor(private authService: AuthService, private router: Router) { }
 
+  // Przekierowanie zalogowanego użytkownika do dedykowanej dla jego roli strony startowej (np. panel właściciela restauracji lub przeglądarka menu)
   redirectToDefaultPage(): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/browse']);
@@ -56,26 +59,31 @@ export class RoleNavigationService {
     }
   }
 
+  // Weryfikacja, czy aktualny użytkownik posiada uprawnienia do wyświetlenia nawigacji wyszukiwania (Browse)
   canShowBrowseNavigation(): boolean {
     const userRole = this.authService.getUserRole();
     return !userRole || RolePermissions.canAccessBrowse(userRole);
   }
 
+  // Weryfikacja, czy aktualny użytkownik posiada uprawnienia do wyświetlenia panelu zarządzania (Dashboard)
   canShowDashboardNavigation(): boolean {
     const userRole = this.authService.getUserRole();
     return userRole ? RolePermissions.canAccessDashboard(userRole) : false;
   }
 
+  // Weryfikacja, czy aktualny użytkownik posiada dostęp do standardowych funkcji klenckich (np. dodawanie opinii)
   canShowUserFeatures(): boolean {
     const userRole = this.authService.getUserRole();
     return userRole ? RolePermissions.canAccessUserFeatures(userRole) : false;
   }
 
+  // Weryfikacja, czy zalogowany użytkownik posiada rolę administratora (Admin)
   isCurrentUserAdmin(): boolean {
     const userRole = this.authService.getUserRole();
     return userRole ? RolePermissions.isAdmin(userRole) : false;
   }
 
+  // Weryfikacja, czy zalogowany użytkownik posiada rolę właściciela restauracji (RestaurantOwner)
   isCurrentUserRestaurantOwner(): boolean {
     const userRole = this.authService.getUserRole();
     return userRole ? RolePermissions.isRestaurantOwner(userRole) : false;

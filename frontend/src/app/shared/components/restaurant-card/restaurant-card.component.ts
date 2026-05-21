@@ -1,3 +1,4 @@
+// frontend/src/app/shared/components/restaurant-card/restaurant-card.component.ts
 import { Component, Input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -14,12 +15,14 @@ import { MediaService } from '../../../core/services/media.service';
   templateUrl: './restaurant-card.component.html',
   styleUrl: './restaurant-card.component.css'
 })
+// Komponent prezentujący skrócone informacje o restauracji w postaci wizytówki (karty)
 export class RestaurantCardComponent {
   @Input() restaurant:any;
   @Input() rating: number = 0;
 
   constructor(private router: Router, private ratingService: RatingServiceService, public mediaService: MediaService) {}
 
+  // Inicjalizacja komponentu - pobranie z serwisu średniej oceny danej restauracji
   ngOnInit(){
     if(this.restaurant?.id){
       this.ratingService.getRestaurantRating(this.restaurant.id).subscribe({
@@ -32,13 +35,13 @@ export class RestaurantCardComponent {
         }
       });
     }
-    
   }
+
+  // Przekierowanie użytkownika na dedykowaną stronę szczegółową restauracji
   goToRestaurant(): void {
     console.log("Clicked go to restaurant")
     if(this.restaurant && this.restaurant.id){
       this.router.navigate(['/restaurant', this.restaurant.id])
     }
   }
-
 }

@@ -5298,31 +5298,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADASF\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/fonfi/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\menumate.csproj",
+      "projectUniqueName": "/Users/fonfi/git_repos/menu-mate/backend/menumate/menumate.csproj",
       "projectName": "menumate",
-      "projectPath": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\menumate.csproj",
-      "packagesPath": "C:\\Users\\ADASF\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADASF\\Desktop\\gitrepos\\menu-mate\\backend\\menumate\\obj\\",
+      "projectPath": "/Users/fonfi/git_repos/menu-mate/backend/menumate/menumate.csproj",
+      "packagesPath": "/Users/fonfi/.nuget/packages/",
+      "outputPath": "/Users/fonfi/git_repos/menu-mate/backend/menumate/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ADASF\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/fonfi/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5340,8 +5333,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.300"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -5393,7 +5385,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/fonfi/.dotnet/sdk/8.0.418/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

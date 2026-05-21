@@ -1,3 +1,4 @@
+// Path: frontend/src/app/features/browse/propose-item-edit/propose-item-edit.component.ts
 import {
   Component,
   Input,
@@ -18,6 +19,7 @@ import { ToastModule } from 'primeng/toast';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
+// Enumerator definiujący modyfikowalne właściwości pozycji menu (dania)
 export enum ItemProperty {
   Name = 'Name',
   Price = 'Price',
@@ -43,6 +45,7 @@ export enum ItemProperty {
   templateUrl: './propose-item-edit.component.html',
   styleUrl: './propose-item-edit.component.css',
 })
+// Komponent formularza dialogowego służący do zgłaszania propozycji poprawek danych konkretnego produktu w menu
 export class ProposeItemEditComponent implements OnInit, OnChanges {
   @Input() itemId: string | null = null;
   @Input() visible: boolean = false;
@@ -63,12 +66,14 @@ export class ProposeItemEditComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
+  // Reakcja na zmianę widoczności okna dialogowego - pobranie danych uwierzytelnionego użytkownika
   ngOnChanges() {
     if (this.visible && !this.currentUser) {
       this.loadCurrentUser();
     }
   }
 
+  // Weryfikacja tożsamości oraz pobranie z bazy danych pełnego profilu aktualnego użytkownika
   loadCurrentUser() {
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({
@@ -108,6 +113,7 @@ export class ProposeItemEditComponent implements OnInit, OnChanges {
     }
   }
 
+  // Przesłanie nowej propozycji modyfikacji właściwości dania do API
   proposeEdit() {
     if (!this.authService.isAuthenticated()) {
       localStorage.setItem('editLoggedOut', 'true');
@@ -164,11 +170,13 @@ export class ProposeItemEditComponent implements OnInit, OnChanges {
     });
   }
 
+  // Przywrócenie pól formularza propozycji zmian do wartości domyślnych
   private resetForm() {
     this.selectedProperty = null;
     this.newValue = '';
   }
 
+  // Zamknięcie okna dialogowego formularza propozycji poprawek
   closeDialog() {
     this.visible = false;
     this.visibleChange.emit(this.visible);

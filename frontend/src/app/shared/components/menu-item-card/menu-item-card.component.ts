@@ -1,3 +1,4 @@
+// Path: frontend/src/app/shared/components/menu-item-card/menu-item-card.component.ts
 import {
   Component,
   signal,
@@ -20,6 +21,7 @@ import { API_CONFIG } from '../../../core/config/api.config';
 import { ItemService } from '../../../core/services/item.service';
 import { MediaService } from '../../../core/services/media.service';
 
+// Typ wyliczeniowy reprezentujący walutę używaną do wyświetlania cen dań
 enum Currency {
   PLN = 0,
   USD = 1,
@@ -43,6 +45,7 @@ enum Currency {
   templateUrl: './menu-item-card.component.html',
   styleUrl: './menu-item-card.component.css',
 })
+// Komponent prezentujący asortyment menu danej restauracji w formie kart, z obsługą wyszukiwania, szczegółów i opinii
 export class MenuItemCardComponent implements OnChanges {
   @Input() searchQuery: string = '';
 
@@ -54,14 +57,16 @@ export class MenuItemCardComponent implements OnChanges {
   value: number = 4;
   selectedItem = signal<any | null>(null);
 
-  constructor(private route: ActivatedRoute, private itemService: ItemService, public mediaService: MediaService) {}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, public mediaService: MediaService) { }
 
+  // Reakcja na zmianę parametrów wejściowych - uruchomienie filtrowania dań przy zmianie zapytania wyszukiwarki
   ngOnChanges(changes: SimpleChanges) {
     if (changes['searchQuery']) {
       this.filterItems();
     }
   }
 
+  // Filtrowanie listy dań na podstawie zgodności nazwy lub opisu z frazą wpisaną przez użytkownika
   filterItems() {
     if (!this.searchQuery || this.searchQuery.trim() === '') {
       this.filteredItems = [...this.items];
@@ -76,28 +81,34 @@ export class MenuItemCardComponent implements OnChanges {
     }
   }
 
+  // Otwarcie okna dialogowego szczegółów dla konkretnego dania z menu
   showDialog(item: any) {
     this.selectedItem.set(item);
     this.visible = true;
     console.log('Selected item: ', item);
   }
 
+  // Wyświetlenie formularza zgłaszania propozycji poprawek danego produktu
   showEdit() {
     this.visibleEdit = true;
   }
 
+  // Ukrycie formularza zgłaszania propozycji poprawek
   hideEdit() {
     this.visibleEdit = false;
   }
 
+  // Wyświetlenie okna dialogowego do dodawania opinii i oceny produktu
   showReview() {
     this.visibleReview = true;
   }
 
+  // Ukrycie okna dialogowego dodawania opinii
   hideReview() {
     this.visibleReview = false;
   }
 
+  // Mapowanie typu wyliczeniowego waluty na odpowiadający mu symbol graficzny
   getCurrencySymbol(currency: Currency): string {
     switch (currency) {
       case Currency.PLN:
@@ -111,6 +122,7 @@ export class MenuItemCardComponent implements OnChanges {
     }
   }
 
+  // Inicjalizacja komponentu - pobranie z API listy dań powiązanych z aktualnie przeglądaną restauracją (ID z URL)
   ngOnInit() {
     const urlID = this.route.snapshot.paramMap.get('id');
 
@@ -127,5 +139,4 @@ export class MenuItemCardComponent implements OnChanges {
       }
     });
   }
-
 }

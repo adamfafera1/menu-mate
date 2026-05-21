@@ -1,3 +1,4 @@
+// Path: frontend/src/app/features/browse/review/review.component.ts
 import { Component } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -21,6 +22,7 @@ import { RatingServiceService } from '../../../core/services/rating-service.serv
   templateUrl: './review.component.html',
   styleUrl: './review.component.css',
 })
+// Komponent odpowiedzialny za wyświetlanie listy opinii oraz średniej oceny dla restauracji
 export class ReviewComponent {
   reviews: any[] = [];
   restaurantRating: number = 0;
@@ -28,6 +30,7 @@ export class ReviewComponent {
 
   constructor(private route: ActivatedRoute, private ratingService: RatingServiceService) {}
 
+  // Inicjalizacja komponentu - pobranie parametru ID restauracji z trasy oraz załadowanie powiązanych opinii z API
   ngOnInit() {
     this.urlID = this.route.snapshot.paramMap.get('id');
 
@@ -45,6 +48,7 @@ export class ReviewComponent {
     }
   }
 
+  // Obliczenie średniej oceny restauracji na podstawie listy pobranych recenzji
   calculateAverageRating(): number {
     if (this.reviews.length === 0) {
       this.restaurantRating = 0;
@@ -58,6 +62,7 @@ export class ReviewComponent {
     return this.restaurantRating;
   }
 
+  // Zwrócenie liczby opinii (pomocniczy stub)
   countReviews(): number {
     return 0;
   }

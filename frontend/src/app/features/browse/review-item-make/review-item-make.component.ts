@@ -25,6 +25,7 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './review-item-make.component.html',
   styleUrl: './review-item-make.component.css',
 })
+// Komponent formularza dialogowego służący do wystawiania nowej oceny i opinii dla wybranego dania (produktu)
 export class ReviewItemMakeComponent implements OnInit, OnChanges {
   @Input() visible: boolean = false;
   @Input() itemId: string | null = null;
@@ -45,12 +46,14 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
+  // Reakcja na zmianę widoczności okna dialogowego - pobranie profilu zalogowanego użytkownika
   ngOnChanges() {
     if (this.visible && !this.currentUser) {
       this.loadCurrentUser();
     }
   }
 
+  // Weryfikacja tożsamości oraz pobranie z bazy danych pełnego profilu aktualnego użytkownika na podstawie tokena JWT
   loadCurrentUser() {
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({
@@ -91,6 +94,7 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
     }
   }
 
+  // Przesłanie nowej opinii i oceny produktu (dania) do bazy danych za pośrednictwem API
   postReview() {
     if (!this.authService.isAuthenticated()) {
       this.messageService.add({
@@ -146,11 +150,13 @@ export class ReviewItemMakeComponent implements OnInit, OnChanges {
     });
   }
 
+  // Zamknięcie okna dialogowego formularza dodawania opinii
   closeDialog() {
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }
 
+  // Przywrócenie domyślnych wartości pól formularza dodawania recenzji produktu
   resetForm() {
     this.title = '';
     this.description = '';

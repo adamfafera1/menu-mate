@@ -1,3 +1,4 @@
+//frontend/src/app/features/dashboard/restaurant-dashboard-edits/restaurant-dashboard-edits.component.ts
 import { Component, OnInit } from '@angular/core';
 import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
 import { MessageService } from 'primeng/api';
@@ -30,24 +31,31 @@ import { DatePipe } from '@angular/common';
   templateUrl: './restaurant-dashboard-edits.component.html',
   styleUrl: './restaurant-dashboard-edits.component.css',
 })
+// Komponent panelu administracyjnego odpowiedzialny za moderację i zarządzanie propozycjami poprawek profilu restauracji
 export class RestaurantDashboardEditsComponent implements OnInit {
-  pendingEdits: any[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private editService: EditService,
     private messageService: MessageService,
     private restaurantService: RestaurantService,
-  ) {}
+  ) { }
   restaurantUrl: any = null;
   restaurant: any = null;
+  pendingEdits: any[] = [];
 
+  // Inicjalizacja komponentu - odczytanie identyfikatora lokalu z URL i wywołanie pobierania danych z API
   ngOnInit(): void {
+    // Odczytanie identyfikatora restauracji z parametrów aktywnej trasy (URL)
     this.restaurantUrl = this.route.snapshot.paramMap.get('id');
+    // Pobranie listy oczekujących poprawek profilu restauracji
     this.loadPendingEdits(this.restaurantUrl);
+    // Pobranie podstawowych informacji profilowych restauracji
     this.loadRestaurant(this.restaurantUrl);
     this.restaurantService.getRestaurantById(this.restaurantUrl);
   }
 
+  // Pobranie z API listy oczekujących (niezatwierdzonych) poprawek profilu restauracji
   loadPendingEdits(restaurantId: string) {
     this.editService.getPendingRestaurantEdits(restaurantId).subscribe({
       next: (edits) => (this.pendingEdits = edits),
@@ -55,6 +63,7 @@ export class RestaurantDashboardEditsComponent implements OnInit {
     });
   }
 
+  // Pobranie z API szczegółowych informacji profilowych restauracji
   loadRestaurant(restaurantId: string) {
     this.restaurantService.getRestaurantById(restaurantId).subscribe({
       next: (restaurant) => (this.restaurant = restaurant),
@@ -62,7 +71,9 @@ export class RestaurantDashboardEditsComponent implements OnInit {
     });
   }
 
+  // Zatwierdzenie wybranej propozycji edycji danych restauracji i automatyczne zaaplikowanie zmian
   approveEdit(editId: string) {
+    // Przesłanie żądania HTTP w celu zatwierdzenia zmiany o podanym identyfikatorze
     this.editService.approveRestaurantEdit(editId).subscribe({
       next: (response) => {
         this.messageService.add({
@@ -70,6 +81,7 @@ export class RestaurantDashboardEditsComponent implements OnInit {
           summary: 'Success',
           detail: 'Edit approved and applied to restaurant',
         });
+        // Ponowne załadowanie listy oczekujących poprawek w celu zsynchronizowania stanu widoku
         this.loadPendingEdits(this.restaurantUrl);
       },
       error: (error) => {
@@ -83,7 +95,9 @@ export class RestaurantDashboardEditsComponent implements OnInit {
     });
   }
 
+  // Odrzucenie (anulowanie) wybranej propozycji edycji profilu restauracji
   denyEdit(editId: string) {
+    // Przesłanie żądania HTTP w celu usunięcia/odrzucenia propozycji poprawki o określonym identyfikatorze
     this.editService.denyRestaurantEdit(editId).subscribe({
       next: (response) => {
         this.messageService.add({
@@ -91,7 +105,8 @@ export class RestaurantDashboardEditsComponent implements OnInit {
           summary: 'Edit Denied',
           detail: 'Edit has been rejected and removed',
         });
-        this.loadPendingEdits(this.restaurantUrl); // Refresh the list
+        // Odświeżenie lokalnej listy oczekujących poprawek
+        this.loadPendingEdits(this.restaurantUrl);
       },
       error: (error) => {
         console.error('Error denying edit:', error);
@@ -104,6 +119,7 @@ export class RestaurantDashboardEditsComponent implements OnInit {
     });
   }
 
+  // Reakcja na zewnętrzne zdarzenie zgłoszenia poprawki - wywołanie odświeżenia listy
   onEditProposed() {
     this.loadPendingEdits(this.restaurantUrl);
   }

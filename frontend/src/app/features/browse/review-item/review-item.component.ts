@@ -1,3 +1,4 @@
+// Path: frontend/src/app/features/browse/review-item/review-item.component.ts
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -20,6 +21,7 @@ import { RatingItemService } from '../../../core/services/rating-item.service';
   templateUrl: './review-item.component.html',
   styleUrl: './review-item.component.css',
 })
+// Komponent odpowiedzialny za pobieranie i wyświetlanie opinii oraz wyliczanie oceny dla konkretnego dania (produktu)
 export class ReviewItemComponent implements OnChanges {
   reviews: any[] = [];
   restaurantRating: number = 0;
@@ -27,12 +29,14 @@ export class ReviewItemComponent implements OnChanges {
 
   constructor(private ratingItemService: RatingItemService) {}
 
+  // Reakcja na zmianę identyfikatora produktu - pobranie nowych recenzji
   ngOnChanges(changes: SimpleChanges) {
     if (changes['urlID'] && this.urlID) {
       this.fetchReviews();
     }
   }
 
+  // Pobranie recenzji przypisanych do produktu z bazy danych za pośrednictwem serwisu ratingItemService
   private fetchReviews() {
     if (!this.urlID) {
       console.error('No item ID provided');
@@ -53,6 +57,7 @@ export class ReviewItemComponent implements OnChanges {
     });
   }
 
+  // Obliczenie średniej oceny produktu na podstawie listy zebranych opinii
   calculateAverageRating(): number {
     if (this.reviews.length === 0) {
       this.restaurantRating = 0;

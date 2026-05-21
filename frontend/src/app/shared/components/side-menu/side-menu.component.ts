@@ -1,3 +1,4 @@
+// Path: frontend/src/app/shared/components/side-menu/side-menu.component.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, ConfirmationService } from 'primeng/api';
@@ -6,7 +7,6 @@ import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RatingServiceService } from '../../../core/services/rating-service.service';
 import { AuthService } from '../../../core/services/auth.service';
-
 
 @Component({
   selector: 'app-side-menu',
@@ -21,18 +21,20 @@ export class SideMenuComponent implements OnInit {
   reviewCount: number | null = 0;
   private id: string | null = null;
 
-
+  // Wyodrębnienie identyfikatora restauracji z bieżącego segmentu ścieżki URL w konstruktorze
   constructor(private router: Router, private ratingService: RatingServiceService, private authService: AuthService, private confirmationService: ConfirmationService) {
     this.id = this.router.url.split('/')[2] || null;
   }
 
+  // Inicjalizacja komponentu - pobranie statystyk opinii oraz zdefiniowanie struktury nawigacji
   ngOnInit() {
-
-
+    // Weryfikacja obecności identyfikatora restauracji
     if (this.id) {
+      // Pobranie z API liczby opinii przypisanych do lokalu w celu prezentacji w menu
       this.ratingService.countRestaurantReviews(this.id).subscribe({
         next: (count) => {
           this.reviewCount = count;
+          // Inicjalizacja struktury zakładek i nawigacji w panelu bocznym
           this.items = [
             {
               separator: true
@@ -47,7 +49,6 @@ export class SideMenuComponent implements OnInit {
                   icon: 'pi pi-star',
                   command: () => this.navigateReviews()
                 },
-
               ]
             },
             {
@@ -80,10 +81,7 @@ export class SideMenuComponent implements OnInit {
                 }
               ]
             }
-
           ];
-
-
         },
         error: (error) => {
           console.error('Error getting review count:', error);
@@ -91,41 +89,51 @@ export class SideMenuComponent implements OnInit {
         }
       });
     }
-
   }
 
+
+  // Przykładowe funkcja przekierowania do odpowiednich widoków w panelu administratora
+  // Przekierowanie do głównego pulpitu (home) wybranej restauracji
   navigateHome() {
     this.router.navigate([`dashboard/${this.id}`]);
   }
 
+  // Przekierowanie do listy poprawek (edits) zgłoszonych do restauracji
   navigateEdits() {
     this.router.navigate([`dashboard/${this.id}/edits`]);
   }
 
+  // Przekierowanie do listy opinii o restauracji
   navigateReviews() {
     this.router.navigate([`dashboard/${this.id}/reviews`]);
   }
 
+  // Przekierowanie do listy zgłoszonych poprawek dań z menu
   navigateItemEdits() {
     this.router.navigate([`dashboard/${this.id}/item-edits`]);
   }
 
+  // Przekierowanie do listy opinii dotyczących konkretnych dań z menu
   navigateItemReviews() {
     this.router.navigate([`dashboard/${this.id}/item-reviews`]);
   }
 
+  // Przekierowanie do formularza dodawania nowego dania do menu
   navigateAddItem() {
     this.router.navigate([`dashboard/${this.id}/add-item`]);
   }
 
+  // Przekierowanie do formularza edycji profilu/właściwości samej restauracji
   navigateRestaurantSelfManage() {
     this.router.navigate([`dashboard/${this.id}/restaurant-self-manage`])
   }
 
+  // Przekierowanie do panelu zarządzania i aktualizacji dań z menu
   navigateItemsSelfManage() {
     this.router.navigate([`dashboard/${this.id}/items-self-manage`])
   }
 
+  // Wyświetlenie modalnego okna potwierdzenia chęci wylogowania administratora lokalu
   confirmSignOut() {
     this.confirmationService.confirm({
       message: 'Are you sure you want to sign out?',
@@ -140,9 +148,9 @@ export class SideMenuComponent implements OnInit {
     });
   }
 
+  // Wyczyszczenie sesji i przekierowanie z powrotem na ekran logowania
   signOut() {
     this.authService.logout();
     this.router.navigate(['login']);
   }
-
 }

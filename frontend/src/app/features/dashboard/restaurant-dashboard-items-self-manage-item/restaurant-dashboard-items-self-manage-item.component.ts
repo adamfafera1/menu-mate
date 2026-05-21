@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+//frontend/src/app/features/dashboard/restaurant-dashboard-items-self-manage-item/restaurant-dashboard-items-self-manage-item.component.ts
+import { Component, OnInit } from '@angular/core';
 import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { TextareaModule } from 'primeng/textarea';
@@ -41,7 +42,8 @@ interface Alergens {
   templateUrl: './restaurant-dashboard-items-self-manage-item.component.html',
   styleUrl: './restaurant-dashboard-items-self-manage-item.component.css',
 })
-export class RestaurantDashboardItemsSelfManageItemComponent {
+// Komponent panelu administracyjnego odpowiedzialny za edycję pojedynczej potrawy (pozycji menu) restauracji
+export class RestaurantDashboardItemsSelfManageItemComponent implements OnInit {
   name: string | undefined;
   description: string | undefined;
   item: any = null;
@@ -61,11 +63,15 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     public mediaService: MediaService
-  ) {}
+  ) { }
 
+  // Obsługa przesyłania nowego pliku graficznego potrawy do chmury za pośrednictwem serwisu API
   onUpload(event: any) {
+    // Weryfikacja obecności pliku graficznego
     if (event.files && event.files.length > 0) {
       const file = event.files[0];
+
+      // Sprawdzanie poprawności identyfikatora dania
       if (!this.itemId) {
         this.messageService.add({
           severity: 'error',
@@ -75,10 +81,12 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
         return;
       }
 
+      // Ustawienie stanu ładowania i przygotowanie danych do wysłania
       this.loading = true;
       const formData = new FormData();
       formData.append('file', file);
-      
+
+      // Wywołanie żądania HTTP POST wysyłającego plik binarny na dedykowany endpoint dania
       this.http.post<{ imagePath: string }>(`${API_CONFIG.baseUrl}/Items/${this.itemId}/upload-image`, formData).subscribe({
         next: (response) => {
           this.messageService.add({
@@ -86,8 +94,10 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
             summary: 'Success',
             detail: 'Item image updated successfully'
           });
+          // Ponowne pobranie danych dania w celu zsynchronizowania stanu komponentu
           this.fetchItemData();
         },
+        // Obsługa błędów
         error: (error) => {
           console.error('Upload failed:', error);
           this.loading = false;
@@ -101,8 +111,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     }
   }
 
-
-
+  // Wysłanie zaktualizowanych wartości i wartości odżywczych potrawy do serwera API
   updateItem(): void {
     if (!this.itemId) {
       this.messageService.add({
@@ -113,6 +122,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       return;
     }
 
+    // Walidacja uzupełnienia podstawowych pól wymaganych formularza
     if (!this.name || !this.description || !this.price) {
       this.messageService.add({
         severity: 'error',
@@ -124,6 +134,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
 
     this.loading = true;
 
+    // Przygotowanie obiektu DTO z zaktualizowanymi szczegółami (nazwa, makroskładniki, scalone alergeny)
     const updateData = {
       restaurantId: this.item?.restaurantId,
       name: this.name,
@@ -138,6 +149,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       image: this.item?.image || '',
     };
 
+    // Wysłanie żądania HTTP PUT w celu trwałego zapisania zmian w bazie danych
     this.http
       .put(`${API_CONFIG.baseUrl}/Items/${this.itemId}`, updateData)
       .subscribe({
@@ -150,6 +162,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
           });
           this.loading = false;
 
+          // Ponowne załadowanie danych z bazy w celu odświeżenia pól
           this.fetchItemData();
         },
         error: (error) => {
@@ -164,6 +177,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       });
   }
 
+  // Przywrócenie pierwotnych wartości pól formularza sprzed edycji i odrzucenie zmian
   cancelUpdate(): void {
     if (this.item) {
       this.name = this.item.name;
@@ -174,6 +188,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       this.fats = this.item.fats;
       this.proteins = this.item.proteins;
 
+      // Zmapowanie oryginalnych alergenów z tekstu z powrotem na wybrane obiekty tablicy
       if (this.item.allergens) {
         this.selectedAlergens = this.alergens.filter((allergen) =>
           this.item.allergens.includes(allergen.name),
@@ -190,10 +205,13 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     });
   }
 
+  // Inicjalizacja komponentu - odczytanie identyfikatorów z URL oraz słownika alergenów
   ngOnInit(): void {
+    // Odczytanie identyfikatora restauracji z parametrów aktywnej trasy
     this.restaurantId = this.route.snapshot.paramMap.get('id');
     const routeParams = this.route.snapshot.url;
 
+    // Ekstrakcja identyfikatora dania z ostatniego segmentu ścieżki URL
     if (routeParams.length >= 4) {
       this.itemId = routeParams[routeParams.length - 1].path;
     }
@@ -202,6 +220,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     console.log('Item ID:', this.itemId);
 
     if (this.itemId) {
+      // Wywołanie asynchronicznego pobierania szczegółów potrawy
       this.fetchItemData();
     } else {
       this.messageService.add({
@@ -212,6 +231,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
       this.loading = false;
     }
 
+    // Definicja dostępnych w systemie alergenów do wyboru
     this.alergens = [
       { name: 'None' },
       { name: 'Cereals containing gluten' },
@@ -231,13 +251,16 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
     ];
   }
 
+  // Pobranie z API pełnych danych szczegółowych potrawy
   fetchItemData(): void {
     this.loading = true;
 
+    // Zapytanie HTTP GET po szczegóły dania
     this.http.get(`${API_CONFIG.baseUrl}/Items/${this.itemId}`).subscribe({
       next: (data: any) => {
         this.item = data;
 
+        // Mapowanie pobranych wartości na pola formularza w widoku HTML
         this.name = data.name;
         this.description = data.description;
         this.price = data.price;
@@ -246,6 +269,7 @@ export class RestaurantDashboardItemsSelfManageItemComponent {
         this.fats = data.fats;
         this.proteins = data.proteins;
 
+        // Rozbicie po przecinku tekstu alergenów z bazy danych i zaznaczenie odpowiednich pól multiselect
         if (data.allergens) {
           const allergenNames = data.allergens
             .split(',')

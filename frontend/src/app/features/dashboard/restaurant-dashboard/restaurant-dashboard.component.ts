@@ -1,3 +1,4 @@
+// frontend/src/app/features/dashboard/restaurant-dashboard/restaurant-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -44,11 +45,14 @@ export class RestaurantDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     public mediaService: MediaService,
     private editService: EditService
-  ) {}
+  ) { }
 
+  // Inicjalizacja komponentu - asynchroniczne pobranie danych o lokalu, ocenach i oczekujących modyfikacjach
   ngOnInit() {
+    // Odczytanie identyfikatora restauracji z URL
     this.urlId = this.route.snapshot.paramMap.get('id');
     if (this.urlId) {
+      // Pobranie profilu restauracji z API
       this.restaurantSerivce.getRestaurantById(this.urlId).subscribe({
         next: (restaurant) => {
           this.restaurant = restaurant;
@@ -59,6 +63,7 @@ export class RestaurantDashboardComponent implements OnInit {
         },
       });
 
+      // Pobranie średniej oceny punktowej restauracji z API
       this.ratingService.getRestaurantRating(this.urlId).subscribe({
         next: (rating) => {
           this.rating = rating;
@@ -69,6 +74,7 @@ export class RestaurantDashboardComponent implements OnInit {
         },
       });
 
+      // Pobranie całkowitej liczby opinii o restauracji z API
       this.ratingService.countRestaurantReviews(this.urlId).subscribe({
         next: (reviewCount) => {
           this.reviewCount = reviewCount;
@@ -79,11 +85,13 @@ export class RestaurantDashboardComponent implements OnInit {
         },
       });
 
+      // Pobranie z API liczby oczekujących propozycji poprawek profilu lokalu
       this.editService.getPendingRestaurantEditsCount(this.urlId).subscribe({
         next: (count) => this.pendingRestaurantEditsCount = count,
         error: (err) => console.error('Error fetching restaurant edits count', err)
       });
 
+      // Pobranie z API liczby oczekujących propozycji edycji dań powiązanych z tym lokalem
       this.editService.getPendingItemEditsCountByRestaurant(this.urlId).subscribe({
         next: (count) => this.pendingItemEditsCount = count,
         error: (err) => console.error('Error fetching item edits count', err)

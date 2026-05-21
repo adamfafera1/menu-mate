@@ -1,3 +1,4 @@
+// frontend/src/app/features/browse/browse/browse.component.ts
 import { Component, OnInit } from '@angular/core';
 import { RestaurantCardComponent } from '../../../shared/components/restaurant-card/restaurant-card.component';
 import { TopSearchComponent } from '../../../shared/components/top-search/top-search.component';
@@ -15,6 +16,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.css',
 })
+// Komponent główny wyszukiwarki restauracji umożliwiający zaawansowane filtrowanie wyników
 export class BrowseComponent implements OnInit {
   loading: boolean = true;
   restaurants: any[] = [];
@@ -30,8 +32,9 @@ export class BrowseComponent implements OnInit {
     private restaurantService: RestaurantService,
     private ratingService: RatingServiceService,
     private geolocationService: GeolocationService
-  ) {}
+  ) { }
 
+  // Inicjalizacja komponentu - asynchroniczne pobranie danych lokali oraz ocen, obliczenie średnich i przypisanie ich do obiektów
   ngOnInit() {
     forkJoin({
       restaurants: this.restaurantService.getRestaurants(),
@@ -58,8 +61,7 @@ export class BrowseComponent implements OnInit {
     });
   }
 
-
-
+  // Zastosowanie kryteriów filtrowania (nazwa, kuchnia, odległość w promieniu 10 km oraz ocena) na liście lokali
   applyFilters() {
     this.filteredRestaurants = this.restaurants.filter((r) => {
       const matchesName = r.name.toLowerCase().includes(this.searchQuery.toLowerCase());
@@ -75,21 +77,25 @@ export class BrowseComponent implements OnInit {
     });
   }
 
+  // Reakcja na zmianę frazy wyszukiwania w polu tekstowym
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
     this.applyFilters();
   }
 
+  // Reakcja na zmianę wybranego rodzaju kuchni w filtrach
   onCuisineChange(cuisine: string | null) {
     this.selectedCuisine = cuisine;
     this.applyFilters();
   }
 
+  // Reakcja na zmianę lokalizacji użytkownika do obliczania odległości
   onLocationChange(location: { lat: number; lng: number } | null) {
     this.selectedLocation = location;
     this.applyFilters();
   }
 
+  // Reakcja na zmianę filtru minimalnej oceny lokalu
   onRatingChange(rating: any) {
     this.selectedRating = rating;
     this.applyFilters();

@@ -1,3 +1,4 @@
+//frontend/src/app/features/dashboard/restaurant-dashboard-restaurant-self-manage/restaurant-dashboard-restaurant-self-manage.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -47,6 +48,7 @@ import { GeolocationService } from '../../../core/services/geolocation.service';
   templateUrl: './restaurant-dashboard-restaurant-self-manage.component.html',
   styleUrl: './restaurant-dashboard-restaurant-self-manage.component.css',
 })
+// Komponent panelu administracyjnego umożliwiający bezpośrednie zarządzanie danymi profilowymi restauracji
 export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit {
   name: string | undefined;
   description: string | undefined;
@@ -75,12 +77,15 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     private geolocationService: GeolocationService
   ) { }
 
+  // Inicjalizacja komponentu - odczytanie identyfikatora restauracji i pobranie jej profilu
   ngOnInit(): void {
+    // Odczytanie parametru ID z adresu URL aktywnej trasy
     this.restaurantId = this.route.snapshot.paramMap.get('id');
 
     console.log('Restaurant ID:', this.restaurantId);
 
     if (this.restaurantId) {
+      // Wywołanie pobierania danych szczegółowych
       this.fetchRestaurantData();
     } else {
       this.messageService.add({
@@ -92,15 +97,18 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     }
   }
 
+  // Pobranie szczegółowych informacji o restauracji z API i zmapowanie ich na formularz
   fetchRestaurantData(): void {
     this.loading = true;
 
+    // Żądanie HTTP GET po dane szczegółowe lokalu
     this.http
       .get(`${API_CONFIG.baseUrl}/Restaurants/${this.restaurantId}`)
       .subscribe({
         next: (data: any) => {
           this.restaurant = data;
 
+          // Przypisanie pobranych wartości do pól formularza w widoku HTML
           this.name = data.name;
           this.description = data.description;
           this.location = data.location;
@@ -123,6 +131,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       });
   }
 
+  // Wyświetlenie okna dialogowego z zapytaniem potwierdzającym chęć zapisu zmian
   confirm(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -140,12 +149,15 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
         label: 'Save',
       },
       accept: () => {
+        // Uruchomienie właściwej procedury aktualizacji po zaakceptowaniu dialogu
         this.updateRestaurant();
       },
     });
   }
 
+  // Przesłanie uaktualnionych informacji o lokalu gastronomicznym na serwer API
   updateRestaurant(): void {
+    // Sprawdzenie poprawności identyfikatora
     if (!this.restaurantId) {
       this.messageService.add({
         severity: 'error',
@@ -155,12 +167,14 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       return;
     }
 
+    // Wyodrębnienie tekstu lokalizacji z wybranego obiektu geolokalizacyjnego (obsługa formatu tekstowego i obiektowego)
     const locationText = this.selectedLocationObj
       ? (typeof this.selectedLocationObj === 'string'
-          ? this.selectedLocationObj
-          : this.selectedLocationObj.label)
+        ? this.selectedLocationObj
+        : this.selectedLocationObj.label)
       : this.location;
 
+    // Walidacja wypełnienia wszystkich pól obowiązkowych formularza
     if (!this.name || !this.description || !locationText || !this.phone) {
       this.messageService.add({
         severity: 'error',
@@ -172,6 +186,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
 
     this.loading = true;
 
+    // Konstrukcja DTO z zaktualizowanymi wartościami restauracji
     const updateData = {
       name: this.name,
       description: this.description,
@@ -184,6 +199,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       cuisine: this.selectedCuisine ?? null,
     };
 
+    // Wysłanie zapytania HTTP PUT z uaktualnionymi danymi
     this.http
       .put(`${API_CONFIG.baseUrl}/Restaurants/${this.restaurantId}`, updateData)
       .subscribe({
@@ -196,16 +212,17 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
           });
           this.loading = false;
 
+          // Ponowne pobranie danych w celu odświeżenia stanu komponentu
           this.fetchRestaurantData();
         },
         error: (error) => {
           console.error('Error updating restaurant:', error);
-
           this.loading = false;
         },
       });
   }
 
+  // Przywrócenie pierwotnych wartości pól formularza sprzed edycji i odrzucenie niezapisanych zmian
   cancel() {
     if (this.restaurant) {
       this.name = this.restaurant.name;
@@ -223,6 +240,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     });
   }
 
+  // Obsługa przesyłania nowego pliku graficznego reprezentującego restaurację do chmury (Azure Blob Storage)
   onUpload(event: any) {
     if (event.files && event.files.length > 0) {
       const file = event.files[0];
@@ -236,6 +254,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
       }
 
       this.loading = true;
+      // Wysłanie grafiki do magazynu Azure za pośrednictwem dedykowanej metody serwisu restauracji
       this.restaurantService.uploadRestaurantImage(this.restaurantId, file).subscribe({
         next: (response) => {
           this.messageService.add({
@@ -243,7 +262,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
             summary: 'Success',
             detail: 'Restaurant image updated successfully'
           });
-          // Refresh data to get new image
+          // Ponowne pobranie danych w celu uaktualnienia ścieżki i odświeżenia widoku
           this.fetchRestaurantData();
         },
         error: (error) => {
@@ -259,6 +278,7 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     }
   }
 
+  // Asynchroniczne wyszukiwanie geolokalizacyjne pasujących adresów za pomocą Nominatim OpenStreetMap API
   searchLocation(event: any): void {
     this.geolocationService.searchLocations(event.query).subscribe({
       next: (results) => {
@@ -270,11 +290,13 @@ export class RestaurantDashboardRestaurantSelfManageComponent implements OnInit 
     });
   }
 
+  // Przypisanie wybranego adresu z listy podpowiedzi do lokalnej zmiennej formularza
   onLocationSelect(event: any): void {
     const place = event?.value ?? event;
     this.location = place.label;
   }
 
+  // Wyczyszczenie zaznaczonego obiektu lokalizacji oraz listy sugestii w wyszukiwarce
   onLocationClear(): void {
     this.selectedLocationObj = null;
     this.locationSuggestions = [];

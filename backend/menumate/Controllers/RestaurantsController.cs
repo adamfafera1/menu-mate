@@ -90,7 +90,7 @@ namespace menumate.Controllers
 
             return Ok(restaurant);
         }
-
+ 
         // Pobranie danych restauracji przypisanej do konkretnego właściciela
         [HttpGet]
         [Route("owner/{ownerId:guid}")]

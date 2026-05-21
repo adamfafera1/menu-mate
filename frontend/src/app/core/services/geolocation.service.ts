@@ -1,3 +1,4 @@
+// Path: frontend/src/app/core/services/geolocation.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
@@ -5,10 +6,12 @@ import { Observable, map, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+// Serwis geolokalizacji odpowiedzialny za obliczenia odległości geograficznych oraz integrację z API geokodowania Nominatim
 export class GeolocationService {
 
   constructor(private http: HttpClient) { }
 
+  // Obliczenie odległości w kilometrach między dwoma punktami geograficznymi na podstawie wzoru haversine (przybliżenie płaskie oparte na średniej szerokości)
   calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
     const p = Math.PI / 180;
     const x = (lng2 - lng1) * p * Math.cos((lat1 + lat2) / 2 * p);
@@ -16,7 +19,7 @@ export class GeolocationService {
     return Math.sqrt(x * x + y * y) * 6371;
   }
 
-
+  // Weryfikacja, czy wskazana lokalizacja (point2) znajduje się w zdefiniowanym promieniu od punktu odniesienia (point1)
   isWithinRadius(
     point1: { lat: number; lng: number },
     point2: { lat: number; lng: number },
@@ -28,7 +31,7 @@ export class GeolocationService {
     return this.calculateDistance(point1.lat, point1.lng, point2.lat, point2.lng) <= radiusKm;
   }
 
-
+  // Wyszukiwanie lokalizacji i adresów geograficznych za pomocą zewnętrznego serwisu OpenStreetMap Nominatim API
   searchLocations(query: string): Observable<any[]> {
     const trimmedQuery = query?.trim();
     if (!trimmedQuery || trimmedQuery.length < 2) {
@@ -54,7 +57,7 @@ export class GeolocationService {
     );
   }
 
-
+  // Formatowanie struktury adresu z Nominatim API do czytelnego ciągu znaków (np. "Ulica numer, Miasto")
   private formatAddress(address: any): string {
     const road = address?.road || address?.pedestrian || address?.path || address?.footway;
     const number = address?.house_number;
